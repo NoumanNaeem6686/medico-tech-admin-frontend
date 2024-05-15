@@ -19,28 +19,16 @@ const MenuProps = {
   },
 };
 
-const languages = [
-  "English",
-  "Spanish",
-  "French",
-  "German",
-  "Chinese",
-  "Japanese",
-  "Russian",
-  "Arabic",
-  "Portuguese",
-  "Hindi",
-  "Bengali",
-  "Korean",
-  "Italian",
-  "Dutch",
-  "Turkish",
-  "Vietnamese",
-  "Swedish",
-  "Polish",
-  "Danish",
-  "Finnish",
-  "Norwegian",
+const abilities = [
+  " Clairsentient",
+  "Clairvoyant",
+  " Channeling",
+  " Empath",
+  "Medium",
+  "Dream analyst",
+  " Clairaudient",
+  "Remote viewing",
+  "Automatic writing",
 ];
 //@ts-ignore
 function getStyles(name, personName, theme) {
@@ -52,7 +40,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-const MultiSelect = ({ onChange }: any) => {
+const MultiSelectForAbilities = ({ onChange }: any) => {
   const theme = useTheme();
   const [personName, setPersonName] = React.useState([]);
 
@@ -75,14 +63,14 @@ const MultiSelect = ({ onChange }: any) => {
 
   return (
     <FormControl fullWidth>
-      <InputLabel id="demo-multiple-chip-label">Languages</InputLabel>
+      <InputLabel id="demo-multiple-chip-label">Abilities</InputLabel>
       <Select
         labelId="demo-multiple-chip-label"
         id="demo-multiple-chip"
         multiple
         value={personName}
         onChange={handleChange}
-        input={<OutlinedInput id="select-multiple-chip" label="Languages" />}
+        input={<OutlinedInput id="select-multiple-chip" label="Abilities" />}
         renderValue={(selected) => (
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
             {selected.map((value) => (
@@ -92,7 +80,7 @@ const MultiSelect = ({ onChange }: any) => {
         )}
         MenuProps={MenuProps}
       >
-        {languages.map((name) => (
+        {abilities.map((name) => (
           <MenuItem
             key={name}
             value={name}
@@ -106,4 +94,4 @@ const MultiSelect = ({ onChange }: any) => {
   );
 };
 
-export default MultiSelect;
+export default MultiSelectForAbilities;

@@ -1,604 +1,249 @@
+"use client";
 import { PSYCHICS_TABLE } from "@/types/brand";
 import Image from "next/image";
 import { FaEye } from "react-icons/fa";
 import ChartThree from "../Charts/ChartThree";
 import ChartTwo from "../Charts/ChartTwo";
-
-const brandData: PSYCHICS_TABLE[] = [
-  {
-    logo: "/images/brand/brand-01.svg",
-    name: "Hanan",
-    visitors: "Hanan",
-    revenues: "5,768",
-    sales: 590,
-    conversion: 240,
-    earnings: "250",
-  },
-  {
-    logo: "/images/brand/brand-02.svg",
-    name: "Afaq",
-    visitors: "usman",
-    revenues: "4,635",
-    sales: 467,
-    conversion: 320,
-    earnings: "250",
-  },
-  {
-    logo: "/images/brand/brand-03.svg",
-    name: "Nouman",
-    visitors: "nouman",
-    revenues: "4,290",
-    sales: 420,
-    conversion: 410,
-    earnings: "250",
-  },
-  {
-    logo: "/images/brand/brand-04.svg",
-    name: "Hamza",
-    visitors: "Afaq",
-    revenues: "3,580",
-    sales: 389,
-    conversion: 195,
-    earnings: "250",
-  },
-  {
-    logo: "/images/brand/brand-05.svg",
-    name: "Muneeb",
-    visitors: "Munaeeb",
-    revenues: "6,768",
-    sales: 390,
-    conversion: 285,
-    earnings: "250",
-  },
-];
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addProduct,
+  deleteProduct,
+  gettingAllProducts,
+  updateProduct,
+} from "../../store/slices/productSlice";
+import { RxCross2 } from "react-icons/rx";
 
 const ProductTable = () => {
+  const dispatch = useDispatch();
+  //@ts-ignore
+  const products = useSelector((state) => state.product.products);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [productName, setProductName] = useState("");
+  const [productPrice, setProductPrice] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [discountPrice, setDiscountPrice] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [productDescription, setProductDescription] = useState("");
+  const [category, setCategory] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [imageId, setImageId] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
+  useEffect(() => {
+    //@ts-ignore
+    dispatch(gettingAllProducts());
+  }, [dispatch]);
+
+  const handleAddNewProduct = async () => {
+    if (!productName || !productPrice || !category || !productDescription || !imageUrl) {
+      toast.error("Please fill in all fields.");
+      return;
+    }
+    
+    const productDetails = {
+      productName,
+      productPrice,
+      discount: discountPrice,
+      category,
+      quantity,
+      description: productDescription,
+      productImageUrl: imageUrl,
+      productImageId: imageId,
+    };
+//@ts-ignore
+    const result = await dispatch(addProduct(productDetails)); //@ts-ignore
+    if (result?.payload?.product) {
+      toast.success("Product added successfully");
+    } else {
+      toast.error("Failed to add product");
+    }
+
+    closeModal();
+  };
+
+  const handleUpdateProduct = async () => {
+    if (!productName || !productPrice || !category || !productDescription || !imageUrl) {
+      toast.error("Please fill in all fields.");
+      return;
+    }
+
+    const productDetails = {
+      productName,
+      productPrice,
+      discount: discountPrice,
+      category,
+      quantity,
+      description: productDescription,
+      productImageUrl: imageUrl,
+      productImageId: imageId,
+    };
+//@ts-ignore
+    const result = await dispatch(updateProduct({  //@ts-ignore
+      id: selectedProduct?.id,
+      productDetails
+    }));
+//@ts-ignore
+    if (result?.payload?.productDetails) {
+      toast.success("Product updated successfully");
+    } else {
+      toast.error("Failed to update product");
+    }
+
+    closeModal();
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setSelectedProduct(null);
+    resetFormFields();
+  };
+
+  const resetFormFields = () => {
+    setProductName("");
+    setProductPrice("");
+    setDiscountPrice("");
+    setQuantity("");
+    setProductDescription("");
+    setCategory("");
+    setImageUrl("");
+    setImageId("");
+  };
+
+  const handleImageChange = (event:any) => {
+    const file = event.target.files[0];
+    uploadFileToCloudinary(file);
+  };
+
+  const toggleModal = (product = null) => {
+    if (product) {
+      setSelectedProduct(product);
+      //@ts-ignore
+      setProductName(product.productName); //@ts-ignore
+      setProductPrice(product.productPrice); //@ts-ignore
+      setDiscountPrice(product.discount || ""); //@ts-ignore
+      setQuantity(product.quantity || ""); //@ts-ignore
+      setProductDescription(product.description || ""); //@ts-ignore
+      setCategory(product.category || ""); //@ts-ignore
+      setImageUrl(product.productImageUrl || ""); //@ts-ignore
+      setImageId(product.productImageId || ""); //@ts-ignore
+    } else {
+      resetFormFields();
+    }
+    setModalOpen(true);
+  };
+
+  const uploadFileToCloudinary = async (file:any) => {
+    const formData = new FormData();
+    formData.append("image", file);
+    setIsLoading(true);
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/image/upload`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      setImageUrl(response.data.data.secure_url);
+      setImageId(response.data.data.public_id);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      setIsLoading(false);
+    }
+  };
+
+  const handleDelete = async (productId:any) => {
+    if (window.confirm("Are you sure you want to delete this product?")) { //@ts-ignore
+      const result = await dispatch(deleteProduct(productId));
+      if (result.type.endsWith('fulfilled')) {
+        toast.success("Product deleted successfully");
+      } else {
+        toast.error("Failed to delete product");
+      }
+    }
+  };
+
   return (
     <section className="bg-gray-50 dark:bg-gray-900 py-3 sm:py-5">
       <div className="mx-auto max-w-screen-2xl px-4 lg:px-12">
         <div className="dark:bg-gray-800 relative overflow-hidden bg-white shadow-md sm:rounded-lg">
-          <div className="flex flex-col space-y-3 px-4 py-3 lg:flex-row lg:items-center lg:justify-between lg:space-x-4 lg:space-y-0">
-            {/* <div className="flex items-center flex-1 space-x-4">
-        <h5>
-          <span className="text-gray-500">All Products:</span>
-          <span className="dark:text-white">123456</span>
-        </h5>
-        <h5>
-          <span className="text-gray-500">Total sales:</span>
-          <span className="dark:text-white">$88.4k</span>
-        </h5>
-      </div> */}
+          <div className="flex items-center justify-between p-4">
+            <h2 className="text-lg font-bold">Products</h2>
+            <button
+              className="rounded bg-[#12a19b] px-4 py-2 font-bold text-white hover:opacity-75"
+              //@ts-ignore
+              onClick={toggleModal}
+            >
+              Add Product
+            </button>
           </div>
           <div className="overflow-x-auto">
             <table className="text-gray-500  dark:text-gray-400 w-full text-left text-sm">
               <thead className="bg-gray-50 dark:bg-gray-700 dark:text-gray-400 bg-[#12a19b] text-xs uppercase text-white">
                 <tr>
-                  <th scope="col" className="p-4">
-                    {/* <div className="flex items-center">
-                      <input
-                        id="checkbox-all"
-                        type="checkbox"
-                        className="bg-gray-100 border-gray-300 text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded focus:ring-2"
-                      />
-                      <label htmlFor="checkbox-all" className="sr-only">
-                        checkbox
-                      </label>
-                    </div> */}
+                  <th scope="col" className="px-4 py-3">
+                    Product Image
                   </th>
                   <th scope="col" className="px-4 py-3">
                     Product Name
                   </th>
                   <th scope="col" className="px-4 py-3">
-                    Ordered Quantity
+                    Product Price
                   </th>
                   <th scope="col" className="px-4 py-3">
-                    Order Status
+                    Product Quantity
                   </th>
                   <th scope="col" className="px-4 py-3">
-                    Sale
+                    Actions
                   </th>
-                  <th scope="col" className="px-4 py-3">
-                    Address/Info
-                  </th>
+                  <th scope="col" className="px-4 py-3"></th>
                 </tr>
               </thead>
               <tbody>
-                <tr className="dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 border-b">
-                  <td className="w-4 px-4 py-3">
-                    <div className="flex items-center">
-                      <input
-                        id="checkbox-table-search-1"
-                        type="checkbox"
-                        // onClick="event.stopPropagation()"
-                        className="bg-gray-100 border-gray-300 text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded focus:ring-2"
-                      />
-                      <label
-                        htmlFor="checkbox-table-search-1"
-                        className="sr-only"
-                      >
-                        checkbox
-                      </label>
-                    </div>
-                  </td>
-                  <th
-                    scope="row"
-                    className="text-gray-900 flex items-center whitespace-nowrap px-4 py-2 font-medium dark:text-white"
-                  >
-                    Samsung
-                  </th>
-
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    <div className="flex items-center">
-                      <div className="bg-red-700 mr-2 inline-block h-4 w-4 rounded-full" />
-                      5
-                    </div>
-                  </td>
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    paid/pending/ship
-                  </td>
-
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    $500
-                  </td>
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    <div className="flex items-center">XYZ USA</div>
-                  </td>
-                </tr>
-                <tr className="dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 border-b">
-                  <td className="w-4 px-4 py-3">
-                    <div className="flex items-center">
-                      <input
-                        id="checkbox-table-search-1"
-                        type="checkbox"
-                        // onClick="event.stopPropagation()"
-                        className="bg-gray-100 border-gray-300 text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded focus:ring-2"
-                      />
-                      <label
-                        htmlFor="checkbox-table-search-1"
-                        className="sr-only"
-                      >
-                        checkbox
-                      </label>
-                    </div>
-                  </td>
-                  <th
-                    scope="row"
-                    className="text-gray-900 flex items-center whitespace-nowrap px-4 py-2 font-medium dark:text-white"
-                  >
-                    Samsung
-                  </th>
-
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    <div className="flex items-center">
-                      <div className="bg-red-700 mr-2 inline-block h-4 w-4 rounded-full" />
-                      5
-                    </div>
-                  </td>
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    paid/pending/ship
-                  </td>
-
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    $500
-                  </td>
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    <div className="flex items-center">XYZ USA</div>
-                  </td>
-                </tr>
-                <tr className="dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 border-b">
-                  <td className="w-4 px-4 py-3">
-                    <div className="flex items-center">
-                      <input
-                        id="checkbox-table-search-1"
-                        type="checkbox"
-                        // onClick="event.stopPropagation()"
-                        className="bg-gray-100 border-gray-300 text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded focus:ring-2"
-                      />
-                      <label
-                        htmlFor="checkbox-table-search-1"
-                        className="sr-only"
-                      >
-                        checkbox
-                      </label>
-                    </div>
-                  </td>
-                  <th
-                    scope="row"
-                    className="text-gray-900 flex items-center whitespace-nowrap px-4 py-2 font-medium dark:text-white"
-                  >
-                    Samsung
-                  </th>
-
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    <div className="flex items-center">
-                      <div className="bg-red-700 mr-2 inline-block h-4 w-4 rounded-full" />
-                      5
-                    </div>
-                  </td>
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    paid/pending/ship
-                  </td>
-
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    $500
-                  </td>
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    <div className="flex items-center">XYZ USA</div>
-                  </td>
-                </tr>
-                <tr className="dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 border-b">
-                  <td className="w-4 px-4 py-3">
-                    <div className="flex items-center">
-                      <input
-                        id="checkbox-table-search-1"
-                        type="checkbox"
-                        // onClick="event.stopPropagation()"
-                        className="bg-gray-100 border-gray-300 text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded focus:ring-2"
-                      />
-                      <label
-                        htmlFor="checkbox-table-search-1"
-                        className="sr-only"
-                      >
-                        checkbox
-                      </label>
-                    </div>
-                  </td>
-                  <th
-                    scope="row"
-                    className="text-gray-900 flex items-center whitespace-nowrap px-4 py-2 font-medium dark:text-white"
-                  >
-                    Samsung
-                  </th>
-
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    <div className="flex items-center">
-                      <div className="bg-red-700 mr-2 inline-block h-4 w-4 rounded-full" />
-                      5
-                    </div>
-                  </td>
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    paid/pending/ship
-                  </td>
-
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    $500
-                  </td>
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    <div className="flex items-center">XYZ USA</div>
-                  </td>
-                </tr>
-                <tr className="dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 border-b">
-                  <td className="w-4 px-4 py-3">
-                    <div className="flex items-center">
-                      <input
-                        id="checkbox-table-search-1"
-                        type="checkbox"
-                        // onClick="event.stopPropagation()"
-                        className="bg-gray-100 border-gray-300 text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded focus:ring-2"
-                      />
-                      <label
-                        htmlFor="checkbox-table-search-1"
-                        className="sr-only"
-                      >
-                        checkbox
-                      </label>
-                    </div>
-                  </td>
-                  <th
-                    scope="row"
-                    className="text-gray-900 flex items-center whitespace-nowrap px-4 py-2 font-medium dark:text-white"
-                  >
-                    Samsung
-                  </th>
-
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    <div className="flex items-center">
-                      <div className="bg-red-700 mr-2 inline-block h-4 w-4 rounded-full" />
-                      5
-                    </div>
-                  </td>
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    paid/pending/ship
-                  </td>
-
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    $500
-                  </td>
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    <div className="flex items-center">XYZ USA</div>
-                  </td>
-                </tr>
-                <tr className="dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 border-b">
-                  <td className="w-4 px-4 py-3">
-                    <div className="flex items-center">
-                      <input
-                        id="checkbox-table-search-1"
-                        type="checkbox"
-                        // onClick="event.stopPropagation()"
-                        className="bg-gray-100 border-gray-300 text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded focus:ring-2"
-                      />
-                      <label
-                        htmlFor="checkbox-table-search-1"
-                        className="sr-only"
-                      >
-                        checkbox
-                      </label>
-                    </div>
-                  </td>
-                  <th
-                    scope="row"
-                    className="text-gray-900 flex items-center whitespace-nowrap px-4 py-2 font-medium dark:text-white"
-                  >
-                    Samsung
-                  </th>
-
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    <div className="flex items-center">
-                      <div className="bg-red-700 mr-2 inline-block h-4 w-4 rounded-full" />
-                      5
-                    </div>
-                  </td>
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    paid/pending/ship
-                  </td>
-
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    $500
-                  </td>
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    <div className="flex items-center">XYZ USA</div>
-                  </td>
-                </tr>
-                <tr className="dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 border-b">
-                  <td className="w-4 px-4 py-3">
-                    <div className="flex items-center">
-                      <input
-                        id="checkbox-table-search-1"
-                        type="checkbox"
-                        // onClick="event.stopPropagation()"
-                        className="bg-gray-100 border-gray-300 text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded focus:ring-2"
-                      />
-                      <label
-                        htmlFor="checkbox-table-search-1"
-                        className="sr-only"
-                      >
-                        checkbox
-                      </label>
-                    </div>
-                  </td>
-                  <th
-                    scope="row"
-                    className="text-gray-900 flex items-center whitespace-nowrap px-4 py-2 font-medium dark:text-white"
-                  >
-                    Samsung
-                  </th>
-
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    <div className="flex items-center">
-                      <div className="bg-red-700 mr-2 inline-block h-4 w-4 rounded-full" />
-                      5
-                    </div>
-                  </td>
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    paid/pending/ship
-                  </td>
-
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    $500
-                  </td>
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    <div className="flex items-center">XYZ USA</div>
-                  </td>
-                </tr>
-                <tr className="dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 border-b">
-                  <td className="w-4 px-4 py-3">
-                    <div className="flex items-center">
-                      <input
-                        id="checkbox-table-search-1"
-                        type="checkbox"
-                        // onClick="event.stopPropagation()"
-                        className="bg-gray-100 border-gray-300 text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded focus:ring-2"
-                      />
-                      <label
-                        htmlFor="checkbox-table-search-1"
-                        className="sr-only"
-                      >
-                        checkbox
-                      </label>
-                    </div>
-                  </td>
-                  <th
-                    scope="row"
-                    className="text-gray-900 flex items-center whitespace-nowrap px-4 py-2 font-medium dark:text-white"
-                  >
-                    Samsung
-                  </th>
-
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    <div className="flex items-center">
-                      <div className="bg-red-700 mr-2 inline-block h-4 w-4 rounded-full" />
-                      5
-                    </div>
-                  </td>
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    paid/pending/ship
-                  </td>
-
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    $500
-                  </td>
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    <div className="flex items-center">XYZ USA</div>
-                  </td>
-                </tr>
-                <tr className="dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 border-b">
-                  <td className="w-4 px-4 py-3">
-                    <div className="flex items-center">
-                      <input
-                        id="checkbox-table-search-1"
-                        type="checkbox"
-                        // onClick="event.stopPropagation()"
-                        className="bg-gray-100 border-gray-300 text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded focus:ring-2"
-                      />
-                      <label
-                        htmlFor="checkbox-table-search-1"
-                        className="sr-only"
-                      >
-                        checkbox
-                      </label>
-                    </div>
-                  </td>
-                  <th
-                    scope="row"
-                    className="text-gray-900 flex items-center whitespace-nowrap px-4 py-2 font-medium dark:text-white"
-                  >
-                    Samsung
-                  </th>
-
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    <div className="flex items-center">
-                      <div className="bg-red-700 mr-2 inline-block h-4 w-4 rounded-full" />
-                      5
-                    </div>
-                  </td>
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    paid/pending/ship
-                  </td>
-
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    $500
-                  </td>
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    <div className="flex items-center">XYZ USA</div>
-                  </td>
-                </tr>
-                <tr className="dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 border-b">
-                  <td className="w-4 px-4 py-3">
-                    <div className="flex items-center">
-                      <input
-                        id="checkbox-table-search-1"
-                        type="checkbox"
-                        // onClick="event.stopPropagation()"
-                        className="bg-gray-100 border-gray-300 text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded focus:ring-2"
-                      />
-                      <label
-                        htmlFor="checkbox-table-search-1"
-                        className="sr-only"
-                      >
-                        checkbox
-                      </label>
-                    </div>
-                  </td>
-                  <th
-                    scope="row"
-                    className="text-gray-900 flex items-center whitespace-nowrap px-4 py-2 font-medium dark:text-white"
-                  >
-                    Samsung
-                  </th>
-
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    <div className="flex items-center">
-                      <div className="bg-red-700 mr-2 inline-block h-4 w-4 rounded-full" />
-                      5
-                    </div>
-                  </td>
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    paid/pending/ship
-                  </td>
-
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    $500
-                  </td>
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    <div className="flex items-center">XYZ USA</div>
-                  </td>
-                </tr>
-                <tr className="dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 border-b">
-                  <td className="w-4 px-4 py-3">
-                    <div className="flex items-center">
-                      <input
-                        id="checkbox-table-search-1"
-                        type="checkbox"
-                        // onClick="event.stopPropagation()"
-                        className="bg-gray-100 border-gray-300 text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded focus:ring-2"
-                      />
-                      <label
-                        htmlFor="checkbox-table-search-1"
-                        className="sr-only"
-                      >
-                        checkbox
-                      </label>
-                    </div>
-                  </td>
-                  <th
-                    scope="row"
-                    className="text-gray-900 flex items-center whitespace-nowrap px-4 py-2 font-medium dark:text-white"
-                  >
-                    Samsung
-                  </th>
-
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    <div className="flex items-center">
-                      <div className="bg-red-700 mr-2 inline-block h-4 w-4 rounded-full" />
-                      5
-                    </div>
-                  </td>
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    paid/pending/ship
-                  </td>
-
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    $500
-                  </td>
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    <div className="flex items-center">XYZ USA</div>
-                  </td>
-                </tr>
-                <tr className="dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 border-b">
-                  <td className="w-4 px-4 py-3">
-                    <div className="flex items-center">
-                      <input
-                        id="checkbox-table-search-1"
-                        type="checkbox"
-                        // onClick="event.stopPropagation()"
-                        className="bg-gray-100 border-gray-300 text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded focus:ring-2"
-                      />
-                      <label
-                        htmlFor="checkbox-table-search-1"
-                        className="sr-only"
-                      >
-                        checkbox
-                      </label>
-                    </div>
-                  </td>
-                  <th
-                    scope="row"
-                    className="text-gray-900 flex items-center whitespace-nowrap px-4 py-2 font-medium dark:text-white"
-                  >
-                    Samsung
-                  </th>
-
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    <div className="flex items-center">
-                      <div className="bg-red-700 mr-2 inline-block h-4 w-4 rounded-full" />
-                      5
-                    </div>
-                  </td>
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    paid/pending/ship
-                  </td>
-
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    $500
-                  </td>
-                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                    <div className="flex items-center">XYZ USA</div>
-                  </td>
-                </tr>
+                {products &&
+                  products.map((product: any) => (
+                    <tr
+                      key={product.id}
+                      style={{ borderBottom: "1px solid #f5f5f7" }}
+                    >
+                      <td className="whitespace-nowrap ps-2">
+                        <img
+                          src={product.productImageUrl}
+                          alt={product.productName}
+                          className="h-10 w-10 rounded-full object-cover"
+                        />
+                      </td>
+                      <td className="text-gray-900 whitespace-nowrap px-6 py-4 text-sm font-medium">
+                        {product.productName}
+                      </td>
+                      <td className="text-gray-500 whitespace-nowrap px-6 py-4 text-sm">
+                        ${product.productPrice}
+                      </td>
+                      <td className="text-gray-500 whitespace-nowrap px-6 py-4 text-sm">
+                        {product.quantity}
+                      </td>
+                      <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+                        <button
+                          onClick={() => toggleModal(product)}
+                          className="mr-3 rounded bg-indigo-600 px-3 py-1 text-white transition duration-150 ease-in-out hover:bg-indigo-700"
+                        >
+                          Update
+                        </button>
+                        <button
+                          onClick={() => handleDelete(product.id)}
+                          className="rounded bg-red px-3 py-1 text-white transition duration-150 ease-in-out"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
-          <nav
+          {/* <nav
             className="flex flex-col items-start justify-between space-y-3 p-4 md:flex-row md:items-center md:space-y-0"
             aria-label="Table navigation"
           >
@@ -697,11 +342,101 @@ const ProductTable = () => {
                 </a>
               </li>
             </ul>
-          </nav>
+          </nav> */}
         </div>
-        <div className="mt-6">
+        {/* model */}
+        {isModalOpen && (
+          <div
+            className="fixed inset-0 z-1 h-full w-full items-center justify-center overflow-y-auto bg-black bg-opacity-50"
+            id="my-modal"
+          >
+            <div className="relative top-20 mx-auto w-96 rounded-md border bg-white p-5 shadow-lg">
+              <div className="mt-3 text-center">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-gray-900 text-lg font-medium leading-6">
+                    Add New Product
+                  </h3>
+                  <button
+                    onClick={() => setModalOpen(false)} // Close the modal
+                    className="text-gray-700 hover:text-gray-900 rounded p-1"
+                    style={{ outline: "none" }}
+                  >
+                    <RxCross2 fontSize={25} />
+                  </button>
+                </div>
+                <div className="mt-2 py-3">
+                  <input
+                    className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+                    type="text"
+                    placeholder="Product Name"
+                    value={productName}
+                    onChange={(e) => setProductName(e.target.value)}
+                  />
+                  <input
+                    className="text-gray-700 focus:shadow-outline mt-4 w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+                    type="number"
+                    placeholder="Product Price"
+                    value={productPrice}
+                    onChange={(e) => setProductPrice(e.target.value)}
+                  />
+                  <input
+                    className="text-gray-700 focus:shadow-outline mt-4 w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+                    type="number"
+                    placeholder="Discount Price"
+                    value={discountPrice}
+                    onChange={(e) => setDiscountPrice(e.target.value)}
+                  />
+                  <input
+                    className="text-gray-700 focus:shadow-outline mt-4 w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+                    type="number"
+                    placeholder="Quantity"
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                  />
+                  <select
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    className="text-gray-700 focus:shadow-outline mt-4 w-full appearance-none rounded border bg-white px-3 py-2 leading-tight shadow focus:outline-none"
+                  >
+                    <option value="">Select Category</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="furniture">Furniture</option>
+                    <option value="clothing">Clothing</option>
+                    <option value="books">Books</option>
+                    <option value="accessories">Accessories</option>
+                  </select>
+                  <textarea
+                    placeholder="Product Description"
+                    value={productDescription}
+                    onChange={(e) => setProductDescription(e.target.value)}
+                    className="text-gray-700 focus:shadow-outline mt-4 w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+                    rows={3}
+                  />
+                  <div className="mt-4">
+                    <label className="block">Product Image</label>
+                    <input
+                      type="file"
+                      onChange={handleImageChange}
+                      className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+                    />
+                  </div>
+                </div>
+                <div className="items-center px-4 py-3">
+                  <button
+                    className="w-full rounded-md bg-green-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-300"
+                    onClick={handleAddNewProduct}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "Loading... " : "Add Product"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        {/* <div className="mt-6">
           <ChartTwo />
-        </div>
+        </div> */}
       </div>
     </section>
   );

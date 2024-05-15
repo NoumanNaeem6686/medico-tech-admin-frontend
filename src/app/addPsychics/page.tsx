@@ -5,18 +5,21 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
-import {addPsychics} from "../../store/slices/psychicsSlice"
+import { addPsychics } from "../../store/slices/psychicsSlice";
 import { toast } from "react-toastify";
+import MultiSelectForTopics from "@/components/MultiSelectForTopics";
+import MultiSelectForTools from "@/components/MultiSelectForTools";
+import MultiSelectForAbilities from "@/components/MultiSelectForAbilities";
 
 const Page = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [submitLoading, setSumbitLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
-  const [errors, setErrors] = useState('');
   const [imageId, setImageId] = useState("");
+  const [errors, setErrors] = useState("");
   const [doctorInfo, setDoctorInfo] = useState({
     name: "",
     email: "",
@@ -24,9 +27,13 @@ const Page = () => {
     password: "",
     zodiac: "",
     price: "",
+    shortDescription:"",
     languages: [],
     joiningDate: "",
     description: "",
+    topic: [],
+    tools: [],
+    abilities: [],
   });
   const initialValues = {
     name: "",
@@ -34,38 +41,47 @@ const Page = () => {
     password: "",
     phone: "",
     price: "",
+    shortDescription:"",
     zodiac: "",
     joiningDate: "",
     description: "",
-    languages: []
+    languages: [],
+    topic: [],
+    tools: [],
+    abilities: [],
   };
 
-  const todayDate = new Date().toISOString().split('T')[0];
-  
+  const todayDate = new Date().toISOString().split("T")[0];
+
   const initialDoctorInfo = {
     ...initialValues,
-    languages: []  // Ensure any additional initial values specific to `doctorInfo` are set if there are any.
+    languages: [],
+    topic: [],
+    tools: [],
+    abilities: [],
   };
 
-  const validatePassword = (password:any) => {
+  const validatePassword = (password: any) => {
     const errors = {};
-    if (password.length < 8) { //@ts-ignore
-        errors.password = "Password must be at least 8 characters long.";
+    if (password.length < 8) {
+      //@ts-ignore
+      errors.password = "Password must be at least 8 characters long.";
     }
-    if (!password.match(/[A-Z]/)) { //@ts-ignore
-        errors.password = "Password must contain at least one uppercase letter.";
+    if (!password.match(/[A-Z]/)) {
+      //@ts-ignore
+      errors.password = "Password must contain at least one uppercase letter.";
     }
-    if (!password.match(/[0-9]/)) { //@ts-ignore
-        errors.password = "Password must contain at least one number.";
+    if (!password.match(/[0-9]/)) {
+      //@ts-ignore
+      errors.password = "Password must contain at least one number.";
     }
-    if (!password.match(/[^a-zA-Z0-9]/)) { //@ts-ignore
-        errors.password = "Password must contain at least one special character.";
+    if (!password.match(/[^a-zA-Z0-9]/)) {
+      //@ts-ignore
+      errors.password = "Password must contain at least one special character.";
     }
     return errors;
-};
+  };
 
-  
-  
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
     setDoctorInfo((prevState) => ({
@@ -117,7 +133,7 @@ const Page = () => {
       console.log("Dropped File:", files[0]);
       uplaodFileToCloudinary(files[0]);
     } else {
-      setErrors( 'Please upload an image');
+      setErrors("Please upload an image");
     }
   };
 
@@ -128,8 +144,8 @@ const Page = () => {
       updatePreview(files[0]);
       console.log("Selected File:", files[0]);
       uplaodFileToCloudinary(files[0]);
-    }else {
-      setErrors( 'Please upload an image');
+    } else {
+      setErrors("Please upload an image");
     }
   };
 
@@ -160,8 +176,8 @@ const Page = () => {
         // setDoctorInfo(prevState => ({ ...prevState, profilePicId: '' }));
       } catch (error) {
         console.error("Error deleting image:", error);
-      }finally {
-        setIsLoading(false);  // Stop loading regardless of outcome
+      } finally {
+        setIsLoading(false); // Stop loading regardless of outcome
       }
     } else {
       console.log("No image ID found");
@@ -174,19 +190,37 @@ const Page = () => {
       languages: selectedLanguages,
     }));
   };
+  const handleTopicChange = (selectedTopic: any) => {
+    setDoctorInfo((prevState) => ({
+      ...prevState,
+      topic: selectedTopic,
+    }));
+  };
+  const handleToolChange = (selectedTool: any) => {
+    setDoctorInfo((prevState) => ({
+      ...prevState,
+      tools: selectedTool,
+    }));
+  };
+  const handleAbilitiesChange = (selectedabilities: any) => {
+    setDoctorInfo((prevState) => ({
+      ...prevState,
+      abilities: selectedabilities,
+    }));
+  };
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-   if(!imageUrl){
-    toast.error('please upload image');
-    return
-   }
+    if (!imageUrl) {
+      toast.error("please upload image");
+      return;
+    }
 
-   const passwordErrors = validatePassword(doctorInfo.password);
+    const passwordErrors = validatePassword(doctorInfo.password);
     if (Object.keys(passwordErrors).length > 0) {
       //@ts-ignore
-        setErrors(passwordErrors.password);  //@ts-ignore
-        toast.error(passwordErrors.password);
-        return;
+      setErrors(passwordErrors.password); //@ts-ignore
+      toast.error(passwordErrors.password);
+      return;
     }
     const data = {
       name: doctorInfo.name,
@@ -203,33 +237,36 @@ const Page = () => {
       userType: "admin",
       profileUrl: imageUrl,
       profilePicId: imageId,
+      topic: doctorInfo.topic,
+      tools: doctorInfo.tools,
+      abilities: doctorInfo.abilities,
+      shortDescription : doctorInfo.shortDescription
     };
-    setSumbitLoading(true)
+    console.log(data);
+    setSumbitLoading(true);
     try {
       //@ts-ignore
       const response = await dispatch(addPsychics(data));
       console.log("🚀 ~ handleSubmit ~ response:", response);
-
       //@ts-ignore
       if (response?.payload && response?.payload.success) {
-          setDoctorInfo(initialDoctorInfo);
-          setFile(null);
-          setPreviewUrl(null);
-          setImageUrl("");
-          setImageId("");
-          toast.success('Record created successfully');
-          //@ts-ignore
-      } else  {
-         //@ts-ignore
-          toast.error(response?.payload);
+        setDoctorInfo(initialDoctorInfo);
+        setFile(null);
+        setPreviewUrl(null);
+        setImageUrl("");
+        setImageId("");
+        toast.success("Record created successfully");
+        //@ts-ignore
+      } else {
+        //@ts-ignore
+        toast.error(response?.payload);
       }
-  } catch (error) {
+    } catch (error) {
       console.error("Error submitting form:", error);
-      toast.error('Failed to create record.');
-  } finally {
-    setSumbitLoading(false)
-  }
-
+      toast.error("Failed to create record.");
+    } finally {
+      setSumbitLoading(false);
+    }
   };
 
   return (
@@ -308,6 +345,19 @@ const Page = () => {
         </div>
         <div className="mb-4">
           <label className="text-gray-700 mb-2 block text-sm font-bold">
+            Short Description
+          </label>
+          <input
+            type="text"
+            name="shortDescription"
+            value={doctorInfo.shortDescription}
+            onChange={handleInputChange}
+            className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label className="text-gray-700 mb-2 block text-sm font-bold">
             Psysics Email
           </label>
           <input
@@ -360,6 +410,30 @@ const Page = () => {
         </div>
         <div className="mb-4">
           <label className="text-gray-700 mb-2 block text-sm font-bold">
+            Topics
+          </label>
+          <MultiSelectForTopics onChange={handleTopicChange} />
+        </div>
+        <div className="mb-4">
+          <label className="text-gray-700 mb-2 block text-sm font-bold">
+            Tools
+          </label>
+          <MultiSelectForTools onChange={handleToolChange} />
+        </div>
+        <div className="mb-4">
+          <label className="text-gray-700 mb-2 block text-sm font-bold">
+            Abilities
+          </label>
+          <MultiSelectForAbilities onChange={handleAbilitiesChange} />
+        </div>
+        <div className="mb-4">
+          <label className="text-gray-700 mb-2 block text-sm font-bold">
+            Select Language
+          </label>
+          <MultiSelect onChange={handleLanguagesChange} />
+        </div>
+        <div className="mb-4">
+          <label className="text-gray-700 mb-2 block text-sm font-bold">
             Zodiac Sign
           </label>
           <select
@@ -390,12 +464,7 @@ const Page = () => {
             ))}
           </select>
         </div>
-        <div className="mb-4">
-          <label className="text-gray-700 mb-2 block text-sm font-bold">
-            Select Language
-          </label>
-          <MultiSelect onChange={handleLanguagesChange} />
-        </div>
+
         <div className="mb-4">
           <label className="text-gray-700 mb-2 block text-sm font-bold">
             Date of joining
@@ -426,10 +495,10 @@ const Page = () => {
 
         <button
           type="submit"
-          disabled ={submitLoading}
+          disabled={submitLoading}
           className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
         >
-          {submitLoading ? "Loading..." : 'Register Psychic'}
+          {submitLoading ? "Loading..." : "Register Psychic"}
         </button>
       </form>
     </DefaultLayout>

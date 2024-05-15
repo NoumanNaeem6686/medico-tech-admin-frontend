@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const URL = 'http://localhost:8000';
+const URL = process.env.NEXT_PUBLIC_BACKEND_URL
 
 export const signUpAdmin = createAsyncThunk(
     "admin/signUpAdmin",
