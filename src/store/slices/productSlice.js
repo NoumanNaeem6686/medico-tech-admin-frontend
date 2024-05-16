@@ -10,16 +10,16 @@ export const addProduct = createAsyncThunk(
       const response = await axios.post(`${URL}/api/admin/addProduct`, product);
       if (!response.data.success) {
         return thunkAPI.rejectWithValue(
-          response.data.message || "Failed to add Product",
+          response.data.message || "Failed to add Product"
         );
       }
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Error during adding product",
+        error.response?.data?.message || "Error during adding product"
       );
     }
-  },
+  }
 );
 
 export const gettingAllProducts = createAsyncThunk(
@@ -33,10 +33,10 @@ export const gettingAllProducts = createAsyncThunk(
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data || "Failed to fetch products",
+        error.response?.data || "Failed to fetch products"
       );
     }
-  },
+  }
 );
 
 export const deleteProduct = createAsyncThunk(
@@ -44,43 +44,42 @@ export const deleteProduct = createAsyncThunk(
   async (productId, thunkAPI) => {
     try {
       const response = await axios.delete(
-        `${URL}/api/admin/deleteProduct/${productId}`,
+        `${URL}/api/admin/deleteProduct/${productId}`
       );
       if (!response.data.success) {
         return thunkAPI.rejectWithValue(
-          response.data.message || "Failed to delete product",
+          response.data.message || "Failed to delete product"
         );
       }
       return productId;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Error during deleting product",
+        error.response?.data?.message || "Error during deleting product"
       );
     }
-  },
+  }
 );
+
 export const updateProduct = createAsyncThunk(
   "products/updateProduct",
   async ({ id, productDetails }, thunkAPI) => {
-    console.log("🚀 ~ productDetails:", productDetails);
-
     try {
       const response = await axios.put(
         `${URL}/api/admin/updateProduct/${id}`,
-        productDetails,
+        productDetails
       );
       if (!response.data.success) {
         return thunkAPI.rejectWithValue(
-          response.data.message || "Failed to delete product",
+          response.data.message || "Failed to update product"
         );
       }
-      return { productId, productDetails: response.data.product };
+      return { id, productDetails: response.data.product };
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Error during deleting product",
+        error.response?.data?.message || "Error during updating product"
       );
     }
-  },
+  }
 );
 
 const initialState = {
@@ -113,8 +112,7 @@ const productSlice = createSlice({
       .addCase(addProduct.fulfilled, (state, action) => {
         state.loading = false;
         state.isSuccess = true;
-        // Assuming action.payload contains the full product object directly
-        state.products = [...state.products, action.payload.product];
+        state.products.push(action.payload.product);
       })
       .addCase(addProduct.rejected, (state, action) => {
         state.loading = false;
@@ -129,7 +127,7 @@ const productSlice = createSlice({
       .addCase(gettingAllProducts.fulfilled, (state, action) => {
         state.loading = false;
         state.isSuccess = true;
-        state.products = action.payload.data; // Assuming the payload structure includes a `data` field
+        state.products = action.payload.data;
       })
       .addCase(gettingAllProducts.rejected, (state, action) => {
         state.loading = false;
@@ -140,11 +138,10 @@ const productSlice = createSlice({
         state.loading = true;
       })
       .addCase(deleteProduct.fulfilled, (state, action) => {
-        console.log(action.payload);
         state.loading = false;
         state.isSuccess = true;
         state.products = state.products.filter(
-          (product) => product.id !== action.payload,
+          (product) => product.id !== action.payload
         );
       })
       .addCase(deleteProduct.rejected, (state, action) => {
@@ -158,13 +155,14 @@ const productSlice = createSlice({
       .addCase(updateProduct.fulfilled, (state, action) => {
         state.loading = false;
         state.isSuccess = true;
-        // Update the list of products with the updated product details
         state.products = state.products.map((product) =>
-          product.id === action.payload.productId
+          product.id === action.payload.id
             ? action.payload.productDetails
-            : product,
+            : product
         );
+        console.log("Updated products state:", state.products);
       })
+      
       .addCase(updateProduct.rejected, (state, action) => {
         state.loading = false;
         state.isError = true;
