@@ -10,17 +10,18 @@ export const createBlog = createAsyncThunk(
       const response = await axios.post(`${URL}/api/admin/create-blog`, blog);
       if (!response.data.success) {
         return thunkAPI.rejectWithValue(
-          response.data.message || "Failed to create Blog",
+          response.data.message || "Failed to create Blog"
         );
       }
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Error during creating Blog",
+        error.response?.data?.message || "Error during creating Blog"
       );
     }
-  },
+  }
 );
+
 export const getAllBlogs = createAsyncThunk(
   "Blog/getAllblogs",
   async (blog, thunkAPI) => {
@@ -28,16 +29,16 @@ export const getAllBlogs = createAsyncThunk(
       const response = await axios.get(`${URL}/api/admin/all-blogs`);
       if (!response.data.success) {
         return thunkAPI.rejectWithValue(
-          response.data.message || "Failed to getting all Blog",
+          response.data.message || "Failed to getting all Blog"
         );
       }
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Error during getting Blog",
+        error.response?.data?.message || "Error during getting Blog"
       );
     }
-  },
+  }
 );
 
 export const deleteBlog = createAsyncThunk(
@@ -51,6 +52,7 @@ export const deleteBlog = createAsyncThunk(
     }
   }
 );
+
 export const updateBlog = createAsyncThunk(
   "blogs/updateBlog",
   async (blog, thunkAPI) => {
@@ -71,7 +73,7 @@ export const updateBlog = createAsyncThunk(
 );
 
 const initialState = {
-  blogs: null,
+  blogs: [],  // Ensure initial state is an array
   error: null,
   loading: false,
   isError: false,
@@ -87,7 +89,7 @@ const blogSlice = createSlice({
       state.isError = false;
       state.isSuccess = false;
       state.error = null;
-      state.blogs = null;
+      state.blogs = [];
     },
   },
   extraReducers: (builder) => {
@@ -100,7 +102,7 @@ const blogSlice = createSlice({
       .addCase(createBlog.fulfilled, (state, action) => {
         state.loading = false;
         state.isSuccess = true;
-        state.blogs = action.payload.newBlog;
+        state.blogs.push(action.payload.newBlog);
       })
       .addCase(createBlog.rejected, (state, action) => {
         state.loading = false;
@@ -115,7 +117,7 @@ const blogSlice = createSlice({
       .addCase(getAllBlogs.fulfilled, (state, action) => {
         state.loading = false;
         state.isSuccess = true;
-        state.blogs = action.payload.data;
+        state.blogs = Array.isArray(action.payload.data) ? action.payload.data : [];
       })
       .addCase(getAllBlogs.rejected, (state, action) => {
         state.loading = false;
@@ -136,9 +138,9 @@ const blogSlice = createSlice({
       .addCase(updateBlog.fulfilled, (state, action) => {
         state.loading = false;
         state.isSuccess = true;
-        const updatedBlogIndex = state.blogs.findIndex(blog => blog.id === action.payload.id);
+        const updatedBlogIndex = state.blogs.findIndex(blog => blog.id === action.payload.updatedBlog.id);
         if (updatedBlogIndex !== -1) {
-          state.blogs[updatedBlogIndex] = action.payload;
+          state.blogs[updatedBlogIndex] = action.payload.updatedBlog;
         }
       })
       .addCase(updateBlog.rejected, (state, action) => {

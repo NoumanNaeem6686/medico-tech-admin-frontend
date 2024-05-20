@@ -1,11 +1,17 @@
 "use client";
-import { deleteBlog, getAllBlogs } from "@/store/slices/blogSlice";
+import {
+  deleteBlog,
+  getAllBlogs,
+  createBlog,
+  updateBlog,
+} from "@/store/slices/blogSlice";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MediaCard from "../Card/Card";
 import axios from "axios";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Box, Modal } from "@mui/material";
+import { toast } from "react-toastify";
 import CreateBlog from "./CreateBlog";
 
 const style = {
@@ -15,43 +21,68 @@ const style = {
   transform: "translate(-50%, -50%)",
   width: 650,
   bgcolor: "background.paper",
-  border: "2px solid #000",
+  // border: "2px solid #000",
   boxShadow: 24,
   p: 4,
 };
 
 const AllBlogs = () => {
-  const dispatch = useDispatch(); //@ts-ignore
-  const blogs = useSelector((state) => state.blog.blogs);
+  const dispatch = useDispatch();
+  const blogs = useSelector((state: any) =>
+    Array.isArray(state.blog.blogs) ? state.blog.blogs : [],
+  ); // Ensure blogs is always an array
   const [selectedBlog, setSelectedBlog] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
-  const openModal = (blog: any) => {
+  const openModal = (blog: any = null) => {
     setSelectedBlog(blog);
     setIsModalOpen(true);
+    setIsUpdating(!!blog);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedBlog(null);
+    setIsUpdating(false);
   };
+
+  const handleCreate = async (newBlog: any) => {
+    //@ts-ignore
+    const result = await dispatch(createBlog(newBlog));
+    //@ts-ignore
+    if (result?.payload?.newBlog) {
+      toast.success("Blog created successfully");
+    }
+    closeModal();
+  };
+
   const handleUpdate = async (updatedBlog: any) => {
     //@ts-ignore
-    const result = await dispatch(updateBlog(updatedBlog));
-    console.log("🚀 ~ handleUpdate ~ result:", result)
+    const result = await dispatch(
+      //@ts-ignore
+      updateBlog({ ...selectedBlog, ...updatedBlog }),
+    );
+    //@ts-ignore
+    if (result?.payload?.updatedBlog) {
+      toast.success("Blog updated successfully");
+    }
+    closeModal();
   };
 
   const handleDelete = async (blog: any) => {
-    const { id, blogImageId } = blog; //@ts-ignore
+    const { id, blogImageId } = blog;
     if (blogImageId) {
       setLoading(true);
       try {
         // Delete the image from Cloudinary
-        await axios.post("http://localhost:8000/api/image/deleteImage", {
-          id: blogImageId,
-        });
-
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/image/deleteImage`,
+          {
+            id: blogImageId,
+          },
+        );
         //@ts-ignore
         await dispatch(deleteBlog(id));
       } catch (error) {
@@ -64,12 +95,15 @@ const AllBlogs = () => {
 
   useEffect(() => {
     const gettingBlogs = async () => {
+      setLoading(true);
       //@ts-ignore
       const result = await dispatch(getAllBlogs());
       console.log("🚀 ~ gettingBlogs ~ result:", result);
+      setLoading(false);
     };
     gettingBlogs();
-  }, []);
+  }, [dispatch]);
+
   return (
     <div className="container mx-auto p-4">
       {loading && (
@@ -77,29 +111,37 @@ const AllBlogs = () => {
           <CircularProgress />
         </div>
       )}
+      <button
+        onClick={() => openModal()}
+        className="my-4 rounded-md bg-[#12a19b] p-2 text-white hover:opacity-75"
+      >
+        Create New Blog
+      </button>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {blogs?.map((blog: any) => (
           <MediaCard
             key={blog.id}
             blog={blog}
             handleDelete={() => handleDelete(blog)}
-            handleUpdate={() => openModal(blog)} // add this line
+            handleUpdate={() => openModal(blog)}
             loading={loading}
           />
         ))}
       </div>
-      {selectedBlog && (
-        <Modal
-          open={isModalOpen}
-          onClose={closeModal}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <CreateBlog  />
-          </Box>
-        </Modal>
-      )}
+
+      <Modal
+        open={isModalOpen}
+        onClose={closeModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <CreateBlog
+            initialValues={selectedBlog}
+            onSubmit={isUpdating ? handleUpdate : handleCreate}
+          />
+        </Box>
+      </Modal>
     </div>
   );
 };
