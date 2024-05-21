@@ -1,16 +1,15 @@
 "use client";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import {
   createPackage,
   deletePackage,
   getAllPackages,
   updatePackage,
 } from "@/store/slices/packagSlice";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
 
 const Packages = () => {
-  const [packages, setPackages] = useState([]);
   const [packageName, setPackageName] = useState("");
   const [price, setPrice] = useState("");
   const [benefits, setBenefits] = useState([""]);
@@ -18,13 +17,10 @@ const Packages = () => {
   const [editingPackageId, setEditingPackageId] = useState(null);
 
   const dispatch = useDispatch(); //@ts-ignore
-  const packgs = useSelector((state) => state.packages.packages); //@ts-ignore
+  const packages = useSelector((state) => state.packages.packages); //@ts-ignore
   const loading = useSelector((state) => state.packages.loading); //@ts-ignore
   const error = useSelector((state) => state.packages.error);
-  console.log("🚀 ~ Packages ~ packgs:", packgs);
-  const uniquePackgs = Array.from(
-    new Set(packgs.map((pkg: any) => JSON.stringify(pkg))), //@ts-ignore
-  ).map((pkg) => JSON.parse(pkg));
+  console.log("🚀 ~ Packages ~ packages:", packages);
 
   useEffect(() => {
     const getPkg = async () => {
@@ -37,6 +33,19 @@ const Packages = () => {
 
   const handleAddOrUpdatePackage = async (e: any) => {
     e.preventDefault();
+
+    const categoryCount = packages.filter((pkg: any) => pkg.category === category).length;
+    const totalPackages = packages.length;
+
+    if (editingPackageId === null && categoryCount >= 1) {
+      toast.error(`You can only add one package in the ${category} category.`);
+      return;
+    }
+
+    if (editingPackageId === null && totalPackages >= 3) {
+      toast.error("You can only add a total of three packages.");
+      return;
+    }
 
     if (
       packageName &&
@@ -55,14 +64,10 @@ const Packages = () => {
         // Update package logic
         try {
           //@ts-ignore
-          const result = await dispatch( updatePackage({ id: editingPackageId, ...newPackage }) ).unwrap();
+          const result = await dispatch(//@ts-ignore
+            updatePackage({ id: editingPackageId, ...newPackage }),
+          ).unwrap();
           toast.success("Package updated successfully");
-          //@ts-ignore
-          setPackages( packages.map((pkg) =>  pkg.id === editingPackageId
-                ? { id: editingPackageId, ...newPackage }
-                : pkg,
-            ),
-          );
           setEditingPackageId(null);
         } catch (error) {
           toast.error("Failed to update package");
@@ -74,8 +79,6 @@ const Packages = () => {
           //@ts-ignore
           const result = await dispatch(createPackage(newPackage)).unwrap();
           toast.success("Package created successfully");
-          //@ts-ignore
-          setPackages([...packages, result]);
         } catch (error) {
           toast.error("Failed to create package");
           console.error("Error creating package:", error);
@@ -93,8 +96,7 @@ const Packages = () => {
     try {
       //@ts-ignore
       await dispatch(deletePackage(id));
-      toast.success("Package deleted successfully"); //@ts-ignore
-      setPackages(packages.filter((pkg) => pkg.id !== id));
+      toast.success("Package deleted successfully");
     } catch (error) {
       toast.error("Failed to delete package");
       console.error("Error deleting package:", error);
@@ -229,7 +231,7 @@ const Packages = () => {
         <p>Loading...</p>
       ) : error ? (
         <p>Error loading packages: {error}</p>
-      ) : uniquePackgs.length > 0 ? (
+      ) : packages.length > 0 ? (
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white">
             <thead>
@@ -242,36 +244,34 @@ const Packages = () => {
               </tr>
             </thead>
             <tbody>
-              {uniquePackgs.map((pkg) =>
-                pkg.data.map((data: any) => (
-                  <tr key={data.id}>
-                    <td className="border-b px-4 py-2">{data.name}</td>
-                    <td className="border-b px-4 py-2">{data.price}</td>
-                    <td className="border-b px-4 py-2">{data.category}</td>
-                    <td className="border-b px-4 py-2">
-                      <ul className="list-inside list-disc">
-                        {data.benefits?.map((benefit: any, idx: any) => (
-                          <li key={idx}>{benefit}</li>
-                        ))}
-                      </ul>
-                    </td>
-                    <td className="border-b px-4 py-2">
-                      <button
-                        onClick={() => handleEdit(data)}
-                        className="focus:shadow-outline rounded bg-yellow-500 px-4 py-2 font-bold text-white hover:bg-yellow-700 focus:outline-none"
-                      >
-                        Update
-                      </button>
-                      <button
-                        onClick={() => handleDelete(data.id)}
-                        className="focus:shadow-outline bg-red-500 ml-2 rounded px-4 py-2 font-bold text-white hover:opacity-75 focus:outline-none"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                )),
-              )}
+              {packages.map((pkg: any) => (
+                <tr key={pkg.id}>
+                  <td className="border-b px-4 py-2">{pkg.name}</td>
+                  <td className="border-b px-4 py-2">{pkg.price}</td>
+                  <td className="border-b px-4 py-2">{pkg.category}</td>
+                  <td className="border-b px-4 py-2">
+                    <ul className="list-inside list-disc">
+                      {pkg.benefits?.map((benefit: any, idx: any) => (
+                        <li key={idx}>{benefit}</li>
+                      ))}
+                    </ul>
+                  </td>
+                  <td className="border-b px-4 py-2">
+                    <button
+                      onClick={() => handleEdit(pkg)}
+                      className="focus:shadow-outline rounded bg-yellow-500 px-4 py-2 font-bold text-white hover:bg-yellow-700 focus:outline-none"
+                    >
+                      Update
+                    </button>
+                    <button
+                      onClick={() => handleDelete(pkg.id)}
+                      className="focus:shadow-outline ml-2 rounded bg-red px-4 py-2 font-bold text-white hover:opacity-75 focus:outline-none"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

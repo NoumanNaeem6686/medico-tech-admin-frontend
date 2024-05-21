@@ -1,7 +1,7 @@
-// store/slices/packageSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 const URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
 export const createPackage = createAsyncThunk(
   "packages/createPackage",
   async (newPackage, thunkAPI) => {
@@ -16,9 +16,10 @@ export const createPackage = createAsyncThunk(
     }
   },
 );
+
 export const getAllPackages = createAsyncThunk(
   "packages/gettingAllPackages",
-  async (newPackage, thunkAPI) => {
+  async (thunkAPI) => {
     try {
       const response = await axios.get(`${URL}/api/admin/getting-packages`);
       return response.data;
@@ -27,6 +28,7 @@ export const getAllPackages = createAsyncThunk(
     }
   },
 );
+
 export const deletePackage = createAsyncThunk(
   "packages/deletePackage",
   async (id, thunkAPI) => {
@@ -34,7 +36,7 @@ export const deletePackage = createAsyncThunk(
       const response = await axios.delete(
         `${URL}/api/admin/delete-package/${id}`,
       );
-      return response.data;
+      return { id };
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -42,15 +44,18 @@ export const deletePackage = createAsyncThunk(
 );
 
 export const updatePackage = createAsyncThunk(
-  'packages/updatePackage',
+  "packages/updatePackage",
   async (updatedPackage, thunkAPI) => {
     try {
-      const response = await axios.put(`${URL}/api/admin/update-package/${updatedPackage.id}`, updatedPackage);
+      const response = await axios.put(
+        `${URL}/api/admin/update-package/${updatedPackage.id}`,
+        updatedPackage,
+      );
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
-  }
+  },
 );
 
 const packageSlice = createSlice({
@@ -69,7 +74,7 @@ const packageSlice = createSlice({
       })
       .addCase(createPackage.fulfilled, (state, action) => {
         state.loading = false;
-        state.packages.push(action.payload);
+        state.packages.push(action.payload.newPackage);
       })
       .addCase(createPackage.rejected, (state, action) => {
         state.loading = false;
@@ -81,7 +86,7 @@ const packageSlice = createSlice({
       })
       .addCase(getAllPackages.fulfilled, (state, action) => {
         state.loading = false;
-        state.packages.push(action.payload);
+        state.packages = action.payload.data;
       })
       .addCase(getAllPackages.rejected, (state, action) => {
         state.loading = false;
@@ -93,12 +98,9 @@ const packageSlice = createSlice({
       })
       .addCase(deletePackage.fulfilled, (state, action) => {
         state.loading = false;
-        state.packages = state.packages
-          .map((pkg) => ({
-            ...pkg,
-            data: pkg.data.filter((data) => data.id !== action.payload.id),
-          }))
-          .filter((pkg) => pkg.data.length > 0);
+        state.packages = state.packages.filter(
+          (pkg) => pkg.id !== action.payload.id,
+        );
       })
       .addCase(deletePackage.rejected, (state, action) => {
         state.loading = false;
@@ -109,17 +111,18 @@ const packageSlice = createSlice({
         state.error = null;
       })
       .addCase(updatePackage.fulfilled, (state, action) => {
+        console.log("action.payload", action.payload);
         state.loading = false;
-        state.packages = state.packages.map(pkg => ({
-          ...pkg,
-          data: pkg.data.map(data => data.id === action.payload.id ? action.payload : data)
-        }));
+        state.packages = state.packages.map((pkg) =>
+          pkg.id === action.payload.updatedPackage.id
+            ? action.payload.updatedPackage
+            : pkg,
+        );
       })
       .addCase(updatePackage.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
-  
   },
 });
 
