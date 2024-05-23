@@ -8,7 +8,11 @@ export const signUpAdmin = createAsyncThunk(
     async (user, thunkAPI) => {
         try {
             const response = await axios.post(`${URL}/api/admin/signUpAdmin`, user);
-            const data = response.data;
+            const data =  response.data;
+            
+          
+               
+            
             if (!data.success) {
                 return thunkAPI.rejectWithValue(data.message || 'Failed to register');
             }
@@ -27,6 +31,7 @@ export const signInAdmin = createAsyncThunk(
             if (!data.success) {
                 return thunkAPI.rejectWithValue(data.message || 'Failed to Login');
             }
+
             return data;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data.message || 'Error during Login');
@@ -51,14 +56,20 @@ const userSlice = createSlice({
             state.isError = false;
             state.isSuccess = false;
             state.error = null;
-            state.admin = null; // Ensure admin data is cleared on reset
+            state.admin = null; 
+            
+
+
+
         },
         logoutAdmin: (state) => {
             state.admin = null;
             state.isSuccess = false;
             state.isError = false;
             state.loading = false;
-            // Optionally clear other state parts related to the admin session
+            document.cookie =  "login=;expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+            localStorage.removeItem("login");
+    
         }
     },
     extraReducers: (builder) => {
@@ -90,6 +101,15 @@ const userSlice = createSlice({
                 state.loading = false;
                 state.isSuccess = true;
                 state.admin = action.payload.admin;
+
+                try{
+                const stringyData = JSON.stringify(action.payload.admin);
+    document.cookie = `login=${stringyData}; path=/;`;
+        localStorage.setItem("login",stringyData)
+                }
+                catch(error){
+                        console.log("Getting error in setting cookies and localstorage", error)
+                }
             })
             .addCase(signInAdmin.rejected, (state, action) => {
                 console.log('Error on login:', action.payload);
