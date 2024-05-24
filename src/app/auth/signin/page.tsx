@@ -43,10 +43,14 @@ const SignIn: React.FC = () => {
 
     try {
       //@ts-ignore
-      await dispatch(signInAdmin(data)).unwrap();
-      setEmail("");
-      setPassword("");
-      router.push("/");
+      const res = await dispatch(signInAdmin(data));
+      console.log("🚀 ~ handleLogin ~ res:", res);
+      if (res.payload.admin) {
+        console.log("working");
+        setEmail("");
+        setPassword("");
+        router.push("/");
+      }
     } catch (error) {
       //@ts-ignore
       toast.error(error.message || "Login failed");

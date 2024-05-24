@@ -46,6 +46,8 @@ export const deleteProduct = createAsyncThunk(
       const response = await axios.delete(
         `${URL}/api/admin/deleteProduct/${productId}`,
       );
+      console.log("🚀 ~ response:", response)
+      
       if (!response.data.success) {
         return thunkAPI.rejectWithValue(
           response.data.message || "Failed to delete product",
@@ -68,12 +70,14 @@ export const updateProduct = createAsyncThunk(
         `${URL}/api/admin/updateProduct/${id}`,
         productDetails,
       );
+      console.log("🚀 ~ response:", response)
+      
       if (!response.data.success) {
         return thunkAPI.rejectWithValue(
           response.data.message || "Failed to update product",
         );
       }
-      return { id, productDetails: response.data.product };
+      return { id, productDetails: response.data.updatedProduct };
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Error during updating product",
@@ -146,6 +150,8 @@ const productSlice = createSlice({
         );
       })
       .addCase(deleteProduct.rejected, (state, action) => {
+        console.log("action payload", action.payload);
+
         state.loading = false;
         state.isError = true;
         state.error = action.payload;
@@ -154,6 +160,7 @@ const productSlice = createSlice({
         state.loading = true;
       })
       .addCase(updateProduct.fulfilled, (state, action) => {
+        console.log('action',action)
         state.loading = false;
         state.isSuccess = true;
         const updatedProductIndex = state.products.findIndex(
@@ -162,6 +169,7 @@ const productSlice = createSlice({
         if (updatedProductIndex >= 0) {
           state.products[updatedProductIndex] = action.payload.productDetails;
         }
+        console.log('state',state)
       })
 
       .addCase(updateProduct.rejected, (state, action) => {
