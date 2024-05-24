@@ -50,6 +50,8 @@ const Page = () => {
     tools: [],
     abilities: [],
   };
+  const URL = process.env.NEXT_PUBLIC_BACKEND_URL
+
 
   const todayDate = new Date().toISOString().split("T")[0];
 
@@ -100,7 +102,7 @@ const Page = () => {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/image/upload",
+        `${URL}/api/image/upload`,
         formData,
         {
           headers: {
@@ -166,7 +168,7 @@ const Page = () => {
       setIsLoading(true);
       try {
         const response = await axios.post(
-          "http://localhost:8000/api/image/deleteImage",
+          `${URL}/api/image/deleteImage`,
           { id: imageId },
         );
         console.log(response.data);
