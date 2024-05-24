@@ -45,6 +45,7 @@ const SignIn: React.FC = () => {
       //@ts-ignore
       const res = await dispatch(signInAdmin(data));
       console.log("🚀 ~ handleLogin ~ res:", res);
+      //@ts-ignore
       if (res.payload.admin) {
         console.log("working");
         setEmail("");
