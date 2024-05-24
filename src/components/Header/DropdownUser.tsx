@@ -31,7 +31,7 @@ const DropdownUser = () => {
     return () => document.removeEventListener("click", clickHandler);
   });
 
-  // close if the esc key is pressed
+
   useEffect(() => {
     const keyHandler = ({ keyCode }: KeyboardEvent) => {
       if (!dropdownOpen || keyCode !== 27) return;
@@ -44,7 +44,7 @@ const DropdownUser = () => {
     // localStorage.removeItem('token'); // If you use localStorage to store token
 
     dispatch(logoutAdmin());
-    router.push("/"); // Adjust this route to where your login page is
+    router.push("/auth/signin");
   };
 
   return (

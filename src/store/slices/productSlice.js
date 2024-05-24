@@ -10,16 +10,16 @@ export const addProduct = createAsyncThunk(
       const response = await axios.post(`${URL}/api/admin/addProduct`, product);
       if (!response.data.success) {
         return thunkAPI.rejectWithValue(
-          response.data.message || "Failed to add Product"
+          response.data.message || "Failed to add Product",
         );
       }
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Error during adding product"
+        error.response?.data?.message || "Error during adding product",
       );
     }
-  }
+  },
 );
 
 export const gettingAllProducts = createAsyncThunk(
@@ -33,10 +33,10 @@ export const gettingAllProducts = createAsyncThunk(
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data || "Failed to fetch products"
+        error.response?.data || "Failed to fetch products",
       );
     }
-  }
+  },
 );
 
 export const deleteProduct = createAsyncThunk(
@@ -44,20 +44,20 @@ export const deleteProduct = createAsyncThunk(
   async (productId, thunkAPI) => {
     try {
       const response = await axios.delete(
-        `${URL}/api/admin/deleteProduct/${productId}`
+        `${URL}/api/admin/deleteProduct/${productId}`,
       );
       if (!response.data.success) {
         return thunkAPI.rejectWithValue(
-          response.data.message || "Failed to delete product"
+          response.data.message || "Failed to delete product",
         );
       }
       return productId;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Error during deleting product"
+        error.response?.data?.message || "Error during deleting product",
       );
     }
-  }
+  },
 );
 
 export const updateProduct = createAsyncThunk(
@@ -66,20 +66,20 @@ export const updateProduct = createAsyncThunk(
     try {
       const response = await axios.put(
         `${URL}/api/admin/updateProduct/${id}`,
-        productDetails
+        productDetails,
       );
       if (!response.data.success) {
         return thunkAPI.rejectWithValue(
-          response.data.message || "Failed to update product"
+          response.data.message || "Failed to update product",
         );
       }
       return { id, productDetails: response.data.product };
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Error during updating product"
+        error.response?.data?.message || "Error during updating product",
       );
     }
-  }
+  },
 );
 
 const initialState = {
@@ -140,8 +140,9 @@ const productSlice = createSlice({
       .addCase(deleteProduct.fulfilled, (state, action) => {
         state.loading = false;
         state.isSuccess = true;
+        console.log("action payload", action.payload);
         state.products = state.products.filter(
-          (product) => product.id !== action.payload
+          (product) => product.id !== action.payload,
         );
       })
       .addCase(deleteProduct.rejected, (state, action) => {
@@ -155,14 +156,14 @@ const productSlice = createSlice({
       .addCase(updateProduct.fulfilled, (state, action) => {
         state.loading = false;
         state.isSuccess = true;
-        state.products = state.products.map((product) =>
-          product.id === action.payload.id
-            ? action.payload.productDetails
-            : product
+        const updatedProductIndex = state.products.findIndex(
+          (product) => product.id === action.payload.id,
         );
-        console.log("Updated products state:", state.products);
+        if (updatedProductIndex >= 0) {
+          state.products[updatedProductIndex] = action.payload.productDetails;
+        }
       })
-      
+
       .addCase(updateProduct.rejected, (state, action) => {
         state.loading = false;
         state.isError = true;
