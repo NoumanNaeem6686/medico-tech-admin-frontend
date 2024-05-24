@@ -44,6 +44,7 @@ const SignIn: React.FC = () => {
         setEmail('');
         setPassword('');
         // Redirect to home page or dashboard
+        window.location.reload()
         router.push('/'); // Change '/dashboard' to your desired route
       })
       .catch((error:any) => {
@@ -56,7 +57,7 @@ const SignIn: React.FC = () => {
     <>
       
 
-      <div className="rounded-sm border border-stroke mt-40 bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+      <div className="rounded-sm border border-stroke  bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="flex flex-wrap items-center">
           <div className="hidden w-full xl:block xl:w-1/2">
             <div className="px-26 py-17.5 text-center">
@@ -287,6 +288,7 @@ const SignIn: React.FC = () => {
                   <input
                     type="submit"
                     value="Sign In"
+                    
                     className="w-full cursor-pointer rounded-lg border border-[#12a19b] bg-[#12a19b] p-4 text-white transition hover:bg-opacity-90"
                   />
                 </div>

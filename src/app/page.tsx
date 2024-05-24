@@ -13,11 +13,14 @@ import SignIn from "./auth/signin/page";
 
 export default function Home() {
   //@ts-ignore
-  const state = useSelector(state => state.admin)
+  // const state = useSelector(state => state.admin)
+  const isLoggedIn = localStorage.getItem("login")
+  console.log(isLoggedIn)
+  //get cokies
   return (
     <>
     {
-      state.admin? ( <DefaultLayout>
+      isLoggedIn? ( <DefaultLayout>
         <ECommerce />
       </DefaultLayout>) : (
         <SignIn/>

@@ -44,7 +44,7 @@ const DropdownUser = () => {
     // localStorage.removeItem('token'); // If you use localStorage to store token
 
     dispatch(logoutAdmin());
-    router.push("/auth/signin"); // Adjust this route to where your login page is
+    router.push("/"); // Adjust this route to where your login page is
   };
 
   return (
