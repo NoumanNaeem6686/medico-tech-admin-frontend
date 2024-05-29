@@ -6,6 +6,8 @@ const URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 export const addProduct = createAsyncThunk(
   "products/addProduct",
   async (product, thunkAPI) => {
+    console.log("🚀 ~ product:", product)
+    
     try {
       const response = await axios.post(`${URL}/api/admin/addProduct`, product);
       if (!response.data.success) {

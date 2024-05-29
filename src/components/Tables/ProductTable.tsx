@@ -26,6 +26,7 @@ const ProductTable = () => {
   const [category, setCategory] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [imageId, setImageId] = useState("");
+  const [productUrl, setProductUrl] = useState(""); // New state for product URL
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
@@ -39,7 +40,8 @@ const ProductTable = () => {
       !productPrice ||
       !category ||
       !productDescription ||
-      !imageUrl
+      !imageUrl ||
+      !productUrl // Ensure product URL is filled
     ) {
       toast.error("Please fill in all fields.");
       return;
@@ -54,6 +56,7 @@ const ProductTable = () => {
       description: productDescription,
       productImageUrl: imageUrl,
       productImageId: imageId,
+      productUrl:productUrl 
     };
     //@ts-ignore
     const result = await dispatch(addProduct(productDetails)); //@ts-ignore
@@ -72,7 +75,8 @@ const ProductTable = () => {
       !productPrice ||
       !category ||
       !productDescription ||
-      !imageUrl
+      !imageUrl ||
+      !productUrl // Ensure product URL is filled
     ) {
       toast.error("Please fill in all fields.");
       return;
@@ -87,6 +91,7 @@ const ProductTable = () => {
       description: productDescription,
       productImageUrl: imageUrl,
       productImageId: imageId,
+      productUrl, // Add product URL to details
     };
 
     const result = await dispatch(
@@ -118,6 +123,7 @@ const ProductTable = () => {
     setCategory("");
     setImageUrl("");
     setImageId("");
+    setProductUrl(""); 
   };
 
   const handleImageChange = (event: any) => {
@@ -136,7 +142,8 @@ const ProductTable = () => {
       setProductDescription(product.description || ""); //@ts-ignore
       setCategory(product.category || ""); //@ts-ignore
       setImageUrl(product.productImageUrl || ""); //@ts-ignore
-      setImageId(product.productImageId || "");
+      setImageId(product.productImageId || ""); //@ts-ignore
+      setProductUrl(product.productUrl || ""); // Set product URL
     } else {
       setModalMode("add");
       resetFormFields();
@@ -173,7 +180,7 @@ const ProductTable = () => {
       const result = await dispatch(deleteProduct(productId));
       if (result.payload) {
         //@ts-ignore
-        toast.success(result.payload);
+        toast.success('Product Deleted Successfully!');
       } else {
         toast.error("Failed to delete product");
       }
@@ -210,6 +217,9 @@ const ProductTable = () => {
                     Product Quantity
                   </th>
                   <th scope="col" className="px-4 py-3">
+                    Product URL
+                  </th>
+                  <th scope="col" className="px-4 py-3">
                     Actions
                   </th>
                   <th scope="col" className="px-4 py-3"></th>
@@ -237,6 +247,16 @@ const ProductTable = () => {
                       </td>
                       <td className="text-gray-500 whitespace-nowrap px-6 py-4 text-sm">
                         {product?.quantity}
+                      </td>
+                      <td className="text-gray-500 whitespace-nowrap px-6 py-4 text-sm">
+                        <a
+                          href={product?.productUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:underline"
+                        >
+                          View Product
+                        </a>
                       </td>
                       <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                         <button
@@ -333,6 +353,13 @@ const ProductTable = () => {
                       className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
                     />
                   </div>
+                  <input
+                    className="text-gray-700 focus:shadow-outline mt-4 w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+                    type="text"
+                    placeholder="Product URL"
+                    value={productUrl}
+                    onChange={(e) => setProductUrl(e.target.value)}
+                  />
                 </div>
                 <div className="items-center px-4 py-3">
                   {modalMode === "add" ? (
