@@ -3,13 +3,16 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import MultiSelect from "@/components/MultiSelect";
 import axios from "axios";
 import React, { useState } from "react";
-import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
 import { addPsychics } from "../../store/slices/psychicsSlice";
 import { toast } from "react-toastify";
 import MultiSelectForTopics from "@/components/MultiSelectForTopics";
 import MultiSelectForTools from "@/components/MultiSelectForTools";
 import MultiSelectForAbilities from "@/components/MultiSelectForAbilities";
+import { auth } from "@/lib/firebase"; // Add your Firebase configuration file here
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase"; // Add your Firestore configuration file here
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -51,7 +54,6 @@ const Page = () => {
     abilities: [],
   };
   const URL = process.env.NEXT_PUBLIC_BACKEND_URL
-
 
   const todayDate = new Date().toISOString().split("T")[0];
 
@@ -96,7 +98,7 @@ const Page = () => {
     e.preventDefault();
   };
 
-  const uplaodFileToCloudinary = async (file: any) => {
+  const uploadFileToCloudinary = async (file: any) => {
     const formData = new FormData();
     formData.append("image", file);
     setIsLoading(true);
@@ -113,12 +115,6 @@ const Page = () => {
       console.log(response.data.data);
       setImageUrl(response.data.data.secure_url);
       setImageId(response.data.data.public_id);
-
-      // Set the image URL in state from the response
-      // setDoctorInfo(prevState => ({
-      //   ...prevState,
-      //   profilePicUrl: response.data.url
-      // }));
       setIsLoading(false);
     } catch (error) {
       console.error("Error uploading image:", error);
@@ -133,7 +129,7 @@ const Page = () => {
       setFile(files[0]);
       updatePreview(files[0]);
       console.log("Dropped File:", files[0]);
-      uplaodFileToCloudinary(files[0]);
+      uploadFileToCloudinary(files[0]);
     } else {
       setErrors("Please upload an image");
     }
@@ -145,7 +141,7 @@ const Page = () => {
       setFile(files[0]);
       updatePreview(files[0]);
       console.log("Selected File:", files[0]);
-      uplaodFileToCloudinary(files[0]);
+      uploadFileToCloudinary(files[0]);
     } else {
       setErrors("Please upload an image");
     }
@@ -161,8 +157,8 @@ const Page = () => {
   };
 
   const clearImage = async (e: any) => {
-    e.preventDefault(); // Prevent default file input click
-    e.stopPropagation(); // Stop the event from propagating to lower elements
+    e.preventDefault();
+    e.stopPropagation();
 
     if (imageId) {
       setIsLoading(true);
@@ -174,12 +170,10 @@ const Page = () => {
         console.log(response.data);
         setFile(null);
         setPreviewUrl(null);
-        // Optionally reset or clear the image ID in your state
-        // setDoctorInfo(prevState => ({ ...prevState, profilePicId: '' }));
       } catch (error) {
         console.error("Error deleting image:", error);
       } finally {
-        setIsLoading(false); // Stop loading regardless of outcome
+        setIsLoading(false);
       }
     } else {
       console.log("No image ID found");
@@ -204,12 +198,13 @@ const Page = () => {
       tools: selectedTool,
     }));
   };
-  const handleAbilitiesChange = (selectedabilities: any) => {
+  const handleAbilitiesChange = (selectedAbilities: any) => {
     setDoctorInfo((prevState) => ({
       ...prevState,
-      abilities: selectedabilities,
+      abilities: selectedAbilities,
     }));
   };
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (!imageUrl) {
@@ -242,11 +237,38 @@ const Page = () => {
       topic: doctorInfo.topic,
       tools: doctorInfo.tools,
       abilities: doctorInfo.abilities,
-      shortDescription : doctorInfo.shortDescription
+      shortDescription: doctorInfo.shortDescription,
     };
     console.log(data);
     setSumbitLoading(true);
     try {
+      // Add user to Firebase Authentication
+      const userCredential = await createUserWithEmailAndPassword(auth, doctorInfo.email, doctorInfo.password);
+      const user = userCredential.user;
+
+      // Add user to Firestore
+      await addDoc(collection(db, "psychics"), {
+        uid: user.uid,
+        name: doctorInfo.name,
+        email: doctorInfo.email,
+        zodiac: doctorInfo.zodiac,
+        price: doctorInfo.price,
+        languages: doctorInfo.languages,
+        joiningDate: doctorInfo.joiningDate,
+        description: doctorInfo.description,
+        phoneNo: doctorInfo.phone,
+        status: false,
+        chat: false,
+        userType: "admin",
+        profileUrl: imageUrl,
+        profilePicId: imageId,
+        topic: doctorInfo.topic,
+        tools: doctorInfo.tools,
+        abilities: doctorInfo.abilities,
+        shortDescription: doctorInfo.shortDescription,
+      });
+
+      // Dispatch action to add psychic to Redux store
       //@ts-ignore
       const response = await dispatch(addPsychics(data));
       console.log("🚀 ~ handleSubmit ~ response:", response);
@@ -258,7 +280,6 @@ const Page = () => {
         setImageUrl("");
         setImageId("");
         toast.success("Record created successfully");
-        //@ts-ignore
       } else {
         //@ts-ignore
         toast.error(response?.payload);

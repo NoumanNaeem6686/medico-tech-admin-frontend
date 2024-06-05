@@ -46,15 +46,19 @@ const SignIn: React.FC = () => {
       const res = await dispatch(signInAdmin(data));
       console.log("🚀 ~ handleLogin ~ res:", res);
       //@ts-ignore
-      if (res.payload.admin) {
+      if (res.payload.success) {
         console.log("working");
+        router.push("/");
         setEmail("");
         setPassword("");
-        router.push("/");
+      } else {
+        //@ts-ignore
+        toast.error(res.payload);
       }
     } catch (error) {
       //@ts-ignore
-      toast.error(error.message || "Login failed");
+      console.log(error.message); //@ts-ignore
+      toast.error("Wrong Credentials!");
     }
   };
 

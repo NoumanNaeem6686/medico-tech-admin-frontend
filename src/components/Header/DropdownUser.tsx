@@ -31,7 +31,6 @@ const DropdownUser = () => {
     return () => document.removeEventListener("click", clickHandler);
   });
 
-
   useEffect(() => {
     const keyHandler = ({ keyCode }: KeyboardEvent) => {
       if (!dropdownOpen || keyCode !== 27) return;
@@ -40,10 +39,10 @@ const DropdownUser = () => {
     document.addEventListener("keydown", keyHandler);
     return () => document.removeEventListener("keydown", keyHandler);
   });
-  const handleLogout = () => {
+  const handleLogout = async () => {
     // localStorage.removeItem('token'); // If you use localStorage to store token
 
-    dispatch(logoutAdmin());
+    await dispatch(logoutAdmin());
     router.push("/auth/signin");
   };
 
