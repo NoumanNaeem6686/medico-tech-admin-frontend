@@ -27,6 +27,8 @@ export const signInAdmin = createAsyncThunk(
     try {
       const response = await axios.post(`${URL}/api/admin/signInAdmin`, user);
       const data = response.data;
+      console.log("🚀 ~ data:", data)
+      
       if (!data.success) {
         return thunkAPI.rejectWithValue(data.message || "Failed to Login");
       }

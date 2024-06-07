@@ -2,6 +2,7 @@
 import { gettingAllPsychics } from "@/store/slices/psychicsSlice";
 import { PSYCHICS_TABLE } from "@/types/brand";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { useDispatch } from "react-redux";
@@ -35,34 +36,12 @@ const PsychicsTable = () => {
     <section className="bg-gray-50 dark:bg-gray-900 py-3 sm:py-5">
       <div className="mx-auto max-w-screen-2xl px-4 lg:px-12">
         <div className="dark:bg-gray-800 relative overflow-hidden bg-white shadow-md sm:rounded-lg">
-          <div className="flex flex-col space-y-3 px-4 py-3 lg:flex-row lg:items-center lg:justify-between lg:space-x-4 lg:space-y-0">
-            {/* <div className="flex items-center flex-1 space-x-4">
-        <h5>
-          <span className="text-gray-500">All Products:</span>
-          <span className="dark:text-white">123456</span>
-        </h5>
-        <h5>
-          <span className="text-gray-500">Total sales:</span>
-          <span className="dark:text-white">$88.4k</span>
-        </h5>
-      </div> */}
-          </div>
+          <div className="flex flex-col space-y-3 px-4 py-3 lg:flex-row lg:items-center lg:justify-between lg:space-x-4 lg:space-y-0"></div>
           <div className="overflow-x-auto">
             <table className="text-gray-500 dark:text-gray-400 w-full text-left text-sm rtl:text-right">
               <thead className="bg-gray-50 dark:bg-gray-700 dark:text-gray-400 bg-[#12a19b] text-xs uppercase text-white">
                 <tr>
-                  <th scope="col" className="p-4">
-                    {/* <div className="flex items-center">
-                    <input
-                      id="checkbox-all"
-                      type="checkbox"
-                      className="bg-gray-100 border-gray-300 text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded focus:ring-2"
-                    />
-                    <label htmlFor="checkbox-all" className="sr-only">
-                      checkbox
-                    </label>
-                  </div> */}
-                  </th>
+                  <th scope="col" className="p-4"></th>
                   <th scope="col" className="px-4 py-3">
                     Psychics
                   </th>
@@ -113,18 +92,27 @@ const PsychicsTable = () => {
                         scope="row"
                         className="text-gray-900 flex items-center whitespace-nowrap px-4 py-2 font-medium dark:text-white"
                       >
-                        <img
-                          src={
+                        <Link
+                          href={
                             //@ts-ignore
-                            psychic?.profileUrl
+                            `/psychics-details/${psychic.id}?name=${psychic.name}`
                           }
-                          alt="iMac Front Image"
-                          className="mr-3 h-8 w-auto"
-                        />
-                        {
-                          //@ts-ignore
-                          psychic?.name
-                        }
+                        >
+                          <div className="flex items-center">
+                            <img
+                              src={
+                                //@ts-ignore
+                                psychic?.profileUrl
+                              }
+                              alt="Psychic Image"
+                              className="mr-3 h-8 w-auto"
+                            />
+                            {
+                              //@ts-ignore
+                              psychic?.name
+                            }
+                          </div>
+                        </Link>
                       </th>
 
                       <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
@@ -162,106 +150,6 @@ const PsychicsTable = () => {
               </tbody>
             </table>
           </div>
-          {/* <nav
-            className="flex flex-col items-start justify-between space-y-3 p-4 md:flex-row md:items-center md:space-y-0"
-            aria-label="Table navigation"
-          >
-            <span className="text-gray-500 dark:text-gray-400 text-sm font-normal">
-              Showing
-              <span className="text-gray-900 font-semibold dark:text-white">
-                1-10
-              </span>
-              of
-              <span className="text-gray-900 font-semibold dark:text-white">
-                1000
-              </span>
-            </span>
-            <ul className="inline-flex items-stretch -space-x-px">
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-500 border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 ml-0 flex h-full items-center justify-center rounded-l-lg border bg-white px-3 py-1.5 dark:hover:text-white"
-                >
-                  <span className="sr-only">Previous</span>
-                  <svg
-                    className="h-5 w-5"
-                    aria-hidden="true"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-500 border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 flex items-center justify-center border bg-white px-3 py-2 text-sm leading-tight dark:hover:text-white"
-                >
-                  1
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-500 border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 flex items-center justify-center border bg-white px-3 py-2 text-sm leading-tight dark:hover:text-white"
-                >
-                  2
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  aria-current="page"
-                  className="text-primary-600 bg-primary-50 border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 z-10 flex items-center justify-center border px-3 py-2 text-sm leading-tight dark:text-white"
-                >
-                  3
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-500 border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 flex items-center justify-center border bg-white px-3 py-2 text-sm leading-tight dark:hover:text-white"
-                >
-                  ...
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-500 border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 flex items-center justify-center border bg-white px-3 py-2 text-sm leading-tight dark:hover:text-white"
-                >
-                  100
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-500 border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 flex h-full items-center justify-center rounded-r-lg border bg-white px-3 py-1.5 leading-tight dark:hover:text-white"
-                >
-                  <span className="sr-only">Next</span>
-                  <svg
-                    className="h-5 w-5"
-                    aria-hidden="true"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </a>
-              </li>
-            </ul>
-          </nav> */}
         </div>
       </div>
     </section>
