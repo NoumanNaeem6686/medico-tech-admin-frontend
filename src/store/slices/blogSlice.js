@@ -6,20 +6,21 @@ const URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 export const createBlog = createAsyncThunk(
   "Blog/createBlog",
   async (blog, thunkAPI) => {
+    console.log(blog);
     try {
       const response = await axios.post(`${URL}/api/admin/create-blog`, blog);
       if (!response.data.success) {
         return thunkAPI.rejectWithValue(
-          response.data.message || "Failed to create Blog"
+          response.data.message || "Failed to create Blog",
         );
       }
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Error during creating Blog"
+        error.response?.data?.message || "Error during creating Blog",
       );
     }
-  }
+  },
 );
 
 export const getAllBlogs = createAsyncThunk(
@@ -29,51 +30,75 @@ export const getAllBlogs = createAsyncThunk(
       const response = await axios.get(`${URL}/api/admin/all-blogs`);
       if (!response.data.success) {
         return thunkAPI.rejectWithValue(
-          response.data.message || "Failed to getting all Blog"
+          response.data.message || "Failed to getting all Blog",
         );
       }
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Error during getting Blog"
+        error.response?.data?.message || "Error during getting Blog",
       );
     }
-  }
+  },
 );
 
 export const deleteBlog = createAsyncThunk(
   "blogs/deleteBlog",
   async (blogId, thunkAPI) => {
     try {
-      const response = await axios.delete(`${URL}/api/admin/delete-blog/${blogId}`);
+      const response = await axios.delete(
+        `${URL}/api/admin/delete-blog/${blogId}`,
+      );
       return blogId;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
-  }
+  },
 );
 
 export const updateBlog = createAsyncThunk(
   "blogs/updateBlog",
   async (blog, thunkAPI) => {
     try {
-      const response = await axios.put(`${URL}/api/admin/update-blog/${blog.id}`, blog);
+      const response = await axios.put(
+        `${URL}/api/admin/update-blog/${blog.id}`,
+        blog,
+      );
       if (!response.data.success) {
         return thunkAPI.rejectWithValue(
-          response.data.message || "Failed to update Blog"
+          response.data.message || "Failed to update Blog",
         );
       }
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Error during updating Blog"
+        error.response?.data?.message || "Error during updating Blog",
       );
     }
-  }
+  },
+);
+export const getAllPsychics = createAsyncThunk(
+  "Blog/getAllPsychics",
+  async (blog, thunkAPI) => {
+    try {
+      const response = await axios.get(`${URL}/api/psyscics/getAllPsychics`);
+      if (!response.data.success) {
+        return thunkAPI.rejectWithValue(
+          response.data.message || "Failed to getting all Blog",
+        );
+      }
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Error during getting Blog",
+      );
+    }
+  },
 );
 
 const initialState = {
-  blogs: [],  // Ensure initial state is an array
+  blogs: [], // Ensure initial state is an array
+  psychics: null,
   error: null,
   loading: false,
   isError: false,
@@ -117,7 +142,9 @@ const blogSlice = createSlice({
       .addCase(getAllBlogs.fulfilled, (state, action) => {
         state.loading = false;
         state.isSuccess = true;
-        state.blogs = Array.isArray(action.payload.data) ? action.payload.data : [];
+        state.blogs = Array.isArray(action.payload.data)
+          ? action.payload.data
+          : [];
       })
       .addCase(getAllBlogs.rejected, (state, action) => {
         state.loading = false;
@@ -138,12 +165,32 @@ const blogSlice = createSlice({
       .addCase(updateBlog.fulfilled, (state, action) => {
         state.loading = false;
         state.isSuccess = true;
-        const updatedBlogIndex = state.blogs.findIndex(blog => blog.id === action.payload.updatedBlog.id);
+        const updatedBlogIndex = state.blogs.findIndex(
+          (blog) => blog.id === action.payload.updatedBlog.id,
+        );
         if (updatedBlogIndex !== -1) {
           state.blogs[updatedBlogIndex] = action.payload.updatedBlog;
         }
       })
       .addCase(updateBlog.rejected, (state, action) => {
+        state.loading = false;
+        state.isError = true;
+        state.error = action.payload;
+      })
+      .addCase(getAllPsychics.pending, (state) => {
+        state.loading = true;
+        state.isError = false;
+        state.error = null;
+      })
+      .addCase(getAllPsychics.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isSuccess = true;
+        console.log("action.payload", action.payload);
+        state.psychics = Array.isArray(action.payload.data)
+          ? action.payload.data
+          : [];
+      })
+      .addCase(getAllPsychics.rejected, (state, action) => {
         state.loading = false;
         state.isError = true;
         state.error = action.payload;

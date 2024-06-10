@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 const CreateBlog = ({ initialValues, onSubmit }: any) => {
@@ -18,6 +19,9 @@ const CreateBlog = ({ initialValues, onSubmit }: any) => {
   const [description, setDescription] = useState(
     initialValues?.description || "",
   );
+  const [psychicId, setPsychicId] = useState(initialValues?.psychicId || ""); // New state for psychic selection
+  const [psychicName, setPsychicName] = useState(""); //@ts-ignore
+  const psychics = useSelector((state) => state.blog.psychics);
 
   useEffect(() => {
     if (initialValues?.blogImageUrl) {
@@ -91,10 +95,25 @@ const CreateBlog = ({ initialValues, onSubmit }: any) => {
     }
   };
 
+  const handlePsychicChange = (e: any) => {
+    const selectedPsychic = psychics.find(
+      (psychic: any) => psychic.id === e.target.value,
+    );
+    setPsychicId(selectedPsychic.id);
+    setPsychicName(selectedPsychic.name);
+  };
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    if (!category || !title || !imageUrl || !imageId || !description) {
+    if (
+      !category ||
+      !title ||
+      !imageUrl ||
+      !imageId ||
+      !description ||
+      !psychicId
+    ) {
       setErrors("Please fill in all fields");
       return;
     }
@@ -104,8 +123,12 @@ const CreateBlog = ({ initialValues, onSubmit }: any) => {
       blogImageUrl: imageUrl,
       blogImageId: imageId,
       description,
+      psychicId, // Include psychicId in the blog data
+      psychicName, // Include psychicName in the blog data
       adminId: "663080c4341f818233e4ce87",
     };
+
+    console.log("blogData", blogData);
 
     try {
       setLoading(true);
@@ -192,6 +215,7 @@ const CreateBlog = ({ initialValues, onSubmit }: any) => {
             className="border-gray-300 mt-1 block w-full rounded-md border p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           />
         </div>
+
         <div>
           <label className="text-gray-700 block text-sm font-medium">
             Category
@@ -235,7 +259,23 @@ const CreateBlog = ({ initialValues, onSubmit }: any) => {
             theme="snow"
           />
         </div>
-
+        <div>
+          <label className="text-gray-700 block text-sm font-medium">
+            Psychic
+          </label>
+          <select
+            value={psychicId}
+            onChange={handlePsychicChange}
+            className="border-gray-300 mt-1 block w-full rounded-md border p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          >
+            <option value="">Select Psychic</option>
+            {psychics?.map((psychic: any) => (
+              <option key={psychic.id} value={psychic.id}>
+                {psychic.name}
+              </option>
+            ))}
+          </select>
+        </div>
         <button
           type="submit"
           className="w-full rounded-md bg-[#12a19b] px-4 py-2 font-semibold text-white shadow hover:opacity-75 focus:outline-none focus:ring-2 "
