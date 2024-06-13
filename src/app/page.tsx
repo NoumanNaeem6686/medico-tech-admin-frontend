@@ -1,5 +1,5 @@
-'use client'
-import { useEffect, useState } from 'react';
+"use client";
+import { useEffect, useState } from "react";
 import ECommerce from "@/components/Dashboard/E-commerce";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import SignIn from "./auth/signin/page";
@@ -12,6 +12,10 @@ export default function Home() {
     setIsLoggedIn(!!loginStatus);
   }, []);
 
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
+
   return (
     <>
       {isLoggedIn ? (
@@ -19,7 +23,7 @@ export default function Home() {
           <ECommerce />
         </DefaultLayout>
       ) : (
-        <SignIn />
+        <SignIn onLogin={handleLogin} />
       )}
     </>
   );

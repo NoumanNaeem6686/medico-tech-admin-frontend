@@ -3,6 +3,7 @@
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Loader from "@/components/Loader";
 
 const URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -34,7 +35,7 @@ const Page = ({ params }: any) => {
   if (loading) {
     return (
       <DefaultLayout>
-        <div>Loading...</div>
+        <Loader />
       </DefaultLayout>
     );
   }

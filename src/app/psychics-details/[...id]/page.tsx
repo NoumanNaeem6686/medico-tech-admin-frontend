@@ -3,6 +3,7 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import axios from "axios";
+import Loader from "@/components/Loader";
 
 const Page = ({ params }: any) => {
   const URL = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -112,7 +113,7 @@ const Page = ({ params }: any) => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   if (!data) {

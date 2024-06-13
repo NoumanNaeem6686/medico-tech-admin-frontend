@@ -8,6 +8,7 @@ import {
   getAllPackages,
   updatePackage,
 } from "@/store/slices/packagSlice";
+import Loader from "./Loader";
 
 const Packages = () => {
   const [packageName, setPackageName] = useState("");
@@ -34,7 +35,9 @@ const Packages = () => {
   const handleAddOrUpdatePackage = async (e: any) => {
     e.preventDefault();
 
-    const categoryCount = packages.filter((pkg: any) => pkg.category === category).length;
+    const categoryCount = packages.filter(
+      (pkg: any) => pkg.category === category,
+    ).length;
     const totalPackages = packages.length;
 
     if (editingPackageId === null && categoryCount >= 1) {
@@ -64,7 +67,8 @@ const Packages = () => {
         // Update package logic
         try {
           //@ts-ignore
-          const result = await dispatch(//@ts-ignore
+          const result = await dispatch(
+            //@ts-ignore
             updatePackage({ id: editingPackageId, ...newPackage }),
           ).unwrap();
           toast.success("Package updated successfully");
@@ -228,7 +232,7 @@ const Packages = () => {
       </form>
       <h3 className="mb-4 text-xl font-bold">Available Packages</h3>
       {loading ? (
-        <p>Loading...</p>
+        <Loader />
       ) : error ? (
         <p>Error loading packages: {error}</p>
       ) : packages.length > 0 ? (

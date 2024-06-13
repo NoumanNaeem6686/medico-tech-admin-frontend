@@ -12,13 +12,16 @@ import { signInAdmin } from "@/store/slices/userSlice";
 import { useRouter } from "next/navigation";
 import { FaRegEye } from "react-icons/fa";
 import { FaRegEyeSlash } from "react-icons/fa";
+interface SignInProps {
+  onLogin: () => void;
+}
 
 // export const metadata: Metadata = {
 //   title: "Next.js SignIn Page | TailAdmin - Next.js Dashboard Template",
 //   description: "This is Next.js Signin Page TailAdmin Dashboard Template",
 // };
 
-const SignIn: React.FC = () => {
+const SignIn: React.FC<SignInProps> = ({ onLogin }) => {
   const router = useRouter();
 
   const dispatch = useDispatch();
@@ -51,6 +54,7 @@ const SignIn: React.FC = () => {
         router.push("/");
         setEmail("");
         setPassword("");
+        onLogin();
       } else {
         //@ts-ignore
         toast.error(res.payload);

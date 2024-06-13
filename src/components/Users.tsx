@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
+import Loader from "./Loader";
 const URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -27,7 +28,7 @@ const Users = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   if (error) {
