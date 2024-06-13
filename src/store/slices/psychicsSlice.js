@@ -9,22 +9,23 @@ export const addPsychics = createAsyncThunk(
     try {
       const response = await axios.post(
         `${URL}/api/psyscics/addpsyscics`,
-        psychics,
+        psychics
       );
       const data = response.data;
       if (!data.success) {
         return thunkAPI.rejectWithValue(
-          data.message || "Failed to register Psychics",
+          data.message || "Failed to register Psychics"
         );
       }
       return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response.data.message || "Error during registration Psychics",
+        error.response.data.message || "Error during registration Psychics"
       );
     }
-  },
+  }
 );
+
 export const gettingAllPsychics = createAsyncThunk(
   "getAllPsychics",
   async (user, thunkAPI) => {
@@ -40,11 +41,30 @@ export const gettingAllPsychics = createAsyncThunk(
       console.log("error in getting all psychics", e);
       return thunkAPI.rejectWithValue(e);
     }
-  },
+  }
+);
+
+export const deletePsychic = createAsyncThunk(
+  "deletePsychic",
+  async (id, thunkAPI) => {
+    try {
+      const response = await axios.delete(`${URL}/api/psyscics/delete-psychic/${id}`);
+      const data = response.data;
+
+      if (!data.success) {
+        return thunkAPI.rejectWithValue(data.message || "Failed to delete psychic");
+      }
+      return id; // Return the deleted psychic ID
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response.data.message || "Error during deletion of psychic"
+      );
+    }
+  }
 );
 
 const initialState = {
-  pasychics: null,
+  pasychics: [],
   error: null,
   loading: false,
   isError: false,
@@ -60,15 +80,8 @@ const psychicsSlice = createSlice({
       state.isError = false;
       state.isSuccess = false;
       state.error = null;
-      state.pasychics = null;
+      state.pasychics = [];
     },
-    // logoutAdmin: (state) => {
-    //     state.admin = null;
-    //     state.isSuccess = false;
-    //     state.isError = false;
-    //     state.loading = false;
-    //     // Optionally clear other state parts related to the admin session
-    // }
   },
   extraReducers: (builder) => {
     builder
@@ -76,33 +89,45 @@ const psychicsSlice = createSlice({
         state.loading = true;
         state.isError = false;
         state.error = null;
-        return state;
       })
       .addCase(addPsychics.fulfilled, (state, action) => {
         state.loading = false;
         state.isSuccess = true;
-        state.pasychics = action.payload;
-        return state;
+        state.pasychics.push(action.payload);
       })
       .addCase(addPsychics.rejected, (state, action) => {
         state.loading = false;
         state.isError = true;
         state.error = action.payload;
-        return state;
       });
-    builder.addCase(gettingAllPsychics.pending, (state, action) => {
+    builder.addCase(gettingAllPsychics.pending, (state) => {
       state.loading = true;
     });
     builder.addCase(gettingAllPsychics.fulfilled, (state, action) => {
       state.loading = false;
-      state.pasychics = action.payload;
+      state.pasychics = action.payload.data;
     });
     builder.addCase(gettingAllPsychics.rejected, (state, action) => {
       state.loading = false;
       state.isError = true;
     });
+    builder.addCase(deletePsychic.pending, (state) => {
+      state.loading = true;
+      state.isError = false;
+      state.error = null;
+    });
+    builder.addCase(deletePsychic.fulfilled, (state, action) => {
+      state.loading = false;
+      state.isSuccess = true;
+      state.pasychics = state.pasychics.filter(psychic => psychic.id !== action.payload);
+    });
+    builder.addCase(deletePsychic.rejected, (state, action) => {
+      state.loading = false;
+      state.isError = true;
+      state.error = action.payload;
+    });
   },
 });
 
-export const { resetPsychicsState, logoutAdmin } = psychicsSlice.actions;
+export const { resetPsychicsState } = psychicsSlice.actions;
 export default psychicsSlice.reducer;

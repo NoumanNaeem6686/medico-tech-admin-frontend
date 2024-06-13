@@ -13,49 +13,93 @@ import { auth } from "@/lib/firebase"; // Add your Firebase configuration file h
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase"; // Add your Firestore configuration file here
+import "react-dates/initialize";
+import "react-dates/lib/css/_datepicker.css";
+import { DateRangePicker, FocusedInputShape } from "react-dates";
+import moment, { Moment } from "moment";
+import { useRouter } from "next/navigation";
 
-const Page = () => {
+interface DoctorInfo {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  zodiac: string;
+  price: string;
+  shortDescription: string;
+  languages: string[];
+  joiningDate: string;
+  description: string;
+  topic: string[];
+  tools: string[];
+  abilities: string[];
+  availability: {
+    startDate: Moment | null;
+    endDate: Moment | null;
+  };
+}
+
+const Page: React.FC = () => {
+  const router = useRouter()
   const dispatch = useDispatch();
-  const [file, setFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [submitLoading, setSumbitLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
   const [imageId, setImageId] = useState("");
   const [errors, setErrors] = useState("");
-  const [doctorInfo, setDoctorInfo] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    password: "",
-    zodiac: "",
-    price: "",
-    shortDescription:"",
-    languages: [],
-    joiningDate: "",
-    description: "",
-    topic: [],
-    tools: [],
-    abilities: [],
-  });
-  const initialValues = {
-    name: "",
-    email: "",
-    password: "",
-    phone: "",
-    price: "",
-    shortDescription:"",
-    zodiac: "",
-    joiningDate: "",
-    description: "",
-    languages: [],
-    topic: [],
-    tools: [],
-    abilities: [],
-  };
-  const URL = process.env.NEXT_PUBLIC_BACKEND_URL
+  const [focusedInput, setFocusedInput] = useState<FocusedInputShape | null>(
+    null,
+  );
+  const [dateRange, setDateRange] = useState<{
+    startDate: Moment | null;
+    endDate: Moment | null;
+  }>({ startDate: null, endDate: null });
 
-  const todayDate = new Date().toISOString().split("T")[0];
+  const [doctorInfo, setDoctorInfo] = useState<DoctorInfo>({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    zodiac: "",
+    price: "",
+    shortDescription: "",
+    languages: [],
+    joiningDate: "",
+    description: "",
+    topic: [],
+    tools: [],
+    abilities: [],
+    availability: {
+      startDate: null,
+      endDate: null,
+    },
+  });
+
+  const initialValues: DoctorInfo = {
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    zodiac: "",
+    price: "",
+    shortDescription: "",
+    languages: [],
+    joiningDate: "",
+    description: "",
+    topic: [],
+    tools: [],
+    abilities: [],
+    availability: {
+      startDate: null,
+      endDate: null,
+    },
+  };
+
+  const URL = process.env.NEXT_PUBLIC_BACKEND_URL || "";
+
+  const todayDate = moment().format("YYYY-MM-DD");
 
   const initialDoctorInfo = {
     ...initialValues,
@@ -65,28 +109,28 @@ const Page = () => {
     abilities: [],
   };
 
-  const validatePassword = (password: any) => {
-    const errors = {};
+  const validatePassword = (password: string) => {
+    const errors: { [key: string]: string } = {};
     if (password.length < 8) {
-      //@ts-ignore
       errors.password = "Password must be at least 8 characters long.";
     }
     if (!password.match(/[A-Z]/)) {
-      //@ts-ignore
       errors.password = "Password must contain at least one uppercase letter.";
     }
     if (!password.match(/[0-9]/)) {
-      //@ts-ignore
       errors.password = "Password must contain at least one number.";
     }
     if (!password.match(/[^a-zA-Z0-9]/)) {
-      //@ts-ignore
       errors.password = "Password must contain at least one special character.";
     }
     return errors;
   };
 
-  const handleInputChange = (e: any) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
     const { name, value } = e.target;
     setDoctorInfo((prevState) => ({
       ...prevState,
@@ -94,24 +138,20 @@ const Page = () => {
     }));
   };
 
-  const handleDragOver = (e: any) => {
+  const handleDragOver = (e: React.DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
   };
 
-  const uploadFileToCloudinary = async (file: any) => {
+  const uploadFileToCloudinary = async (file: File) => {
     const formData = new FormData();
     formData.append("image", file);
     setIsLoading(true);
     try {
-      const response = await axios.post(
-        `${URL}/api/image/upload`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+      const response = await axios.post(`${URL}/api/image/upload`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
         },
-      );
+      });
       console.log(response.data.data);
       setImageUrl(response.data.data.secure_url);
       setImageId(response.data.data.public_id);
@@ -122,7 +162,7 @@ const Page = () => {
     }
   };
 
-  const handleDrop = async (e: any) => {
+  const handleDrop = async (e: React.DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
     const files = e.dataTransfer.files;
     if (files && files.length > 0) {
@@ -135,7 +175,7 @@ const Page = () => {
     }
   };
 
-  const handleFileChange = (e: any) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
       setFile(files[0]);
@@ -147,26 +187,24 @@ const Page = () => {
     }
   };
 
-  const updatePreview = (file: any) => {
+  const updatePreview = (file: File) => {
     const reader = new FileReader();
     reader.onloadend = () => {
-      //@ts-ignore
-      setPreviewUrl(reader.result);
+      setPreviewUrl(reader.result as string);
     };
     reader.readAsDataURL(file);
   };
 
-  const clearImage = async (e: any) => {
+  const clearImage = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
 
     if (imageId) {
       setIsLoading(true);
       try {
-        const response = await axios.post(
-          `${URL}/api/image/deleteImage`,
-          { id: imageId },
-        );
+        const response = await axios.post(`${URL}/api/image/deleteImage`, {
+          id: imageId,
+        });
         console.log(response.data);
         setFile(null);
         setPreviewUrl(null);
@@ -180,32 +218,52 @@ const Page = () => {
     }
   };
 
-  const handleLanguagesChange = (selectedLanguages: any) => {
+  const handleLanguagesChange = (selectedLanguages: string[]) => {
     setDoctorInfo((prevState) => ({
       ...prevState,
       languages: selectedLanguages,
     }));
   };
-  const handleTopicChange = (selectedTopic: any) => {
+
+  const handleTopicChange = (selectedTopic: string[]) => {
     setDoctorInfo((prevState) => ({
       ...prevState,
       topic: selectedTopic,
     }));
   };
-  const handleToolChange = (selectedTool: any) => {
+
+  const handleToolChange = (selectedTool: string[]) => {
     setDoctorInfo((prevState) => ({
       ...prevState,
       tools: selectedTool,
     }));
   };
-  const handleAbilitiesChange = (selectedAbilities: any) => {
+
+  const handleAbilitiesChange = (selectedAbilities: string[]) => {
     setDoctorInfo((prevState) => ({
       ...prevState,
       abilities: selectedAbilities,
     }));
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleDateRangeChange = ({
+    startDate,
+    endDate,
+  }: {
+    startDate: Moment | null;
+    endDate: Moment | null;
+  }) => {
+    setDateRange({ startDate, endDate });
+    setDoctorInfo((prevState: any) => ({
+      ...prevState,
+      availability: {
+        startDate: startDate ? startDate.format("YYYY-MM-DD") : null,
+        endDate: endDate ? endDate.format("YYYY-MM-DD") : null,
+      },
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!imageUrl) {
       toast.error("please upload image");
@@ -214,11 +272,11 @@ const Page = () => {
 
     const passwordErrors = validatePassword(doctorInfo.password);
     if (Object.keys(passwordErrors).length > 0) {
-      //@ts-ignore
-      setErrors(passwordErrors.password); //@ts-ignore
+      setErrors(passwordErrors.password);
       toast.error(passwordErrors.password);
       return;
     }
+
     const data = {
       name: doctorInfo.name,
       email: doctorInfo.email,
@@ -238,41 +296,42 @@ const Page = () => {
       tools: doctorInfo.tools,
       abilities: doctorInfo.abilities,
       shortDescription: doctorInfo.shortDescription,
+      availability: doctorInfo.availability,
     };
     console.log(data);
     setSumbitLoading(true);
     try {
-      // Add user to Firebase Authentication
-      const userCredential = await createUserWithEmailAndPassword(auth, doctorInfo.email, doctorInfo.password);
-      const user = userCredential.user;
-
-      // Add user to Firestore
-      await addDoc(collection(db, "psychics"), {
-        uid: user.uid,
-        name: doctorInfo.name,
-        email: doctorInfo.email,
-        zodiac: doctorInfo.zodiac,
-        price: doctorInfo.price,
-        languages: doctorInfo.languages,
-        joiningDate: doctorInfo.joiningDate,
-        description: doctorInfo.description,
-        phoneNo: doctorInfo.phone,
-        status: false,
-        chat: false,
-        userType: "admin",
-        profileUrl: imageUrl,
-        profilePicId: imageId,
-        topic: doctorInfo.topic,
-        tools: doctorInfo.tools,
-        abilities: doctorInfo.abilities,
-        shortDescription: doctorInfo.shortDescription,
-      });
-
-      // Dispatch action to add psychic to Redux store
+      // const userCredential = await createUserWithEmailAndPassword(
+      //   auth,
+      //   doctorInfo.email,
+      //   doctorInfo.password,
+      // );
+      // const user = userCredential.user;
+      // await addDoc(collection(db, "psychics"), {
+      //   uid: user.uid,
+      //   name: doctorInfo.name,
+      //   email: doctorInfo.email,
+      //   zodiac: doctorInfo.zodiac,
+      //   price: doctorInfo.price,
+      //   languages: doctorInfo.languages,
+      //   joiningDate: doctorInfo.joiningDate,
+      //   description: doctorInfo.description,
+      //   phoneNo: doctorInfo.phone,
+      //   status: false,
+      //   chat: false,
+      //   userType: "admin",
+      //   profileUrl: imageUrl,
+      //   profilePicId: imageId,
+      //   topic: doctorInfo.topic,
+      //   tools: doctorInfo.tools,
+      //   abilities: doctorInfo.abilities,
+      //   shortDescription: doctorInfo.shortDescription,
+      //   availability: doctorInfo.availability,
+      // });
       //@ts-ignore
       const response = await dispatch(addPsychics(data));
       console.log("🚀 ~ handleSubmit ~ response:", response);
-      //@ts-ignore
+       //@ts-ignore
       if (response?.payload && response?.payload.success) {
         setDoctorInfo(initialDoctorInfo);
         setFile(null);
@@ -280,8 +339,8 @@ const Page = () => {
         setImageUrl("");
         setImageId("");
         toast.success("Record created successfully");
-      } else {
-        //@ts-ignore
+        router.push('/psychics-table')
+      } else { //@ts-ignore
         toast.error(response?.payload);
       }
     } catch (error) {
@@ -305,7 +364,7 @@ const Page = () => {
             >
               {isLoading ? (
                 <div className="flex h-full flex-col items-center justify-center">
-                  <div className="loader"></div> {/* Loading spinner */}
+                  <div className="loader"></div>
                   <p className="text-gray-500 text-sm">Uploading...</p>
                 </div>
               ) : previewUrl ? (
@@ -487,7 +546,6 @@ const Page = () => {
             ))}
           </select>
         </div>
-
         <div className="mb-4">
           <label className="text-gray-700 mb-2 block text-sm font-bold">
             Date of joining
@@ -514,6 +572,25 @@ const Page = () => {
             placeholder="Enter a brief description..."
             required
           ></textarea>
+        </div>
+
+        <div className="mb-4">
+          <label className="text-gray-700 mb-2 block text-sm font-bold">
+            Availability Date
+          </label>
+          <DateRangePicker
+            startDate={dateRange.startDate}
+            startDateId="start_date_id"
+            endDate={dateRange.endDate}
+            endDateId="end_date_id"
+            onDatesChange={handleDateRangeChange}
+            focusedInput={focusedInput}
+            onFocusChange={(focusedInput) => setFocusedInput(focusedInput)}
+            numberOfMonths={1}
+            displayFormat="YYYY-MM-DD"
+            isOutsideRange={() => false}
+            minimumNights={0}
+          />
         </div>
 
         <button

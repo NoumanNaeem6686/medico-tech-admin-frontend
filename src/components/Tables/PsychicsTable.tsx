@@ -1,37 +1,55 @@
 "use client";
-import { gettingAllPsychics } from "@/store/slices/psychicsSlice";
+import {
+  deletePsychic,
+  gettingAllPsychics,
+} from "@/store/slices/psychicsSlice";
 import { PSYCHICS_TABLE } from "@/types/brand";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { FaEye } from "react-icons/fa";
-import { useDispatch } from "react-redux";
+import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
 import Loader from "../Loader";
 
 const PsychicsTable = () => {
-  const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
-  const [psychics, setPsychics] = useState([]);
-  const getAllPsychics = async () => {
-    setLoading(true); // Start loading
+  const dispatch = useDispatch();//@ts-ignore
+  const { pasychics, loading } = useSelector((state) => state.psychics);
+
+  useEffect(() => {
+    const getAllPsychics = async () => {
+      try {
+        //@ts-ignore
+        await dispatch(gettingAllPsychics());
+      } catch (error) {
+        console.error("Failed to fetch psychics:", error);
+      }
+    };
+
+    getAllPsychics();
+  }, [dispatch]);
+
+  const handleEdit = (id: string) => {
+    // Handle edit logic here
+    console.log("Edit psychic with ID:", id);
+  };
+
+  const handleDelete = async (id: string) => {
     try {
       //@ts-ignore
-      const response = await dispatch(gettingAllPsychics());
+      const response = await dispatch(deletePsychic(id));
       //@ts-ignore
-      console.log(response?.payload?.data);
-      //@ts-ignore
-      setPsychics(response?.payload?.data);
+      if (response?.payload?.success) {
+        // The Redux state will be updated by the deletePsychic.fulfilled case
+      }
     } catch (error) {
-      console.error("Failed to fetch psychics:", error);
+      console.error("Error deleting psychic:", error);
     }
-    setLoading(false);
   };
-  useEffect(() => {
-    getAllPsychics();
-  }, []);
+
   if (loading) {
     return <Loader />;
   }
+
   return (
     <section className="bg-gray-50 dark:bg-gray-900 py-3 sm:py-5">
       <div className="mx-auto max-w-screen-2xl px-4 lg:px-12">
@@ -63,11 +81,14 @@ const PsychicsTable = () => {
                   <th scope="col" className="px-4 py-3">
                     Earnings
                   </th>
+                  <th scope="col" className="px-4 py-3">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                {psychics &&
-                  psychics.map((psychic, index) => (
+                {pasychics &&
+                  pasychics.map((psychic: any, index: any) => (
                     <tr
                       key={index}
                       className="odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 dark:border-gray-700 border-b odd:bg-white"
@@ -114,7 +135,6 @@ const PsychicsTable = () => {
                           </div>
                         </Link>
                       </th>
-
                       <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
                         <div className="flex items-center">
                           <div className="bg-red-700 mr-2 inline-block h-4 w-4 rounded-full" />
@@ -127,7 +147,6 @@ const PsychicsTable = () => {
                           psychic?.status ? "Online" : "Offline"
                         }
                       </td>
-
                       <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
                         on/off
                       </td>
@@ -144,6 +163,22 @@ const PsychicsTable = () => {
                       </td>
                       <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
                         <div className="flex items-center">$6000</div>
+                      </td>
+                      <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
+                        <div className="flex items-center space-x-2">
+                          {/* <button
+                            onClick={() => handleEdit(psychic.id)}
+                            className="text-blue-600 hover:text-blue-800"
+                          >
+                            <FaEdit />
+                          </button> */}
+                          <button
+                            onClick={() => handleDelete(psychic.id)}
+                            className="text-red-600 hover:text-red-800"
+                          >
+                            <FaTrash />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
