@@ -13,9 +13,9 @@ import { auth } from "@/lib/firebase"; // Add your Firebase configuration file h
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase"; // Add your Firestore configuration file here
-import "react-dates/initialize";
-import "react-dates/lib/css/_datepicker.css";
-import { DateRangePicker, FocusedInputShape } from "react-dates";
+// import "react-dates/initialize";
+// import "react-dates/lib/css/_datepicker.css";
+// import { DateRangePicker, FocusedInputShape } from "react-dates";
 import moment, { Moment } from "moment";
 import { useRouter } from "next/navigation";
 
@@ -40,7 +40,7 @@ interface DoctorInfo {
 }
 
 const Page: React.FC = () => {
-  const router = useRouter()
+  const router = useRouter();
   const dispatch = useDispatch();
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -49,7 +49,7 @@ const Page: React.FC = () => {
   const [imageUrl, setImageUrl] = useState("");
   const [imageId, setImageId] = useState("");
   const [errors, setErrors] = useState("");
-  const [focusedInput, setFocusedInput] = useState<FocusedInputShape | null>(
+  const [focusedInput, setFocusedInput] = useState< null>(
     null,
   );
   const [dateRange, setDateRange] = useState<{
@@ -331,10 +331,9 @@ const Page: React.FC = () => {
       //@ts-ignore
       const response = await dispatch(addPsychics(data));
 
-
       console.log("🚀 ~ handleSubmit ~ response:", response);
       console.log("🚀 ~ handleSubmit ~ response:", response);
-       //@ts-ignore
+      //@ts-ignore
       if (response?.payload && response?.payload.success) {
         setDoctorInfo(initialDoctorInfo);
         setFile(null);
@@ -342,8 +341,9 @@ const Page: React.FC = () => {
         setImageUrl("");
         setImageId("");
         toast.success("Record created successfully");
-        router.push('/psychics-table')
-      } else { //@ts-ignore
+        router.push("/psychics-table");
+      } else {
+        //@ts-ignore
         toast.error(response?.payload);
       }
     } catch (error) {
@@ -581,7 +581,7 @@ const Page: React.FC = () => {
           <label className="text-gray-700 mb-2 block text-sm font-bold">
             Availability Date
           </label>
-          <DateRangePicker
+          {/* <DateRangePicker
             startDate={dateRange.startDate}
             startDateId="start_date_id"
             endDate={dateRange.endDate}
@@ -593,7 +593,7 @@ const Page: React.FC = () => {
             displayFormat="YYYY-MM-DD"
             isOutsideRange={() => false}
             minimumNights={0}
-          />
+          /> */}
         </div>
 
         <button
