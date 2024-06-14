@@ -12,9 +12,9 @@ export default function Home() {
     setIsLoggedIn(!!loginStatus);
   }, []);
 
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-  };
+  // const handleLogin = () => {
+  //   setIsLoggedIn(true);
+  // };
 
   return (
     <>
@@ -23,7 +23,9 @@ export default function Home() {
           <ECommerce />
         </DefaultLayout>
       ) : (
-        <SignIn onLogin={handleLogin} />
+        <SignIn
+        // onLogin={handleLogin}
+        />
       )}
     </>
   );
