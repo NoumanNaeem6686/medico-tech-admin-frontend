@@ -330,6 +330,9 @@ const Page: React.FC = () => {
       // });
       //@ts-ignore
       const response = await dispatch(addPsychics(data));
+
+
+      console.log("🚀 ~ handleSubmit ~ response:", response);
       console.log("🚀 ~ handleSubmit ~ response:", response);
        //@ts-ignore
       if (response?.payload && response?.payload.success) {
