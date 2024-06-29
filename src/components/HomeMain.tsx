@@ -1,8 +1,9 @@
 "use client";
 import { useSelector } from "react-redux";
-import ECommerce from "@/components/Dashboard/E-commerce";
+
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import SignIn from "@/app/auth/signin/page";
+import ECommerce from "./Dashboard/E-commerce";
 
 export default function HomeMain() {
   //@ts-ignore
@@ -12,7 +13,7 @@ export default function HomeMain() {
   const isLoggedIn = !!loggedInUser;
 
   const handleLogin = () => {
-    // Logic to handle login
+    console.log("login");
   };
 
   return (
@@ -22,7 +23,7 @@ export default function HomeMain() {
           <ECommerce />
         </DefaultLayout>
       ) : (
-        <SignIn onLogin={handleLogin} />
+        <SignIn />
       )}
     </>
   );

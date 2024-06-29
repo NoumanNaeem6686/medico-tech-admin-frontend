@@ -9,11 +9,7 @@ import { useRouter } from "next/navigation";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import logo from "../../public/images/logo/logo.png";
 
-interface SignInProps {
-  onLogin: () => void;
-}
-
-const SignInMain: React.FC<SignInProps> = ({ onLogin }) => {
+const SignInMain = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
@@ -45,7 +41,6 @@ const SignInMain: React.FC<SignInProps> = ({ onLogin }) => {
         router.push("/");
         setEmail("");
         setPassword("");
-        onLogin();
       } else {
         //@ts-ignore
         toast.error(res.payload);

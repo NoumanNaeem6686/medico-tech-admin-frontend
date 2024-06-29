@@ -6,7 +6,7 @@ import ChartTwo from "../Charts/ChartTwo";
 import ChatCard from "../Chat/ChatCard";
 import TableOne from "../Tables/TableOne";
 import CardDataStats from "../CardDataStats";
-import MapOne from "../Maps/MapOne";
+
 
 const ECommerce: React.FC = () => {
   return (
