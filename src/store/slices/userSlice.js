@@ -16,30 +16,52 @@ export const signUpAdmin = createAsyncThunk(
       return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response.data.message || "Error during registration",
+        error.response.data.message || "Error during registration"
       );
     }
-  },
+  }
 );
+
 export const signInAdmin = createAsyncThunk(
   "admin/signInAdmin",
   async (user, thunkAPI) => {
     try {
       const response = await axios.post(`${URL}/api/admin/signInAdmin`, user);
       const data = response.data;
-      console.log("🚀 ~ data:", data)
-      
+      console.log("🚀 ~ data:", data);
+
       if (!data.success) {
         return thunkAPI.rejectWithValue(data.message || "Failed to Login");
       }
 
+      const stringyData = JSON.stringify(data.admin);
+      document.cookie = `login=${stringyData}; path=/;`;
+      localStorage.setItem("login", stringyData);
+
       return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response.data.message || "Error during Login",
+        error.response.data.message || "Error during Login"
       );
     }
-  },
+  }
+);
+
+export const getCurrentAdmin = createAsyncThunk(
+  "admin/loadAdminFromLocalStorage",
+  async (_, thunkAPI) => {
+    try {
+      const loginData = localStorage.getItem("login");
+      if (loginData) {
+        const admin = JSON.parse(loginData);
+        return { admin };
+      } else {
+        return thunkAPI.rejectWithValue("No admin data found in local storage");
+      }
+    } catch (error) {
+      return thunkAPI.rejectWithValue("Failed to load admin data from local storage");
+    }
+  }
 );
 
 const initialState = {
@@ -97,20 +119,24 @@ const userSlice = createSlice({
         state.loading = false;
         state.isSuccess = true;
         state.admin = action.payload.admin;
-
-        try {
-          const stringyData = JSON.stringify(action.payload.admin);
-          document.cookie = `login=${stringyData}; path=/;`;
-          localStorage.setItem("login", stringyData);
-        } catch (error) {
-          console.log(
-            "Getting error in setting cookies and localstorage",
-            error,
-          );
-        }
       })
       .addCase(signInAdmin.rejected, (state, action) => {
         console.log("Error on login:", action.payload);
+        state.loading = false;
+        state.isError = true;
+        state.error = action.payload;
+      })
+      .addCase(getCurrentAdmin.pending, (state) => {
+        state.loading = true;
+        state.isError = false;
+        state.error = null;
+      })
+      .addCase(getCurrentAdmin.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isSuccess = true;
+        state.admin = action.payload.admin;
+      })
+      .addCase(getCurrentAdmin.rejected, (state, action) => {
         state.loading = false;
         state.isError = true;
         state.error = action.payload;

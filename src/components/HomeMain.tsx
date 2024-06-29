@@ -1,19 +1,18 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import ECommerce from "@/components/Dashboard/E-commerce";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import SignIn from "@/app/auth/signin/page";
 
 export default function HomeMain() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  //@ts-ignore
+  const loggedInUser = useSelector((state) => state.admin.admin);
+  console.log("🚀 ~ HomeMain ~ loggedInUser:", loggedInUser);
 
-  useEffect(() => {
-    const loginStatus = localStorage.getItem("login");
-    setIsLoggedIn(!!loginStatus);
-  }, []);
+  const isLoggedIn = !!loggedInUser;
 
   const handleLogin = () => {
-    setIsLoggedIn(true);
+    // Logic to handle login
   };
 
   return (

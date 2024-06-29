@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import adminReducer from "@/store/slices/userSlice";
+import adminReducer, { getCurrentAdmin } from "@/store/slices/userSlice";
 import psychicsReducer, { gettingAllPsychics } from "@/store/slices/psychicsSlice";
 import productReducer, {
   gettingAllProducts,
@@ -18,6 +18,7 @@ export const store = configureStore({
 });
 
 store.dispatch(gettingAllProducts());
+store.dispatch(getCurrentAdmin());
 store.dispatch(getAllBlogs());
 store.dispatch(getAllPackages());
 store.dispatch(gettingAllPsychics());

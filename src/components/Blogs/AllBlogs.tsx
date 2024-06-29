@@ -78,7 +78,7 @@ const AllBlogs = () => {
     if (blogImageId) {
       setLoading(true);
       try {
-        // Delete the image from Cloudinary
+        
         await axios.post(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/image/deleteImage`,
           {
