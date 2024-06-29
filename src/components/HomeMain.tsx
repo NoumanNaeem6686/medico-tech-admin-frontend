@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import SignIn from "@/app/auth/signin/page";
-import ECommerce from "./Dashboard/E-commerce";
+import Dashboard from "./Dashboard/Dashboard";
 
 export default function HomeMain() {
   //@ts-ignore
@@ -20,7 +20,7 @@ export default function HomeMain() {
     <>
       {isLoggedIn ? (
         <DefaultLayout>
-          <ECommerce />
+          <Dashboard />
         </DefaultLayout>
       ) : (
         <SignIn />

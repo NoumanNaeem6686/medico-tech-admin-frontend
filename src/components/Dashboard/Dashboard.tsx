@@ -8,7 +8,7 @@ import TableOne from "../Tables/TableOne";
 import CardDataStats from "../CardDataStats";
 
 
-const ECommerce: React.FC = () => {
+const Dashboard: React.FC = () => {
   return (
     <>
       <h2 className="mb-10 text-title-md2 font-semibold text-black dark:text-white">
@@ -521,4 +521,4 @@ const ECommerce: React.FC = () => {
   );
 };
 
-export default ECommerce;
+export default Dashboard;

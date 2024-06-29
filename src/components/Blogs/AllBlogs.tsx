@@ -15,23 +15,11 @@ import { Box, Modal } from "@mui/material";
 import { toast } from "react-toastify";
 import CreateBlog from "./CreateBlog";
 
-const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 650,
-  bgcolor: "background.paper",
-  // border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
-
 const AllBlogs = () => {
   const dispatch = useDispatch();
   const blogs = useSelector((state: any) =>
     Array.isArray(state.blog.blogs) ? state.blog.blogs : [],
-  ); 
+  );
   const psychics = useSelector((state: any) => state.blog.psychics || []);
   const [selectedBlog, setSelectedBlog] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -78,7 +66,6 @@ const AllBlogs = () => {
     if (blogImageId) {
       setLoading(true);
       try {
-        
         await axios.post(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/image/deleteImage`,
           {
@@ -147,8 +134,9 @@ const AllBlogs = () => {
         onClose={closeModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        className="flex items-center justify-center"
       >
-        <Box sx={style}>
+        <Box className="max-h-[98vh] w-full max-w-3xl overflow-y-auto bg-white p-4 shadow-lg">
           <CreateBlog
             initialValues={selectedBlog}
             onSubmit={isUpdating ? handleUpdate : handleCreate}
