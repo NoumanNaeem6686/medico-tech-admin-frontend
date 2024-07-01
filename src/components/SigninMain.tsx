@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { signInAdmin } from "@/store/slices/userSlice";
 import { useRouter } from "next/navigation";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import logo from "../../public/images/logo/logo.png";
 
 const SignInMain = () => {
@@ -15,6 +16,7 @@ const SignInMain = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -32,8 +34,10 @@ const SignInMain = () => {
     };
 
     try {
+      setLoading(true); // Set loading to true before making the request
       //@ts-ignore
       const res = await dispatch(signInAdmin(data));
+      setLoading(false); // Set loading to false after receiving the response
       console.log("🚀 ~ handleLogin ~ res:", res);
       //@ts-ignore
       if (res.payload.success) {
@@ -46,9 +50,10 @@ const SignInMain = () => {
         toast.error(res.payload);
       }
     } catch (error) {
+      setLoading(false); // Set loading to false if there's an error
       //@ts-ignore
       console.log(error.message); //@ts-ignore
-      // toast.error("Wrong Credentials!");
+      toast.error("Wrong Credentials!");
     }
   };
 
@@ -151,11 +156,16 @@ const SignInMain = () => {
                   </div>
                 </div>
                 <div className="mb-5">
-                  <input
+                  <button
                     type="submit"
-                    value="Sign In"
-                    className="w-full cursor-pointer rounded-lg border border-[#12a19b] bg-[#12a19b] p-4 text-white transition hover:bg-opacity-90"
-                  />
+                    className="flex w-full cursor-pointer items-center justify-center rounded-lg border border-[#12a19b] bg-[#12a19b] p-4 text-white transition hover:bg-opacity-90"
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <AiOutlineLoading3Quarters className="mr-2 animate-spin" />
+                    ) : null}
+                    {loading ? "Signing In..." : "Sign In"}
+                  </button>
                 </div>
               </form>
             </div>

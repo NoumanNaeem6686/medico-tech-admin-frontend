@@ -63,6 +63,31 @@ export const deletePsychic = createAsyncThunk(
   }
 );
 
+export const updatePsychic = createAsyncThunk(
+  "updatePsychic",
+  async (psychic, thunkAPI) => {
+    try {
+      const response = await axios.put(
+        `${URL}/api/psyscics/update-psychic/${psychic.id}`,
+        psychic
+      );
+      const data = response.data;
+
+      if (!data.success) {
+        return thunkAPI.rejectWithValue(
+          data.message || "Failed to update psychic"
+        );
+      }
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response.data.message || "Error during updating psychic"
+      );
+    }
+  }
+);
+
+
 const initialState = {
   pasychics: [],
   error: null,
@@ -119,9 +144,28 @@ const psychicsSlice = createSlice({
     builder.addCase(deletePsychic.fulfilled, (state, action) => {
       state.loading = false;
       state.isSuccess = true;
-      state.pasychics = state.pasychics.filter(psychic => psychic.id !== action.payload);
+      state.pasychics = state.pasychics.filter(
+        (psychic) => psychic.id !== action.payload
+      );
     });
     builder.addCase(deletePsychic.rejected, (state, action) => {
+      state.loading = false;
+      state.isError = true;
+      state.error = action.payload;
+    });
+    builder.addCase(updatePsychic.pending, (state) => {
+      state.loading = true;
+      state.isError = false;
+      state.error = null;
+    });
+    builder.addCase(updatePsychic.fulfilled, (state, action) => {
+      state.loading = false;
+      state.isSuccess = true;
+      state.pasychics = state.pasychics.map((psychic) =>
+        psychic.id === action.payload.data.id ? action.payload.data : psychic
+      );
+    });
+    builder.addCase(updatePsychic.rejected, (state, action) => {
       state.loading = false;
       state.isError = true;
       state.error = action.payload;
@@ -131,3 +175,4 @@ const psychicsSlice = createSlice({
 
 export const { resetPsychicsState } = psychicsSlice.actions;
 export default psychicsSlice.reducer;
+
