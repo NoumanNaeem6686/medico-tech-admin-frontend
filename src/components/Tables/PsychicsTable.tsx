@@ -38,15 +38,26 @@ const PsychicsTable = () => {
   };
 
   const handleDelete = async (id: any) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this psychic?",
+    );
+    if (!confirmed) {
+      return; 
+    }
+
     try {
       //@ts-ignore
       const response = await dispatch(deletePsychic(id));
+      console.log("🚀 ~ handleDelete ~ response:", response)
       //@ts-ignore
-      if (response?.payload?.success) {
+      if (response?.payload) {
         toast.success("Psychic deleted successfully");
+      } else {
+        toast.error("Failed to delete psychic");
       }
     } catch (error) {
       console.error("Error deleting psychic:", error);
+      toast.error("Error deleting psychic");
     }
   };
 
