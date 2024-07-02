@@ -13,9 +13,9 @@ import { auth } from "@/lib/firebase"; // Add your Firebase configuration file h
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase"; // Add your Firestore configuration file here
-// import "react-dates/initialize";
-// import "react-dates/lib/css/_datepicker.css";
-// import { DateRangePicker, FocusedInputShape } from "react-dates";
+import "react-dates/initialize";
+import "react-dates/lib/css/_datepicker.css";
+import { DateRangePicker, FocusedInputShape } from "react-dates";
 import moment, { Moment } from "moment";
 import { useRouter } from "next/navigation";
 
@@ -23,9 +23,9 @@ interface DoctorInfo {
   name: string;
   email: string;
   phone: string;
-  experience:string;
-  statusMessage:string;
-  profileDescription:string;
+  experience: string;
+  statusMessage: string;
+  profileDescription: string;
   password: string;
   zodiac: string;
   price: string;
@@ -52,9 +52,7 @@ const Page: React.FC = () => {
   const [imageUrl, setImageUrl] = useState("");
   const [imageId, setImageId] = useState("");
   const [errors, setErrors] = useState("");
-  const [focusedInput, setFocusedInput] = useState< null>(
-    null,
-  );
+  const [focusedInput, setFocusedInput] = useState<null>(null);
   const [dateRange, setDateRange] = useState<{
     startDate: Moment | null;
     endDate: Moment | null;
@@ -63,13 +61,13 @@ const Page: React.FC = () => {
   const [doctorInfo, setDoctorInfo] = useState<DoctorInfo>({
     name: "",
     email: "",
-    profileDescription:"",
-    statusMessage:"",
+    profileDescription: "",
+    statusMessage: "",
     phone: "",
     password: "",
     zodiac: "",
     price: "",
-    experience:"",
+    experience: "",
     shortDescription: "",
     languages: [],
     joiningDate: "",
@@ -88,9 +86,9 @@ const Page: React.FC = () => {
     email: "",
     phone: "",
     password: "",
-    statusMessage:"",
-    experience :"",
-    profileDescription:"",
+    statusMessage: "",
+    experience: "",
+    profileDescription: "",
     zodiac: "",
     price: "",
     shortDescription: "",
@@ -289,7 +287,7 @@ const Page: React.FC = () => {
     const data = {
       name: doctorInfo.name,
       email: doctorInfo.email,
-      experience:doctorInfo.experience,
+      experience: doctorInfo.experience,
       password: doctorInfo.password,
       zodiac: doctorInfo.zodiac,
       price: doctorInfo.price,
@@ -632,19 +630,19 @@ const Page: React.FC = () => {
           <label className="text-gray-700 mb-2 block text-sm font-bold">
             Availability Date
           </label>
-          {/* <DateRangePicker
+          <DateRangePicker
             startDate={dateRange.startDate}
             startDateId="start_date_id"
             endDate={dateRange.endDate}
             endDateId="end_date_id"
             onDatesChange={handleDateRangeChange}
-            focusedInput={focusedInput}
+            focusedInput={focusedInput} //@ts-ignore
             onFocusChange={(focusedInput) => setFocusedInput(focusedInput)}
             numberOfMonths={1}
             displayFormat="YYYY-MM-DD"
             isOutsideRange={() => false}
             minimumNights={0}
-          /> */}
+          />
         </div>
 
         <button
