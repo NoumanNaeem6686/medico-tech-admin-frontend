@@ -23,6 +23,9 @@ interface DoctorInfo {
   name: string;
   email: string;
   phone: string;
+  experience:string;
+  statusMessage:string;
+  profileDescription:string;
   password: string;
   zodiac: string;
   price: string;
@@ -60,10 +63,13 @@ const Page: React.FC = () => {
   const [doctorInfo, setDoctorInfo] = useState<DoctorInfo>({
     name: "",
     email: "",
+    profileDescription:"",
+    statusMessage:"",
     phone: "",
     password: "",
     zodiac: "",
     price: "",
+    experience:"",
     shortDescription: "",
     languages: [],
     joiningDate: "",
@@ -82,6 +88,9 @@ const Page: React.FC = () => {
     email: "",
     phone: "",
     password: "",
+    statusMessage:"",
+    experience :"",
+    profileDescription:"",
     zodiac: "",
     price: "",
     shortDescription: "",
@@ -280,9 +289,12 @@ const Page: React.FC = () => {
     const data = {
       name: doctorInfo.name,
       email: doctorInfo.email,
+      experience:doctorInfo.experience,
       password: doctorInfo.password,
       zodiac: doctorInfo.zodiac,
       price: doctorInfo.price,
+      profileDescription: doctorInfo.profileDescription,
+      statusMessage: doctorInfo.statusMessage,
       languages: doctorInfo.languages,
       joiningDate: doctorInfo.joiningDate,
       description: doctorInfo.description,
@@ -436,6 +448,45 @@ const Page: React.FC = () => {
             type="text"
             name="shortDescription"
             value={doctorInfo.shortDescription}
+            onChange={handleInputChange}
+            className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label className="text-gray-700 mb-2 block text-sm font-bold">
+            Status Message
+          </label>
+          <input
+            type="text"
+            name="statusMessage"
+            value={doctorInfo.statusMessage}
+            onChange={handleInputChange}
+            className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label className="text-gray-700 mb-2 block text-sm font-bold">
+            Profile Description
+          </label>
+          <input
+            type="text"
+            name="profileDescription"
+            value={doctorInfo.profileDescription}
+            onChange={handleInputChange}
+            className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label className="text-gray-700 mb-2 block text-sm font-bold">
+            Experience
+          </label>
+          <input
+            type="text"
+            name="experience"
+            value={doctorInfo.experience}
             onChange={handleInputChange}
             className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
             required

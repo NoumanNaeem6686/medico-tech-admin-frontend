@@ -5,7 +5,10 @@ export interface Psychic {
     shortDescription: string;
     email: string;
     phoneNo: string;
+    profileDescription:string;
     price: string;
+    statusMessage:string;
+    experience: string;
     languages: string[];
     topic: string[];
     tools: string[];

@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import axios from "axios";
 import Loader from "@/components/Loader";
+import { db } from "@/lib/firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 const Page = ({ params }: any) => {
   const URL = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -16,8 +18,10 @@ const Page = ({ params }: any) => {
   const [filteredReviews, setFilteredReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isChatModalOpen, setIsChatModalOpen] = useState(false);
   const [selectedNote, setSelectedNote] = useState("");
   const [selectedUserId, setSelectedUserId] = useState("");
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     if (id) {
@@ -49,23 +53,54 @@ const Page = ({ params }: any) => {
     }
   };
 
-  const openModal = (note: string, psychicId: string, userId: string) => {
+  const openReviewModal = (note: string, psychicId: string, userId: string) => {
     setSelectedNote(note);
     setSelectedUserId(userId);
     const filtered = reviews.filter(
       (review: any) =>
         review.psychicId === psychicId && review.userId === userId,
     );
-    console.log("🚀 ~ openModal ~ filtered:", filtered);
+    console.log("🚀 ~ openReviewModal ~ filtered:", filtered);
     setFilteredReviews(filtered);
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
+  const openChatModal = (psychicId: string, userId: string) => {
+    console.log("psychicId", psychicId);
+    console.log("userId", userId);
+    setSelectedUserId(userId);
+    fetchChatMessages(psychicId, userId);
+    setIsChatModalOpen(true);
+  };
+
+  const closeReviewModal = () => {
     setIsModalOpen(false);
     setSelectedNote("");
     setSelectedUserId("");
     setFilteredReviews([]);
+  };
+
+  const closeChatModal = () => {
+    setIsChatModalOpen(false);
+    setSelectedUserId("");
+    setMessages([]);
+  };
+
+  const fetchChatMessages = async (psychicId: string, userId: string) => {
+    const combinedId = `${userId}_${psychicId}`;
+    try {
+      const docRef = doc(db, "chats", combinedId);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        setMessages(docSnap.data().messages || []);
+      } else {
+        console.log("No such document!");
+        setMessages([]);
+      }
+    } catch (error) {
+      console.error("Error fetching chat messages:", error);
+    }
   };
 
   const renderStars = (rating: number) => {
@@ -113,7 +148,11 @@ const Page = ({ params }: any) => {
   };
 
   if (loading) {
-    return <Loader />;
+    return (
+      <DefaultLayout>
+        <Loader />;
+      </DefaultLayout>
+    );
   }
 
   if (!data) {
@@ -136,11 +175,13 @@ const Page = ({ params }: any) => {
               <th className="border-b px-4 py-2">Total Amount</th>
               <th className="border-b px-4 py-2">Last Readings</th>
               <th className="border-b px-4 py-2">Notes</th>
+              <th className="border-b px-4 py-2">Chat</th>
               <th className="border-b px-4 py-2">Status</th>
             </tr>
           </thead>
           <tbody>
-            {data && //@ts-ignore
+            {data &&
+              //@ts-ignore
               data.map((item: any) => (
                 <tr key={item.id}>
                   <td className="border-b px-4 py-2">{item.userName}</td>
@@ -152,11 +193,19 @@ const Page = ({ params }: any) => {
                   <td className="border-b px-4 py-2">
                     <button
                       onClick={() =>
-                        openModal(item.notes, item.psychicId, item.userId)
+                        openReviewModal(item.notes, item.psychicId, item.userId)
                       }
                       className="rounded bg-blue-500 px-2 py-1 text-white"
                     >
-                      View Notes & Reviews
+                      Notes & Reviews
+                    </button>
+                  </td>
+                  <td className="border-b px-4 py-2">
+                    <button
+                      onClick={() => openChatModal(item.psychicId, item.userId)}
+                      className="rounded bg-green-500 px-2 py-1 text-white"
+                    >
+                      Chat
                     </button>
                   </td>
                   <td className="border-b px-4 py-2">{item.status}</td>
@@ -170,7 +219,7 @@ const Page = ({ params }: any) => {
         <div className="bg-gray-900 fixed inset-0 z-50 flex items-center justify-center bg-opacity-75">
           <div className="relative w-full max-w-lg rounded-lg bg-white p-8 shadow-lg">
             <button
-              onClick={closeModal}
+              onClick={closeReviewModal}
               className="text-gray-600 hover:text-gray-900 absolute right-2 top-2"
             >
               <svg
@@ -208,6 +257,65 @@ const Page = ({ params }: any) => {
             ) : (
               <p>No reviews available</p>
             )}
+          </div>
+        </div>
+      )}
+
+      {isChatModalOpen && (
+        <div className="bg-gray-900 fixed inset-0 z-50 flex items-center justify-center bg-opacity-75">
+          <div
+            className="relative w-full max-w-lg rounded-lg bg-white p-8 shadow-lg"
+            style={{ height: "70vh", width: "70vw" }}
+          >
+            <button
+              onClick={closeChatModal}
+              className="text-gray-600 hover:text-gray-900 absolute right-2 top-2"
+            >
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+            <h2 className="mb-4 text-xl font-bold">Chat Messages</h2>
+            <div
+              className="overflow-y-auto"
+              style={{ height: "calc(100% - 50px)" }}
+            >
+              {messages.length > 0 ? (
+                <ul>
+                  {messages.map((message: any, index) => (
+                    <li key={index} className="mb-2 border-b pb-2">
+                      <div className="flex items-center">
+                        <strong>
+                          {message.senderId === selectedUserId
+                            ? "User"
+                            : "Psychic"}
+                          :
+                        </strong>
+                        <p className="ml-2">{message.content}</p>
+                      </div>
+                      <p className="text-gray-500 text-sm">
+                        {new Date(
+                          message.timestamp.seconds * 1000,
+                        ).toLocaleString()}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No messages available</p>
+              )}
+            </div>
           </div>
         </div>
       )}
