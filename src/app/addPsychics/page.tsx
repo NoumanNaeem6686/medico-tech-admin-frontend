@@ -53,7 +53,6 @@ interface DoctorInfo {
   bankDetails?: BankDetails; // Add this line
 }
 
-
 const Page: React.FC = () => {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -144,7 +143,6 @@ const Page: React.FC = () => {
       swiftCode: "",
     },
   };
-  
 
   const handleBankDetailsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -698,7 +696,7 @@ const Page: React.FC = () => {
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}
-            className="focus:shadow-outline rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-700 focus:outline-none"
+            className="focus:shadow-outline rounded bg-[#12a19b] px-4 py-2 font-bold text-white hover:opacity-70 focus:outline-none"
           >
             Add Bank Details
           </button>
@@ -713,109 +711,107 @@ const Page: React.FC = () => {
       </form>
 
       <ReactModal
-      isOpen={isModalOpen}
-      onRequestClose={() => setIsModalOpen(false)}
-      contentLabel="Add Bank Details"
-      className="fixed inset-0 z-50 flex items-center justify-center outline-none focus:outline-none"
-      overlayClassName="fixed inset-0 bg-gray-600 bg-opacity-75 backdrop-blur-sm"
-    >
-      <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-lg">
-        <h2 className="mb-4 text-2xl">Add Bank Details</h2>
-        <form onSubmit={handleBankDetailsSubmit}>
-          <div className="mb-4">
-            <label className="mb-2 block text-sm font-bold">
-              Name of Account
-            </label>
-            <input
-              type="text"
-              name="accountHolderName"
-              value={bankDetails.accountHolderName}
-              onChange={handleBankDetailsChange}
-              className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="mb-2 block text-sm font-bold">Bank Name</label>
-            <input
-              type="text"
-              name="bankName"
-              value={bankDetails.bankName}
-              onChange={handleBankDetailsChange}
-              className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="mb-2 block text-sm font-bold">
-              Bank Address
-            </label>
-            <input
-              type="text"
-              name="bankAddress"
-              value={bankDetails.bankAddress}
-              onChange={handleBankDetailsChange}
-              className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="mb-2 block text-sm font-bold">
-              Account Number
-            </label>
-            <input
-              type="text"
-              name="accountNumber"
-              value={bankDetails.accountNumber}
-              onChange={handleBankDetailsChange}
-              className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="mb-2 block text-sm font-bold">
-              IBAN / ABA / Firewire / BSB
-            </label>
-            <input
-              type="text"
-              name="iban"
-              value={bankDetails.iban}
-              onChange={handleBankDetailsChange}
-              className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="mb-2 block text-sm font-bold">
-              SWIFT CODE
-            </label>
-            <input
-              type="text"
-              name="swiftCode"
-              value={bankDetails.swiftCode}
-              onChange={handleBankDetailsChange}
-              className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
-              required
-            />
-          </div>
-          <div className="flex justify-end">
-            <button
-              type="button"
-              onClick={() => setIsModalOpen(false)}
-              className="focus:shadow-outline bg-gray-500 hover:bg-gray-700 mr-2 rounded px-4 py-2 font-bold text-black focus:outline-none"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
-            >
-              Save
-            </button>
-          </div>
-        </form>
-      </div>
-    </ReactModal>
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        contentLabel="Add Bank Details"
+        className="fixed inset-0 z-50 flex items-center justify-center outline-none focus:outline-none"
+        overlayClassName="fixed inset-0 bg-gray-600 bg-opacity-75 backdrop-blur-sm"
+      >
+        <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-lg">
+          <h2 className="mb-4 text-2xl">Add Bank Details</h2>
+          <form onSubmit={handleBankDetailsSubmit}>
+            <div className="mb-4">
+              <label className="mb-2 block text-sm font-bold">
+                Name of Account
+              </label>
+              <input
+                type="text"
+                name="accountHolderName"
+                value={bankDetails.accountHolderName}
+                onChange={handleBankDetailsChange}
+                className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="mb-2 block text-sm font-bold">Bank Name</label>
+              <input
+                type="text"
+                name="bankName"
+                value={bankDetails.bankName}
+                onChange={handleBankDetailsChange}
+                className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="mb-2 block text-sm font-bold">
+                Bank Address
+              </label>
+              <input
+                type="text"
+                name="bankAddress"
+                value={bankDetails.bankAddress}
+                onChange={handleBankDetailsChange}
+                className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="mb-2 block text-sm font-bold">
+                Account Number
+              </label>
+              <input
+                type="text"
+                name="accountNumber"
+                value={bankDetails.accountNumber}
+                onChange={handleBankDetailsChange}
+                className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="mb-2 block text-sm font-bold">
+                IBAN / ABA / Firewire / BSB
+              </label>
+              <input
+                type="text"
+                name="iban"
+                value={bankDetails.iban}
+                onChange={handleBankDetailsChange}
+                className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="mb-2 block text-sm font-bold">SWIFT CODE</label>
+              <input
+                type="text"
+                name="swiftCode"
+                value={bankDetails.swiftCode}
+                onChange={handleBankDetailsChange}
+                className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+                required
+              />
+            </div>
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={() => setIsModalOpen(false)}
+                className="focus:shadow-outline bg-gray-500 hover:bg-gray-700 mr-2 rounded px-4 py-2 font-bold text-black focus:outline-none"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
+              >
+                Save
+              </button>
+            </div>
+          </form>
+        </div>
+      </ReactModal>
     </DefaultLayout>
   );
 };
