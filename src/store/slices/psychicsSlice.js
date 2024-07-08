@@ -12,6 +12,7 @@ export const addPsychics = createAsyncThunk(
         psychics
       );
       const data = response.data;
+      console.log("🚀 ~ data:", data)
       if (!data.success) {
         return thunkAPI.rejectWithValue(
           data.message || "Failed to register Psychics"

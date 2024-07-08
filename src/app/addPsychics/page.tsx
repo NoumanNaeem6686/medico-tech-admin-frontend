@@ -43,9 +43,13 @@ interface DoctorInfo {
   languages: string[];
   joiningDate: string;
   description: string;
+  country: string;
   topic: string[];
   tools: string[];
   abilities: string[];
+  city: string;
+  address: string;
+  zipcode: number;
   availability: {
     startDate: Moment | null;
     endDate: Moment | null;
@@ -92,6 +96,10 @@ const Page: React.FC = () => {
     languages: [],
     joiningDate: "",
     description: "",
+    zipcode: 0,
+    country: "",
+    city: "",
+    address: "",
     topic: [],
     tools: [],
     abilities: [],
@@ -115,6 +123,10 @@ const Page: React.FC = () => {
     languages: [],
     joiningDate: "",
     description: "",
+    country: "",
+    zipcode: 0,
+    city: "",
+    address: "",
     topic: [],
     tools: [],
     abilities: [],
@@ -317,17 +329,72 @@ const Page: React.FC = () => {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const validateForm = () => {
+    const requiredFields = [
+      "name",
+      "email",
+      "phone",
+      "experience",
+      "statusMessage",
+      "profileDescription",
+      "password",
+      "zodiac",
+      "price",
+      "shortDescription",
+      "languages",
+      "joiningDate",
+      "description",
+      "address",
+      "city",
+      "country",
+      "zipcode",
+    ];
+
+    const missingFields = requiredFields.filter(
+      (field) =>
+        !doctorInfo[field as keyof DoctorInfo] ||
+        (field === "languages" && doctorInfo.languages.length === 0),
+    );
+
+    if (missingFields.length > 0) {
+      return false;
+    }
+
+    const requiredBankFields = [
+      "accountHolderName",
+      "bankName",
+      "bankAddress",
+      "accountNumber",
+      "iban",
+      "swiftCode",
+    ];
+
+    const missingBankFields = requiredBankFields.filter(
+      (field) => !bankDetails[field as keyof BankDetails],
+    );
+
+    if (missingBankFields.length > 0) {
+      return false;
+    }
+
     if (!imageUrl) {
-      toast.error("please upload image");
-      return;
+      return false;
     }
 
     const passwordErrors = validatePassword(doctorInfo.password);
     if (Object.keys(passwordErrors).length > 0) {
       setErrors(passwordErrors.password);
-      toast.error(passwordErrors.password);
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      toast.error("Please fill all the fields.");
       return;
     }
 
@@ -355,41 +422,18 @@ const Page: React.FC = () => {
       shortDescription: doctorInfo.shortDescription,
       availability: doctorInfo.availability,
       bankDetails: doctorInfo.bankDetails,
+      zipcode: doctorInfo.zipcode,
+      address: doctorInfo.address,
+      city: doctorInfo.city,
+      country: doctorInfo.country,
     };
+
     console.log(data);
     setSumbitLoading(true);
     try {
-      // const userCredential = await createUserWithEmailAndPassword(
-      //   auth,
-      //   doctorInfo.email,
-      //   doctorInfo.password,
-      // );
-      // const user = userCredential.user;
-      // await addDoc(collection(db, "psychics"), {
-      //   uid: user.uid,
-      //   name: doctorInfo.name,
-      //   email: doctorInfo.email,
-      //   zodiac: doctorInfo.zodiac,
-      //   price: doctorInfo.price,
-      //   languages: doctorInfo.languages,
-      //   joiningDate: doctorInfo.joiningDate,
-      //   description: doctorInfo.description,
-      //   phoneNo: doctorInfo.phone,
-      //   status: false,
-      //   chat: false,
-      //   userType: "admin",
-      //   profileUrl: imageUrl,
-      //   profilePicId: imageId,
-      //   topic: doctorInfo.topic,
-      //   tools: doctorInfo.tools,
-      //   abilities: doctorInfo.abilities,
-      //   shortDescription: doctorInfo.shortDescription,
-      //   availability: doctorInfo.availability,
-      // });
       //@ts-ignore
       const response = await dispatch(addPsychics(data));
 
-      console.log("🚀 ~ handleSubmit ~ response:", response);
       console.log("🚀 ~ handleSubmit ~ response:", response);
       //@ts-ignore
       if (response?.payload && response?.payload.success) {
@@ -576,6 +620,58 @@ const Page: React.FC = () => {
             className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
             required
           />
+          <div className="mb-4">
+            <label className="text-gray-700 mb-2 block text-sm font-bold">
+              Address
+            </label>
+            <input
+              type="text"
+              name="address"
+              value={doctorInfo.address}
+              onChange={handleInputChange}
+              className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="text-gray-700 mb-2 block text-sm font-bold">
+              City
+            </label>
+            <input
+              type="text"
+              name="city"
+              value={doctorInfo.city}
+              onChange={handleInputChange}
+              className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="text-gray-700 mb-2 block text-sm font-bold">
+              Country
+            </label>
+            <input
+              type="text"
+              name="country"
+              value={doctorInfo.country}
+              onChange={handleInputChange}
+              className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="text-gray-700 mb-2 block text-sm font-bold">
+              Post code / Zip code
+            </label>
+            <input
+              type="number"
+              name="zipcode"
+              value={doctorInfo.zipcode}
+              onChange={handleInputChange}
+              className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+              required
+            />
+          </div>
         </div>
         <div className="mb-4">
           <label className="text-gray-700 mb-2 block text-sm font-bold">
