@@ -1,27 +1,61 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+
 const URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export const addPsychics = createAsyncThunk(
   "addPsychics",
   async (psychics, thunkAPI) => {
     try {
-      const response = await axios.post(
-        `${URL}/api/psyscics/addpsyscics`,
-        psychics
-      );
+      // First API call to add the psychic
+      const response = await axios.post(`${URL}/api/psyscics/addpsyscics`, psychics);
       const data = response.data;
-      console.log("🚀 ~ data:", data)
+      console.log("🚀 ~ First API response data:", data);
+
       if (!data.success) {
         return thunkAPI.rejectWithValue(
           data.message || "Failed to register Psychics"
         );
       }
-      return data;
+
+      // Log the entire response data structure
+      console.log("🚀 ~ Full response data structure:", data);
+
+      // Extract the id from the response data
+      const { id } = data.data;
+      console.log("🚀 ~ Extracted id:", id);
+
+      if (!id) {
+        return thunkAPI.rejectWithValue("Psychic ID is missing in the response");
+      }
+
+      // Construct the psychicStatus object
+      const psychicStatus = {
+        psychicId: id,
+        chatStatus: false, // Default call status
+        callStatus: false, // Default chat status
+      };
+
+      // Second API call to save the psychic's status
+      const statusResponse = await axios.post(
+        `${URL}/api/psyscics/psychics-status`,
+        psychicStatus
+      );
+      const statusData = statusResponse.data;
+      console.log("🚀 ~ Second API response statusData:", statusData);
+
+      if (!statusData.success) {
+        return thunkAPI.rejectWithValue(
+          statusData.message || "Failed to save Psychic status"
+        );
+      }
+
+      return { ...data, status: statusData };
     } catch (error) {
+      console.error("🚀 ~ Error:", error.response?.data);
       return thunkAPI.rejectWithValue(
-        error.response.data.message || "Error during registration Psychics"
+        error.response?.data?.message || "Error during registration Psychics"
       );
     }
   }
