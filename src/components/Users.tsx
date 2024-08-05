@@ -50,39 +50,21 @@ const Users = () => {
           </tr>
         </thead>
         <tbody>
-          {users?.map((user) => (
-            <tr
-              key={
-                //@ts-ignore
-                user.id
-              }
-            >
+          {users?.map((user: any) => (
+            <tr key={user.id}>
               {/* <td className="border-b px-4 py-2">{user.id}</td> */}
               <td className="border-b px-4 py-2">
-                <Link //@ts-ignore
+                <Link
                   href={`/user-details/${user.id}`} //@ts-ignore
                   key={user.id}
                   passHref
                 >
-                  {
-                    //@ts-ignore
-                    user.userName
-                  }
+                  {user.userName}
                 </Link>
               </td>
-              <td className="border-b px-4 py-2">
-                {
-                  //@ts-ignore
-                  user.email
-                }
-              </td>
+              <td className="border-b px-4 py-2">{user.email}</td>
               {/* <td className="border-b px-4 py-2">{user.country}</td> */}
-              <td className="border-b px-4 py-2">
-                {
-                  //@ts-ignore
-                  user.mobileNo
-                }
-              </td>
+              <td className="border-b px-4 py-2">{user.mobileNo}</td>
             </tr>
           ))}
         </tbody>

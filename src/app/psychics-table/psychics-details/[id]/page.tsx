@@ -6,54 +6,62 @@ import axios from "axios";
 import Loader from "@/components/Loader";
 import { db } from "@/lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
+import { useSelector } from "react-redux";
 
 const Page = ({ params }: any) => {
   const URL = process.env.NEXT_PUBLIC_BACKEND_URL;
   const { id } = params;
+  console.log("🚀 ~ Page ~ id:", id);
   const searchParams = useSearchParams();
   const name = searchParams.get("name");
   console.log("🚀 ~ Page ~ name:", name);
-  const [data, setData] = useState(null);
+  // const [data, setData] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [filteredReviews, setFilteredReviews] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isChatModalOpen, setIsChatModalOpen] = useState(false);
   const [selectedNote, setSelectedNote] = useState("");
   const [selectedUserId, setSelectedUserId] = useState("");
   const [messages, setMessages] = useState([]);
+  const { customerHistory, loading } = useSelector(
+    (state: any) => state.customerHistory,
+  );
+  const data = customerHistory.filter((item: any) => item.psychic.id == id);
+  console.log("🚀 ~ Page ~ data:", data)
+  // useEffect(() => {
+  //   if (id) {
+  //     fetchData(id);
+  //     fetchAllReviews();
+  //   }
+  // }, [id]);
 
-  useEffect(() => {
-    if (id) {
-      fetchData(id);
-      fetchAllReviews();
-    }
-  }, [id]);
+  // const fetchData = async (psychicId: string) => {
+  //   try {
+  //     const response = await axios.get(
+  //       `${URL}/api/customer/customer-detail-by-id/${psychicId}`,
+  //     );
+  //     console.log("response", response.data);
+  //     setData(response.data);
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //     setLoading(false);
+  //   }
+  // };
 
-  const fetchData = async (psychicId: string) => {
-    try {
-      const response = await axios.get(
-        `${URL}/api/customer/customer-detail-by-id/${psychicId}`,
-      );
-      setData(response.data);
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      setLoading(false);
-    }
-  };
-
-  const fetchAllReviews = async () => {
-    try {
-      const response = await axios.get(`${URL}/api/user/all-review`);
-      setReviews(response.data.reviews);
-      console.log("🚀 ~ fetchAllReviews ~ response:", response);
-    } catch (error) {
-      console.error("Error fetching reviews:", error);
-    }
-  };
+  // const fetchAllReviews = async () => {
+  //   try {
+  //     const response = await axios.get(`${URL}/api/user/all-review`);
+  //     setReviews(response.data.reviews);
+  //     console.log("🚀 ~ fetchAllReviews ~ response:", response);
+  //   } catch (error) {
+  //     console.error("Error fetching reviews:", error);
+  //   }
+  // };
 
   const openReviewModal = (note: string, psychicId: string, userId: string) => {
+    console.log("🚀 ~ openReviewModal ~ note:", note);
     setSelectedNote(note);
     setSelectedUserId(userId);
     const filtered = reviews.filter(

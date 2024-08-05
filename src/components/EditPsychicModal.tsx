@@ -6,6 +6,7 @@ import MultiSelectForTools from "@/components/MultiSelectForTools";
 import MultiSelectForAbilities from "@/components/MultiSelectForAbilities";
 import MultiSelect from "@/components/MultiSelect";
 import { Psychic } from "@/types/psychic"; // Ensure this import matches your actual types
+import Image from "next/image";
 
 interface EditPsychicModalProps {
   psychic: Psychic;
@@ -177,10 +178,12 @@ const EditPsychicModal: React.FC<EditPsychicModalProps> = ({
                   </div>
                 ) : previewUrl ? (
                   <>
-                    <img
+                    <Image
                       src={previewUrl}
                       alt="Preview"
                       className="h-full w-full object-cover"
+                      height={200}
+                      width={200}
                     />
                     <button
                       onClick={clearImage}

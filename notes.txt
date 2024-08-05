@@ -1,0 +1,11 @@
+Tips
+
+1. don't use ts-ignore
+2. don't use settimeout for loading,
+3. don't "use client" in main route or layout
+
+
+
+Pending points:
+1. customer history calling
+2. psychic earning collection

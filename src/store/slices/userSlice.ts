@@ -1,3 +1,4 @@
+import { SiginUser } from "@/types/user";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -14,37 +15,36 @@ export const signUpAdmin = createAsyncThunk(
         return thunkAPI.rejectWithValue(data.message || "Failed to register");
       }
       return data;
-    } catch (error) {
+    } catch (error: any) {
       return thunkAPI.rejectWithValue(
-        error.response.data.message || "Error during registration"
+        error.response.data.message || "Error during registration",
       );
     }
-  }
+  },
 );
 
 export const signInAdmin = createAsyncThunk(
   "admin/signInAdmin",
-  async (user, thunkAPI) => {
+  async (user: SiginUser, { rejectWithValue }) => {
     try {
       const response = await axios.post(`${URL}/api/admin/signInAdmin`, user);
       const data = response.data;
       console.log("🚀 ~ data:", data);
 
       if (!data.success) {
-        return thunkAPI.rejectWithValue(data.message || "Failed to Login");
+        return rejectWithValue(data.message || "Failed to Login");
       }
-
       const stringyData = JSON.stringify(data.admin);
       document.cookie = `login=${stringyData}; path=/;`;
       localStorage.setItem("login", stringyData);
 
       return data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response.data.message || "Error during Login"
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response.data.message || "Error during Login",
       );
     }
-  }
+  },
 );
 
 export const getCurrentAdmin = createAsyncThunk(
@@ -59,13 +59,16 @@ export const getCurrentAdmin = createAsyncThunk(
         return thunkAPI.rejectWithValue("No admin data found in local storage");
       }
     } catch (error) {
-      return thunkAPI.rejectWithValue("Failed to load admin data from local storage");
+      return thunkAPI.rejectWithValue(
+        "Failed to load admin data from local storage",
+      );
     }
-  }
+  },
 );
 
 const initialState = {
   admin: null,
+  isUserLogined: false,
   error: null,
   loading: false,
   isError: false,
@@ -79,6 +82,7 @@ const userSlice = createSlice({
     resetAdminState: (state) => {
       state.loading = false;
       state.isError = false;
+      state.isUserLogined = false;
       state.isSuccess = false;
       state.error = null;
       state.admin = null;
@@ -87,6 +91,8 @@ const userSlice = createSlice({
       state.admin = null;
       state.isSuccess = false;
       state.isError = false;
+      state.isUserLogined = false;
+
       state.loading = false;
       document.cookie = "login=;expires=Thu, 01 Jan 1970 00:00:01 GMT;";
       localStorage.removeItem("login");
@@ -104,7 +110,7 @@ const userSlice = createSlice({
         state.isSuccess = true;
         state.admin = action.payload;
       })
-      .addCase(signUpAdmin.rejected, (state, action) => {
+      .addCase(signUpAdmin.rejected, (state, action: any) => {
         state.loading = false;
         state.isError = true;
         state.error = action.payload;
@@ -118,9 +124,11 @@ const userSlice = createSlice({
         console.log("Payload received on login:", action.payload.admin);
         state.loading = false;
         state.isSuccess = true;
+        state.isUserLogined = true;
+
         state.admin = action.payload.admin;
       })
-      .addCase(signInAdmin.rejected, (state, action) => {
+      .addCase(signInAdmin.rejected, (state, action: any) => {
         console.log("Error on login:", action.payload);
         state.loading = false;
         state.isError = true;
@@ -134,9 +142,11 @@ const userSlice = createSlice({
       .addCase(getCurrentAdmin.fulfilled, (state, action) => {
         state.loading = false;
         state.isSuccess = true;
+        state.isUserLogined = true;
+
         state.admin = action.payload.admin;
       })
-      .addCase(getCurrentAdmin.rejected, (state, action) => {
+      .addCase(getCurrentAdmin.rejected, (state, action: any) => {
         state.loading = false;
         state.isError = true;
         state.error = action.payload;

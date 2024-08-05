@@ -36,24 +36,22 @@ const SignInMain = () => {
     try {
       setLoading(true); // Set loading to true before making the request
       //@ts-ignore
-      const res = await dispatch(signInAdmin(data));
+      const res: any = await dispatch(signInAdmin(data));
       setLoading(false); // Set loading to false after receiving the response
       console.log("🚀 ~ handleLogin ~ res:", res);
-      //@ts-ignore
       if (res.payload.success) {
         toast.success("Login Successfully");
         router.push("/");
         setEmail("");
         setPassword("");
       } else {
-        //@ts-ignore
         toast.error(res.payload);
       }
-    } catch (error) {
-      setLoading(false); // Set loading to false if there's an error
-      //@ts-ignore
+    } catch (error: any) {
       console.log(error.message); //@ts-ignore
       toast.error("Wrong Credentials!");
+    } finally {
+      setLoading(false); // Set loading to false if there's an error
     }
   };
 

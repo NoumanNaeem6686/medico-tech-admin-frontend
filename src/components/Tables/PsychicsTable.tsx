@@ -12,25 +12,27 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../Loader";
 import EditPsychicModal from "../EditPsychicModal"; // Import the modal component
 import { toast } from "react-toastify";
+import { Psychic } from "@/types/psychic";
 
 const PsychicsTable = () => {
   const dispatch = useDispatch(); //@ts-ignore
   const { pasychics, loading } = useSelector((state) => state.psychics);
+  console.log("🚀 ~ PsychicsTable ~ pasychics:", pasychics);
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [currentPsychic, setCurrentPsychic] = useState(null);
+  const [currentPsychic, setCurrentPsychic] = useState<any>({});
 
-  useEffect(() => {
-    const getAllPsychics = async () => {
-      try {
-        //@ts-ignore
-        await dispatch(gettingAllPsychics());
-      } catch (error) {
-        console.error("Failed to fetch psychics:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const getAllPsychics = async () => {
+  //     try {
+  //       //@ts-ignore
+  //       await dispatch(gettingAllPsychics());
+  //     } catch (error) {
+  //       console.error("Failed to fetch psychics:", error);
+  //     }
+  //   };
 
-    getAllPsychics();
-  }, [dispatch]);
+  //   getAllPsychics();
+  // }, [dispatch]);
 
   const handleEdit = (psychic: any) => {
     setCurrentPsychic(psychic);
@@ -42,14 +44,14 @@ const PsychicsTable = () => {
       "Are you sure you want to delete this psychic?",
     );
     if (!confirmed) {
-      return; 
+      return;
     }
 
     try {
       //@ts-ignore
-      const response = await dispatch(deletePsychic(id));
-      console.log("🚀 ~ handleDelete ~ response:", response)
-      //@ts-ignore
+      const response: any = await dispatch(deletePsychic(id));
+      console.log("🚀 ~ handleDelete ~ response:", response);
+
       if (response?.payload) {
         toast.success("Psychic deleted successfully");
       } else {
@@ -65,12 +67,12 @@ const PsychicsTable = () => {
     console.log("updatedPsychic", updatedPsychic);
     try {
       //@ts-ignore
-      const response = await dispatch(updatePsychic(updatedPsychic));
-      console.log("🚀 ~ handleUpdatePsychic ~ response:", response); //@ts-ignore
+      const response: any = await dispatch(updatePsychic(updatedPsychic));
+      console.log("🚀 ~ handleUpdatePsychic ~ response:", response);
       if (response?.payload?.success) {
         toast.success("Psychic updated successfully");
         setEditModalOpen(false);
-        setCurrentPsychic(null);
+        // setCurrentPsychic({});
       } else {
         // Handle update error
       }
@@ -96,9 +98,9 @@ const PsychicsTable = () => {
                   <th scope="col" className="px-4 py-3">
                     Psychics
                   </th>
-                  <th scope="col" className="px-4 py-3">
+                  {/* <th scope="col" className="px-4 py-3">
                     Category
-                  </th>
+                  </th> */}
                   <th scope="col" className="px-4 py-3">
                     Status
                   </th>
@@ -146,24 +148,26 @@ const PsychicsTable = () => {
                         className="text-gray-900 flex items-center whitespace-nowrap px-4 py-2 font-medium dark:text-white"
                       >
                         <Link
-                          href={`/psychics-details/${psychic.id}?name=${psychic.name}`}
+                          href={`/psychics-table/psychics-details/${psychic.id}?name=${psychic.name}`}
                         >
                           <div className="flex items-center">
-                            <img
+                            <Image
                               src={psychic?.profileUrl}
                               alt="Psychic Image"
                               className="mr-3 h-8 w-auto"
+                              width={100}
+                              height={100}
                             />
                             {psychic?.name}
                           </div>
                         </Link>
                       </th>
-                      <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
+                      {/* <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
                         <div className="flex items-center">
                           <div className="bg-red-700 mr-2 inline-block h-4 w-4 rounded-full" />
                           category
                         </div>
-                      </td>
+                      </td> */}
                       <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
                         {psychic?.status ? "Online" : "Offline"}
                       </td>
@@ -205,7 +209,7 @@ const PsychicsTable = () => {
         </div>
       </div>
       {editModalOpen && (
-        <EditPsychicModal //@ts-ignore
+        <EditPsychicModal
           psychic={currentPsychic}
           onClose={() => setEditModalOpen(false)}
           onUpdate={handleUpdatePsychic}

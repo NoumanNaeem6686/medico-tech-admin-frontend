@@ -7,10 +7,8 @@ import Dashboard from "./Dashboard/Dashboard";
 
 export default function HomeMain() {
   //@ts-ignore
-  const loggedInUser = useSelector((state) => state.admin.admin);
+  const loggedInUser = useSelector((state) => state.admin.isUserLogined);
   console.log("🚀 ~ HomeMain ~ loggedInUser:", loggedInUser);
-
-  const isLoggedIn = !!loggedInUser;
 
   const handleLogin = () => {
     console.log("login");
@@ -18,7 +16,7 @@ export default function HomeMain() {
 
   return (
     <>
-      {isLoggedIn ? (
+      {loggedInUser ? (
         <DefaultLayout>
           <Dashboard />
         </DefaultLayout>
