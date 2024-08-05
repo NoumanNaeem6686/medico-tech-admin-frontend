@@ -93,7 +93,7 @@ const customerHistorySlice = createSlice({
     //   .addCase(addPsychics.fulfilled, (state, action) => {
     //     state.loading = false;
     //     state.isSuccess = true;
-    //     state.pasychics.push(action.payload);
+    //     state.psychics.push(action.payload);
     //   })
     //   .addCase(addPsychics.rejected, (state, action) => {
     //     state.loading = false;
@@ -120,7 +120,7 @@ const customerHistorySlice = createSlice({
     // builder.addCase(deletePsychic.fulfilled, (state, action) => {
     //   state.loading = false;
     //   state.isSuccess = true;
-    //   state.pasychics = state.pasychics.filter(
+    //   state.psychics = state.psychics.filter(
     //     (psychic) => psychic.id !== action.payload,
     //   );
     // });
@@ -137,7 +137,7 @@ const customerHistorySlice = createSlice({
     // builder.addCase(updatePsychic.fulfilled, (state, action) => {
     //   state.loading = false;
     //   state.isSuccess = true;
-    //   state.pasychics = state.pasychics.map((psychic) =>
+    //   state.psychics = state.psychics.map((psychic) =>
     //     psychic.id === action.payload.data.id ? action.payload.data : psychic,
     //   );
     // });

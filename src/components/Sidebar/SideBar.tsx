@@ -282,9 +282,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </li>
               <li>
                 <Link
-                  href="/addPsychics"
+                  href="/add-psychics"
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-black duration-300 ease-in-out hover:bg-[#12a19b] hover:text-white dark:hover:bg-meta-4 ${
-                    pathname.includes("addPsychics") &&
+                    pathname.includes("add-psychics") &&
                     "bg-[#12a19b] text-white dark:bg-meta-4"
                   }`}
                 >
@@ -319,9 +319,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
               <li>
                 <Link
-                  href="/ProductSalePannel"
+                  href="/product"
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-black duration-300 ease-in-out hover:bg-[#12a19b] hover:text-white dark:hover:bg-meta-4 ${
-                    pathname.includes("ProductSalePannel") &&
+                    pathname.includes("product") &&
                     "bg-[#12a19b] text-white dark:bg-meta-4"
                   }`}
                 >

@@ -1,6 +1,5 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-
 
 const URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -9,13 +8,16 @@ export const addPsychics = createAsyncThunk(
   async (psychics, thunkAPI) => {
     try {
       // First API call to add the psychic
-      const response = await axios.post(`${URL}/api/psyscics/addpsyscics`, psychics);
+      const response = await axios.post(
+        `${URL}/api/psyscics/addpsyscics`,
+        psychics,
+      );
       const data = response.data;
       console.log("🚀 ~ First API response data:", data);
 
       if (!data.success) {
         return thunkAPI.rejectWithValue(
-          data.message || "Failed to register Psychics"
+          data.message || "Failed to register Psychics",
         );
       }
 
@@ -27,7 +29,9 @@ export const addPsychics = createAsyncThunk(
       console.log("🚀 ~ Extracted id:", id);
 
       if (!id) {
-        return thunkAPI.rejectWithValue("Psychic ID is missing in the response");
+        return thunkAPI.rejectWithValue(
+          "Psychic ID is missing in the response",
+        );
       }
 
       // Construct the psychicStatus object
@@ -40,25 +44,25 @@ export const addPsychics = createAsyncThunk(
       // Second API call to save the psychic's status
       const statusResponse = await axios.post(
         `${URL}/api/psyscics/psychics-status`,
-        psychicStatus
+        psychicStatus,
       );
       const statusData = statusResponse.data;
       console.log("🚀 ~ Second API response statusData:", statusData);
 
       if (!statusData.success) {
         return thunkAPI.rejectWithValue(
-          statusData.message || "Failed to save Psychic status"
+          statusData.message || "Failed to save Psychic status",
         );
       }
 
       return { ...data, status: statusData };
-    } catch (error) {
+    } catch (error: any) {
       console.error("🚀 ~ Error:", error.response?.data);
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Error during registration Psychics"
+        error.response?.data?.message || "Error during registration Psychics",
       );
     }
-  }
+  },
 );
 
 export const gettingAllPsychics = createAsyncThunk(
@@ -76,55 +80,58 @@ export const gettingAllPsychics = createAsyncThunk(
       console.log("error in getting all psychics", e);
       return thunkAPI.rejectWithValue(e);
     }
-  }
+  },
 );
 
 export const deletePsychic = createAsyncThunk(
   "deletePsychic",
   async (id, thunkAPI) => {
     try {
-      const response = await axios.delete(`${URL}/api/psyscics/delete-psychic/${id}`);
-      const data = response.data;
-
-      if (!data.success) {
-        return thunkAPI.rejectWithValue(data.message || "Failed to delete psychic");
-      }
-      return id; // Return the deleted psychic ID
-    } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response.data.message || "Error during deletion of psychic"
-      );
-    }
-  }
-);
-
-export const updatePsychic = createAsyncThunk(
-  "updatePsychic",
-  async (psychic, thunkAPI) => {
-    try {
-      const response = await axios.put(
-        `${URL}/api/psyscics/update-psychic/${psychic.id}`,
-        psychic
+      const response = await axios.delete(
+        `${URL}/api/psyscics/delete-psychic/${id}`,
       );
       const data = response.data;
 
       if (!data.success) {
         return thunkAPI.rejectWithValue(
-          data.message || "Failed to update psychic"
+          data.message || "Failed to delete psychic",
+        );
+      }
+      return id; // Return the deleted psychic ID
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response.data.message || "Error during deletion of psychic",
+      );
+    }
+  },
+);
+
+export const updatePsychic = createAsyncThunk(
+  "updatePsychic",
+  async (psychic: any, thunkAPI) => {
+    try {
+      const response = await axios.put(
+        `${URL}/api/psyscics/update-psychic/${psychic.id}`,
+        psychic,
+      );
+      const data = response.data;
+
+      if (!data.success) {
+        return thunkAPI.rejectWithValue(
+          data.message || "Failed to update psychic",
         );
       }
       return data;
-    } catch (error) {
+    } catch (error: any) {
       return thunkAPI.rejectWithValue(
-        error.response.data.message || "Error during updating psychic"
+        error.response.data.message || "Error during updating psychic",
       );
     }
-  }
+  },
 );
 
-
 const initialState = {
-  pasychics: [],
+  psychics: [],
   error: null,
   loading: false,
   isError: false,
@@ -140,7 +147,7 @@ const psychicsSlice = createSlice({
       state.isError = false;
       state.isSuccess = false;
       state.error = null;
-      state.pasychics = [];
+      state.psychics = [];
     },
   },
   extraReducers: (builder) => {
@@ -150,12 +157,13 @@ const psychicsSlice = createSlice({
         state.isError = false;
         state.error = null;
       })
-      .addCase(addPsychics.fulfilled, (state, action) => {
+      .addCase(addPsychics.fulfilled, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.isSuccess = true;
-        state.pasychics.push(action.payload);
+        //@ts-ignore
+        state.psychics.push(action?.payload);
       })
-      .addCase(addPsychics.rejected, (state, action) => {
+      .addCase(addPsychics.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.isError = true;
         state.error = action.payload;
@@ -165,7 +173,7 @@ const psychicsSlice = createSlice({
     });
     builder.addCase(gettingAllPsychics.fulfilled, (state, action) => {
       state.loading = false;
-      state.pasychics = action.payload.data;
+      state.psychics = action.payload.data;
     });
     builder.addCase(gettingAllPsychics.rejected, (state, action) => {
       state.loading = false;
@@ -179,15 +187,18 @@ const psychicsSlice = createSlice({
     builder.addCase(deletePsychic.fulfilled, (state, action) => {
       state.loading = false;
       state.isSuccess = true;
-      state.pasychics = state.pasychics.filter(
-        (psychic) => psychic.id !== action.payload
+      state.psychics = state.psychics.filter(
+        (psychic: any) => psychic.id !== action.payload,
       );
     });
-    builder.addCase(deletePsychic.rejected, (state, action) => {
-      state.loading = false;
-      state.isError = true;
-      state.error = action.payload;
-    });
+    builder.addCase(
+      deletePsychic.rejected,
+      (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.isError = true;
+        state.error = action.payload;
+      },
+    );
     builder.addCase(updatePsychic.pending, (state) => {
       state.loading = true;
       state.isError = false;
@@ -196,18 +207,21 @@ const psychicsSlice = createSlice({
     builder.addCase(updatePsychic.fulfilled, (state, action) => {
       state.loading = false;
       state.isSuccess = true;
-      state.pasychics = state.pasychics.map((psychic) =>
-        psychic.id === action.payload.data.id ? action.payload.data : psychic
+      const data: any = state.psychics.map((psychic: any) =>
+        psychic.id === action.payload.data.id ? action.payload.data : psychic,
       );
+      state.psychics = data;
     });
-    builder.addCase(updatePsychic.rejected, (state, action) => {
-      state.loading = false;
-      state.isError = true;
-      state.error = action.payload;
-    });
+    builder.addCase(
+      updatePsychic.rejected,
+      (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.isError = true;
+        state.error = action.payload;
+      },
+    );
   },
 });
 
 export const { resetPsychicsState } = psychicsSlice.actions;
 export default psychicsSlice.reducer;
-

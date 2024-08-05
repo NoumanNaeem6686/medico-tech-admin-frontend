@@ -2,6 +2,7 @@
 
 import { useSelector } from "react-redux";
 import Loader from "../Loader";
+import { CalculateCustomerHistoryAmount } from "../utils/helper";
 const TableOne = () => {
   const { customerHistory, loading } = useSelector(
     (state: any) => state.customerHistory,
@@ -104,11 +105,11 @@ const TableOne = () => {
                       </td>
                       <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
                         $
-                        {Math.ceil(
-                          (item.selectedTime / 60) * item.psychic.price,
+                        {CalculateCustomerHistoryAmount(
+                          item.selectedTime,
+                          item.psychic.price,
                         )}
                       </td>
-
                       {/* <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
                       <div className="flex items-center">
                         <svg

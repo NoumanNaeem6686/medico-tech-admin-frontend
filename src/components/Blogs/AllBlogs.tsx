@@ -17,9 +17,7 @@ import CreateBlog from "./CreateBlog";
 
 const AllBlogs = () => {
   const dispatch = useDispatch();
-  const blogs = useSelector((state: any) =>
-    Array.isArray(state.blog.blogs) ? state.blog.blogs : [],
-  );
+  const blogs = useSelector((state: any) => state.blog.blogs);
   const psychics = useSelector((state: any) => state.blog.psychics || []);
   const [selectedBlog, setSelectedBlog] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -82,15 +80,15 @@ const AllBlogs = () => {
     }
   };
 
-  const gettingAllPsychics = async () => {
-    try {
-      //@ts-ignore
-      const res = await dispatch(getAllPsychics());
-      console.log("🚀 ~ gettingAllPsychics ~ res:", res);
-    } catch (error) {
-      console.log("Error in getting all psychics");
-    }
-  };
+  // const gettingAllPsychics = async () => {
+  //   try {
+  //     //@ts-ignore
+  //     const res = await dispatch(getAllPsychics());
+  //     console.log("🚀 ~ gettingAllPsychics ~ res:", res);
+  //   } catch (error) {
+  //     console.log("Error in getting all psychics");
+  //   }
+  // };
 
   useEffect(() => {
     const gettingBlogs = async () => {
@@ -101,7 +99,7 @@ const AllBlogs = () => {
       setLoading(false);
     };
     gettingBlogs();
-    gettingAllPsychics();
+    // gettingAllPsychics();
   }, [dispatch]);
 
   return (

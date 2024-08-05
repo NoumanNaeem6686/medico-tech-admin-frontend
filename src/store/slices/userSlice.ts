@@ -1,5 +1,5 @@
 import { SiginUser } from "@/types/user";
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const URL = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -110,7 +110,7 @@ const userSlice = createSlice({
         state.isSuccess = true;
         state.admin = action.payload;
       })
-      .addCase(signUpAdmin.rejected, (state, action: any) => {
+      .addCase(signUpAdmin.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.isError = true;
         state.error = action.payload;
@@ -128,7 +128,7 @@ const userSlice = createSlice({
 
         state.admin = action.payload.admin;
       })
-      .addCase(signInAdmin.rejected, (state, action: any) => {
+      .addCase(signInAdmin.rejected, (state, action: PayloadAction<any>) => {
         console.log("Error on login:", action.payload);
         state.loading = false;
         state.isError = true;
@@ -146,11 +146,14 @@ const userSlice = createSlice({
 
         state.admin = action.payload.admin;
       })
-      .addCase(getCurrentAdmin.rejected, (state, action: any) => {
-        state.loading = false;
-        state.isError = true;
-        state.error = action.payload;
-      });
+      .addCase(
+        getCurrentAdmin.rejected,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.isError = true;
+          state.error = action.payload;
+        },
+      );
   },
 });
 

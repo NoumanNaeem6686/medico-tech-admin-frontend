@@ -19,8 +19,8 @@ export const config = {
   matcher: [
     '/all-blogs',
     '/customer-history',
-    '/addPsychics',
-    '/ProductSalePannel',
+    '/add-psychics',
+    '/product',
     '/packages',
     '/profile',
     '/settings',

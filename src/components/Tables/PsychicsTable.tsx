@@ -16,8 +16,8 @@ import { Psychic } from "@/types/psychic";
 
 const PsychicsTable = () => {
   const dispatch = useDispatch(); //@ts-ignore
-  const { pasychics, loading } = useSelector((state) => state.psychics);
-  console.log("🚀 ~ PsychicsTable ~ pasychics:", pasychics);
+  const { psychics, loading } = useSelector((state) => state.psychics);
+  console.log("🚀 ~ PsychicsTable ~ psychics:", psychics);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [currentPsychic, setCurrentPsychic] = useState<any>({});
 
@@ -122,8 +122,8 @@ const PsychicsTable = () => {
                 </tr>
               </thead>
               <tbody>
-                {pasychics &&
-                  pasychics.map((psychic: any, index: any) => (
+                {psychics &&
+                  psychics.map((psychic: any, index: any) => (
                     <tr
                       key={index}
                       className="odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 dark:border-gray-700 border-b odd:bg-white"

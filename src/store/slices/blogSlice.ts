@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const URL = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -15,7 +15,7 @@ export const createBlog = createAsyncThunk(
         );
       }
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Error during creating Blog",
       );
@@ -34,7 +34,7 @@ export const getAllBlogs = createAsyncThunk(
         );
       }
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Error during getting Blog",
       );
@@ -50,7 +50,7 @@ export const deleteBlog = createAsyncThunk(
         `${URL}/api/admin/delete-blog/${blogId}`,
       );
       return blogId;
-    } catch (error) {
+    } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
   },
@@ -58,7 +58,7 @@ export const deleteBlog = createAsyncThunk(
 
 export const updateBlog = createAsyncThunk(
   "blogs/updateBlog",
-  async (blog, thunkAPI) => {
+  async (blog: any, thunkAPI) => {
     try {
       const response = await axios.put(
         `${URL}/api/admin/update-blog/${blog.id}`,
@@ -70,7 +70,7 @@ export const updateBlog = createAsyncThunk(
         );
       }
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Error during updating Blog",
       );
@@ -88,7 +88,7 @@ export const getAllPsychics = createAsyncThunk(
         );
       }
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Error during getting Blog",
       );
@@ -124,12 +124,14 @@ const blogSlice = createSlice({
         state.isError = false;
         state.error = null;
       })
-      .addCase(createBlog.fulfilled, (state, action) => {
+      .addCase(createBlog.fulfilled, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.isSuccess = true;
+        // @ts-ignore
+
         state.blogs.push(action.payload.newBlog);
       })
-      .addCase(createBlog.rejected, (state, action) => {
+      .addCase(createBlog.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.isError = true;
         state.error = action.payload;
@@ -146,15 +148,17 @@ const blogSlice = createSlice({
           ? action.payload.data
           : [];
       })
-      .addCase(getAllBlogs.rejected, (state, action) => {
+      .addCase(getAllBlogs.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.isError = true;
         state.error = action.payload;
       })
       .addCase(deleteBlog.fulfilled, (state, action) => {
-        state.blogs = state.blogs.filter((blog) => blog.id !== action.payload);
+        state.blogs = state.blogs.filter(
+          (blog: any) => blog.id !== action.payload,
+        );
       })
-      .addCase(deleteBlog.rejected, (state, action) => {
+      .addCase(deleteBlog.rejected, (state, action: PayloadAction<any>) => {
         state.error = action.payload;
       })
       .addCase(updateBlog.pending, (state) => {
@@ -162,39 +166,41 @@ const blogSlice = createSlice({
         state.isError = false;
         state.error = null;
       })
-      .addCase(updateBlog.fulfilled, (state, action) => {
+      .addCase(updateBlog.fulfilled, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.isSuccess = true;
         const updatedBlogIndex = state.blogs.findIndex(
-          (blog) => blog.id === action.payload.updatedBlog.id,
+          (blog: any) => blog.id === action.payload.updatedBlog.id,
         );
         if (updatedBlogIndex !== -1) {
+          // @ts-ignore
+
           state.blogs[updatedBlogIndex] = action.payload.updatedBlog;
         }
       })
-      .addCase(updateBlog.rejected, (state, action) => {
-        state.loading = false;
-        state.isError = true;
-        state.error = action.payload;
-      })
-      .addCase(getAllPsychics.pending, (state) => {
-        state.loading = true;
-        state.isError = false;
-        state.error = null;
-      })
-      .addCase(getAllPsychics.fulfilled, (state, action) => {
-        state.loading = false;
-        state.isSuccess = true;
-        console.log("action.payload", action.payload);
-        state.psychics = Array.isArray(action.payload.data)
-          ? action.payload.data
-          : [];
-      })
-      .addCase(getAllPsychics.rejected, (state, action) => {
+      .addCase(updateBlog.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.isError = true;
         state.error = action.payload;
       });
+    // .addCase(getAllPsychics.pending, (state) => {
+    //   state.loading = true;
+    //   state.isError = false;
+    //   state.error = null;
+    // })
+    // .addCase(getAllPsychics.fulfilled, (state, action) => {
+    //   state.loading = false;
+    //   state.isSuccess = true;
+    //   console.log("action.payload", action.payload);
+    //   state.psychics = Array.isArray(action.payload.data)
+    //     ? action.payload.data
+    //     : [];
+    // })
+    // .addCase(getAllPsychics.rejected, (state, action) => {
+    //   state.loading = false;
+    //   state.isError = true;
+    //   state.error = action.payload;
+    // });
   },
 });
 

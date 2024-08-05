@@ -7,16 +7,16 @@ import Loader from "@/components/Loader";
 import { db } from "@/lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { useSelector } from "react-redux";
+import { CalculateCustomerHistoryAmount } from "@/components/utils/helper";
+import { isThenable } from "next/dist/client/components/router-reducer/router-reducer-types";
 
 const Page = ({ params }: any) => {
-  const URL = process.env.NEXT_PUBLIC_BACKEND_URL;
   const { id } = params;
-  console.log("🚀 ~ Page ~ id:", id);
   const searchParams = useSearchParams();
-  const name = searchParams.get("name");
+  const name = searchParams?.get("name") || "psychic";
   console.log("🚀 ~ Page ~ name:", name);
   // const [data, setData] = useState(null);
-  const [reviews, setReviews] = useState([]);
+  // const [reviews, setReviews] = useState([]);
   const [filteredReviews, setFilteredReviews] = useState([]);
   // const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,7 +28,7 @@ const Page = ({ params }: any) => {
     (state: any) => state.customerHistory,
   );
   const data = customerHistory.filter((item: any) => item.psychic.id == id);
-  console.log("🚀 ~ Page ~ data:", data)
+  // console.log("🚀 ~ Page ~ data:", data);
   // useEffect(() => {
   //   if (id) {
   //     fetchData(id);
@@ -60,11 +60,23 @@ const Page = ({ params }: any) => {
   //   }
   // };
 
-  const openReviewModal = (note: string, psychicId: string, userId: string) => {
-    console.log("🚀 ~ openReviewModal ~ note:", note);
-    setSelectedNote(note);
+  const openReviewModal = (
+    note: string,
+    psychicId: string,
+    userId: string,
+    index: number,
+  ) => {
+    // console.log("🚀 ~ Page ~ userId:", userId);
+    // console.log("🚀 ~ Page ~ psychicId:", psychicId);
+    // console.log("🚀 ~ openReviewModal ~ note:", note);
+    // console.log("cuetom", customerHistory[index]);
+    const notes = customerHistory[index].psychic.notes.filter(
+      (item: any) => item.userId === userId,
+    );
+    console.log("🚀 ~ Page ~ notes:", notes);
+    setSelectedNote(notes[0]?.note || "");
     setSelectedUserId(userId);
-    const filtered = reviews.filter(
+    const filtered = customerHistory[index].psychic.reviews.filter(
       (review: any) =>
         review.psychicId === psychicId && review.userId === userId,
     );
@@ -99,7 +111,6 @@ const Page = ({ params }: any) => {
     try {
       const docRef = doc(db, "chats", combinedId);
       const docSnap = await getDoc(docRef);
-
       if (docSnap.exists()) {
         setMessages(docSnap.data().messages || []);
       } else {
@@ -181,7 +192,7 @@ const Page = ({ params }: any) => {
               <th className="border-b px-4 py-2">User Name</th>
               <th className="border-b px-4 py-2">Selected Time</th>
               <th className="border-b px-4 py-2">Total Amount</th>
-              <th className="border-b px-4 py-2">Last Readings</th>
+              <th className="border-b px-4 py-2">Reading Time & Date</th>
               <th className="border-b px-4 py-2">Notes</th>
               <th className="border-b px-4 py-2">Chat</th>
               <th className="border-b px-4 py-2">Status</th>
@@ -189,19 +200,31 @@ const Page = ({ params }: any) => {
           </thead>
           <tbody>
             {data &&
-              //@ts-ignore
-              data.map((item: any) => (
+              data.map((item: any, index: number) => (
                 <tr key={item.id}>
-                  <td className="border-b px-4 py-2">{item.userName}</td>
-                  <td className="border-b px-4 py-2">{item.selectedTime}m</td>
-                  <td className="border-b px-4 py-2">${item.totalAmount}</td>
+                  <td className="border-b px-4 py-2">{item.user.userName}</td>
+                  <td className="border-b px-4 py-2">
+                    {(item.selectedTime / 60).toFixed(2)}m
+                  </td>
+                  <td className="border-b px-4 py-2">
+                    ${" "}
+                    {CalculateCustomerHistoryAmount(
+                      item.selectedTime,
+                      item.psychic.price,
+                    )}
+                  </td>
                   <td className="border-b px-4 py-2">
                     {new Date(item.createdAt).toLocaleString()}
                   </td>
                   <td className="border-b px-4 py-2">
                     <button
                       onClick={() =>
-                        openReviewModal(item.notes, item.psychicId, item.userId)
+                        openReviewModal(
+                          item.notes,
+                          item.psychicId,
+                          item.userId,
+                          index,
+                        )
                       }
                       className="rounded bg-blue-500 px-2 py-1 text-white"
                     >
@@ -209,12 +232,20 @@ const Page = ({ params }: any) => {
                     </button>
                   </td>
                   <td className="border-b px-4 py-2">
-                    <button
-                      onClick={() => openChatModal(item.psychicId, item.userId)}
-                      className="rounded bg-green-500 px-2 py-1 text-white"
-                    >
-                      Chat
-                    </button>
+                    {item.serviceType == "chat" ? (
+                      <button
+                        onClick={() =>
+                          openChatModal(item.psychicId, item.userId)
+                        }
+                        className="rounded bg-green-500 px-2 py-1 text-white"
+                      >
+                        Chat
+                      </button>
+                    ) : (
+                      <button className="rounded bg-red px-2 py-1 text-white">
+                        Call
+                      </button>
+                    )}
                   </td>
                   <td className="border-b px-4 py-2">{item.status}</td>
                 </tr>

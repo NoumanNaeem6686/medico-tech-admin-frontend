@@ -21,7 +21,8 @@ const CreateBlog = ({ initialValues, onSubmit }: any) => {
   );
   const [psychicId, setPsychicId] = useState(initialValues?.psychicId || ""); // New state for psychic selection
   const [psychicName, setPsychicName] = useState(""); //@ts-ignore
-  const psychics = useSelector((state) => state.blog.psychics);
+  const psychics = useSelector((state) => state.psychics.psychics);
+  console.log("🚀 ~ CreateBlog ~ psychics:", psychics);
 
   useEffect(() => {
     if (initialValues?.blogImageUrl) {

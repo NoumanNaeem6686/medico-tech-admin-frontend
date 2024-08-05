@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 const URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -11,7 +11,7 @@ export const createPackage = createAsyncThunk(
         newPackage,
       );
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
   },
@@ -19,11 +19,11 @@ export const createPackage = createAsyncThunk(
 
 export const getAllPackages = createAsyncThunk(
   "packages/gettingAllPackages",
-  async (thunkAPI) => {
+  async (_, thunkAPI) => {
     try {
       const response = await axios.get(`${URL}/api/admin/getting-packages`);
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
   },
@@ -37,7 +37,7 @@ export const deletePackage = createAsyncThunk(
         `${URL}/api/admin/delete-package/${id}`,
       );
       return { id };
-    } catch (error) {
+    } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
   },
@@ -45,14 +45,14 @@ export const deletePackage = createAsyncThunk(
 
 export const updatePackage = createAsyncThunk(
   "packages/updatePackage",
-  async (updatedPackage, thunkAPI) => {
+  async (updatedPackage: any, thunkAPI) => {
     try {
       const response = await axios.put(
         `${URL}/api/admin/update-package/${updatedPackage.id}`,
         updatedPackage,
       );
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
   },
@@ -72,11 +72,13 @@ const packageSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(createPackage.fulfilled, (state, action) => {
+      .addCase(createPackage.fulfilled, (state, action: PayloadAction<any>) => {
         state.loading = false;
+        // @ts-ignore
+
         state.packages.push(action.payload.newPackage);
       })
-      .addCase(createPackage.rejected, (state, action) => {
+      .addCase(createPackage.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload;
       })
@@ -84,11 +86,14 @@ const packageSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(getAllPackages.fulfilled, (state, action) => {
-        state.loading = false;
-        state.packages = action.payload.data;
-      })
-      .addCase(getAllPackages.rejected, (state, action) => {
+      .addCase(
+        getAllPackages.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.packages = action.payload.data;
+        },
+      )
+      .addCase(getAllPackages.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload;
       })
@@ -96,13 +101,13 @@ const packageSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(deletePackage.fulfilled, (state, action) => {
+      .addCase(deletePackage.fulfilled, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.packages = state.packages.filter(
-          (pkg) => pkg.id !== action.payload.id,
+          (pkg: any) => pkg.id !== action.payload.id,
         );
       })
-      .addCase(deletePackage.rejected, (state, action) => {
+      .addCase(deletePackage.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload;
       })
@@ -110,16 +115,18 @@ const packageSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(updatePackage.fulfilled, (state, action) => {
-        console.log("action.payload", action.payload);
+      .addCase(updatePackage.fulfilled, (state, action: PayloadAction<any>) => {
+        // console.log("action.payload", action:PayloadAction<any>.payload);
         state.loading = false;
-        state.packages = state.packages.map((pkg) =>
+        // @ts-ignore
+
+        state.packages = state.packages.map((pkg: any) =>
           pkg.id === action.payload.updatedPackage.id
             ? action.payload.updatedPackage
             : pkg,
         );
       })
-      .addCase(updatePackage.rejected, (state, action) => {
+      .addCase(updatePackage.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload;
       });

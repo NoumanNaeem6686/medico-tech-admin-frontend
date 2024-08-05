@@ -1,61 +1,22 @@
 "use client";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import MultiSelect from "@/components/MultiSelect";
-import axios from "axios";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addPsychics } from "../../store/slices/psychicsSlice";
-import { toast } from "react-toastify";
-import MultiSelectForTopics from "@/components/MultiSelectForTopics";
-import MultiSelectForTools from "@/components/MultiSelectForTools";
 import MultiSelectForAbilities from "@/components/MultiSelectForAbilities";
-import { auth } from "@/lib/firebase"; // Add your Firebase configuration file here
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { collection, addDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase"; // Add your Firestore configuration file here
-import "react-dates/initialize";
-import "react-dates/lib/css/_datepicker.css";
-import { DateRangePicker, FocusedInputShape } from "react-dates";
+import MultiSelectForTools from "@/components/MultiSelectForTools";
+import MultiSelectForTopics from "@/components/MultiSelectForTopics";
+import axios from "axios";
 import moment, { Moment } from "moment";
 import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { DateRangePicker } from "react-dates";
+import "react-dates/initialize";
+import "react-dates/lib/css/_datepicker.css";
 import ReactModal from "react-modal";
-
-interface BankDetails {
-  accountHolderName: string;
-  bankName: string;
-  bankAddress: string;
-  accountNumber: string;
-  iban: string;
-  swiftCode: string;
-}
-
-interface DoctorInfo {
-  name: string;
-  email: string;
-  phone: string;
-  experience: string;
-  statusMessage: string;
-  profileDescription: string;
-  password: string;
-  zodiac: string;
-  price: string;
-  shortDescription: string;
-  languages: string[];
-  joiningDate: string;
-  description: string;
-  country: string;
-  topic: string[];
-  tools: string[];
-  abilities: string[];
-  city: string;
-  address: string;
-  zipcode: number;
-  availability: {
-    startDate: Moment | null;
-    endDate: Moment | null;
-  };
-  bankDetails?: BankDetails; // Add this line
-}
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { addPsychics } from "../../store/slices/psychicsSlice";
+import { BankDetails, DoctorInfo } from "@/types/psychic";
+import Image from "next/image";
 
 const Page: React.FC = () => {
   const router = useRouter();
@@ -413,7 +374,7 @@ const Page: React.FC = () => {
       phoneNo: doctorInfo.phone,
       status: false,
       chat: false,
-      userType: "admin",
+      userType: "psychic",
       profileUrl: imageUrl,
       profilePicId: imageId,
       topic: doctorInfo.topic,
@@ -474,10 +435,12 @@ const Page: React.FC = () => {
                 </div>
               ) : previewUrl ? (
                 <>
-                  <img
+                  <Image
                     src={previewUrl}
                     alt="Preview"
                     className="h-full w-full object-cover"
+                    height={200}
+                    width={300}
                   />
                   <button
                     onClick={clearImage}

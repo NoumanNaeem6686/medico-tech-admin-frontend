@@ -11,6 +11,7 @@ import {
   gettingAllProducts,
   updateProduct,
 } from "../../store/slices/productSlice";
+import Image from "next/image";
 
 const ProductTable = () => {
   const dispatch = useDispatch(); //@ts-ignore
@@ -43,6 +44,7 @@ const ProductTable = () => {
       !imageUrl ||
       !productUrl // Ensure product URL is filled
     ) {
+      console.log("product",imageUrl,productUrl)
       toast.error("Please fill in all fields.");
       return;
     }
@@ -56,7 +58,7 @@ const ProductTable = () => {
       description: productDescription,
       productImageUrl: imageUrl,
       productImageId: imageId,
-      productUrl:productUrl 
+      productUrl: productUrl,
     };
     //@ts-ignore
     const result = await dispatch(addProduct(productDetails)); //@ts-ignore
@@ -123,7 +125,7 @@ const ProductTable = () => {
     setCategory("");
     setImageUrl("");
     setImageId("");
-    setProductUrl(""); 
+    setProductUrl("");
   };
 
   const handleImageChange = (event: any) => {
@@ -180,7 +182,7 @@ const ProductTable = () => {
       const result = await dispatch(deleteProduct(productId));
       if (result.payload) {
         //@ts-ignore
-        toast.success('Product Deleted Successfully!');
+        toast.success("Product Deleted Successfully!");
       } else {
         toast.error("Failed to delete product");
       }
@@ -233,10 +235,12 @@ const ProductTable = () => {
                       style={{ borderBottom: "1px solid #f5f5f7" }}
                     >
                       <td className="whitespace-nowrap ps-2">
-                        <img
+                        <Image
                           src={product?.productImageUrl}
                           alt={product?.productName}
                           className="h-10 w-10 rounded-full object-cover"
+                          height={200}
+                          width={200}
                         />
                       </td>
                       <td className="text-gray-900 whitespace-nowrap px-6 py-4 text-sm font-medium">

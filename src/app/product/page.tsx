@@ -1,14 +1,15 @@
-import AllBlogs from "@/components/Blogs/AllBlogs";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
+import ProductTable from "@/components/Tables/ProductTable";
+import React from "react";
 
 const page = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Blogs" />
+      <Breadcrumb pageName="Product" />
 
       <div className="flex flex-col gap-10">
-        <AllBlogs />
+        <ProductTable />
       </div>
     </DefaultLayout>
   );
