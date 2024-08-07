@@ -8,9 +8,9 @@ import axios from "axios";
 import moment, { Moment } from "moment";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-// import { DateRangePicker } from "react-dates";
-// import "react-dates/initialize";
-// import "react-dates/lib/css/_datepicker.css";
+import { DateRangePicker } from "react-dates";
+import "react-dates/initialize";
+import "react-dates/lib/css/_datepicker.css";
 import ReactModal from "react-modal";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
@@ -737,7 +737,7 @@ const Page: React.FC = () => {
           <label className="text-gray-700 mb-2 block text-sm font-bold">
             Availability Date
           </label>
-          {/* <DateRangePicker
+          <DateRangePicker
             startDate={dateRange.startDate}
             startDateId="start_date_id"
             endDate={dateRange.endDate}
@@ -749,7 +749,7 @@ const Page: React.FC = () => {
             displayFormat="YYYY-MM-DD"
             isOutsideRange={() => false}
             minimumNights={0}
-          /> */}
+          />
         </div>
         <div className="flex justify-between">
           <button
