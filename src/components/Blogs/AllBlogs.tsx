@@ -18,7 +18,8 @@ import CreateBlog from "./CreateBlog";
 const AllBlogs = () => {
   const dispatch = useDispatch();
   const blogs = useSelector((state: any) => state.blog.blogs);
-  const psychics = useSelector((state: any) => state.blog.psychics || []);
+  console.log("🚀 ~ AllBlogs ~ blogs:", blogs);
+  // const psychics = useSelector((state: any) => state.blog.psychics || []);
   const [selectedBlog, setSelectedBlog] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -90,17 +91,17 @@ const AllBlogs = () => {
   //   }
   // };
 
-  useEffect(() => {
-    const gettingBlogs = async () => {
-      setLoading(true);
-      //@ts-ignore
-      const result = await dispatch(getAllBlogs());
-      console.log("🚀 ~ gettingBlogs ~ result:", result);
-      setLoading(false);
-    };
-    gettingBlogs();
-    // gettingAllPsychics();
-  }, [dispatch]);
+  // useEffect(() => {
+  //   const gettingBlogs = async () => {
+  //     setLoading(true);
+  //     //@ts-ignore
+  //     const result = await dispatch(getAllBlogs());
+  //     console.log("🚀 ~ gettingBlogs ~ result:", result);
+  //     setLoading(false);
+  //   };
+  //   gettingBlogs();
+  //   // gettingAllPsychics();
+  // }, [dispatch]);
 
   return (
     <div className="container mx-auto p-4">

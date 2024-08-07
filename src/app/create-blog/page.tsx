@@ -1,4 +1,3 @@
-
 import CreateBlog from "@/components/Blogs/CreateBlog";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
@@ -11,7 +10,7 @@ const page = () => {
       <Breadcrumb pageName="Create Blog" />
 
       <div className="flex flex-col gap-10">
-        {/* <CreateBlog/> */}
+        <CreateBlog />
       </div>
     </DefaultLayout>
   );

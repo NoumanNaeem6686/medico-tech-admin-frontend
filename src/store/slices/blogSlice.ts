@@ -28,6 +28,7 @@ export const getAllBlogs = createAsyncThunk(
   async (blog, thunkAPI) => {
     try {
       const response = await axios.get(`${URL}/api/admin/all-blogs`);
+      // console.log("🚀 ~ response:", response.data)
       if (!response.data.success) {
         return thunkAPI.rejectWithValue(
           response.data.message || "Failed to getting all Blog",

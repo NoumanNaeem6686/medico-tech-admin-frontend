@@ -1,7 +1,10 @@
 "use client";
 import axios from "axios";
+import dynamic from "next/dynamic";
+import Image from "next/image";
 import React, { useState, useEffect } from "react";
-import ReactQuill from "react-quill";
+// Dynamically import ReactQuill to avoid SSR issues
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -169,10 +172,12 @@ const CreateBlog = ({ initialValues, onSubmit }: any) => {
               </div>
             ) : previewUrl ? (
               <>
-                <img
+                <Image
                   src={previewUrl}
                   alt="Preview"
                   className="h-full w-full object-cover"
+                  height={200}
+                  width={200}
                 />
                 <button
                   onClick={clearImage}

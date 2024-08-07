@@ -8,7 +8,7 @@ const page = () => {
     <DefaultLayout>
       <Breadcrumb pageName="Blogs" />
       <div className="flex flex-col gap-10">
-        {/* <AllBlogs /> */}
+        <AllBlogs />
       </div>
     </DefaultLayout>
   );
