@@ -12,7 +12,8 @@ export const metadata: Metadata = {
 const BasicChartPage: React.FC = () => {
   return (
     <DefaultLayout>
-      <Chart />
+      <></>
+      {/* <Chart /> */}
     </DefaultLayout>
   );
 };
