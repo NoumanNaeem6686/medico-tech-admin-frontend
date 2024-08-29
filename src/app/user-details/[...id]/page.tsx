@@ -4,6 +4,7 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Loader from "@/components/Loader";
+import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 
 const URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -56,12 +57,13 @@ const Page = ({ params }: any) => {
   return (
     <DefaultLayout>
       <div>
-        <h1 className="mb-4 text-2xl font-bold">Readers History</h1>
+        <Breadcrumb pageName="Readers History" />
+
         {customerHistory.length > 0 ? (
-          <table className="min-w-full border bg-white">
-            <thead>
+          <table className="min-w-full border rounded-2xl overflow-hidden shadow-lg">
+            <thead className="bg-[#12A19B] text-white">
               <tr>
-                <th className="border-b px-4 py-2">User Name</th>
+                <th className="border-b px-4 py-2">Service Type</th>
                 <th className="border-b px-4 py-2">Selected Time</th>
                 <th className="border-b px-4 py-2">Total Amount</th>
                 <th className="border-b px-4 py-2">Last Readings</th>
@@ -71,12 +73,12 @@ const Page = ({ params }: any) => {
               </tr>
             </thead>
             <tbody>
-              {customerHistory.map((item: any) => (
-                <tr key={item.id}>
-                  <td className="border-b px-4 py-2">{item.userName}</td>
-                  <td className="border-b px-4 py-2">{item.selectedTime}m</td>
-                  <td className="border-b px-4 py-2">${item.totalAmount}</td>
-                  <td className="border-b px-4 py-2">
+              {customerHistory.map((item: any, index: any) => (
+                <tr key={item.id} className={`hover:bg-[#a7ebd9] ${index % 2 !== 0 ? "bg-[#daedec]" : "bg-white"}`}>
+                  <td className="px-4 capitalize py-2 text-center">{item.serviceType}</td>
+                  <td className="px-4 py-2 text-center">{item.selectedTime}m</td>
+                  <td className="px-4 py-2 text-center">${item.amount}</td>
+                  <td className="px-4 py-2 text-center">
                     {new Date(item.createdAt).toLocaleString()}
                   </td>
                   {/* <td className="border-b px-4 py-2">{item.notes}</td>

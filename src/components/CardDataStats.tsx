@@ -18,8 +18,8 @@ const CardDataStats: React.FC<CardDataStatsProps> = ({
   children,
 }) => {
   return (
-    <div className="rounded-sm border border-stroke bg-white px-7.5 py-6 shadow-default dark:border-strokedark dark:bg-boxdark">
-      <div className="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 dark:bg-meta-4">
+    <div className="hover:scale-105 transition-all duration-300 cursor-pointer group hover:bg-[#12A19B] border border-stroke bg-white  px-7.5 py-6 shadow-default dark:border-strokedark rounded-xl dark:bg-boxdark">
+      <div className="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 group-hover:bg-[#2a8581] dark:bg-meta-4">
         {children}
       </div>
 
@@ -28,19 +28,18 @@ const CardDataStats: React.FC<CardDataStatsProps> = ({
           <h4 className="text-title-md font-bold text-black dark:text-white">
             {total}
           </h4>
-          <span className="text-sm font-medium">{title}</span>
+          <span className="text-sm font-medium group-hover:text-slate-100">{title}</span>
         </div>
 
         <span
-          className={`flex items-center gap-1 text-sm font-medium ${
-            levelUp && "text-meta-3"
-          } ${levelDown && "text-meta-5"} `}
+          className={`flex items-center gap-1 text-sm font-medium ${levelUp && "text-meta-3 group-hover:text-white"
+            } ${levelDown && "text-meta-5 group-hover:text-white"} `}
         >
           {rate}
 
           {levelUp && (
             <svg
-              className="fill-meta-3"
+              className="fill-meta-3 group-hover:fill-white"
               width="10"
               height="11"
               viewBox="0 0 10 11"
@@ -55,7 +54,7 @@ const CardDataStats: React.FC<CardDataStatsProps> = ({
           )}
           {levelDown && (
             <svg
-              className="fill-meta-5"
+              className="fill-meta-5 group-hover:fill-white"
               width="10"
               height="11"
               viewBox="0 0 10 11"

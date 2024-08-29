@@ -4,13 +4,15 @@ import MultiSelect from "@/components/MultiSelect";
 import MultiSelectForAbilities from "@/components/MultiSelectForAbilities";
 import MultiSelectForTools from "@/components/MultiSelectForTools";
 import MultiSelectForTopics from "@/components/MultiSelectForTopics";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import moment, { Moment } from "moment";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { DateRangePicker } from "react-dates";
-import "react-dates/initialize";
-import "react-dates/lib/css/_datepicker.css";
+// import { DateRangePicker } from "react-dates";
+// import "react-dates/initialize";
+// import "react-dates/lib/css/_datepicker.css";
 import ReactModal from "react-modal";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
@@ -29,10 +31,8 @@ const Page: React.FC = () => {
   const [imageId, setImageId] = useState("");
   const [errors, setErrors] = useState("");
   const [focusedInput, setFocusedInput] = useState<null>(null);
-  const [dateRange, setDateRange] = useState<{
-    startDate: Moment | null;
-    endDate: Moment | null;
-  }>({ startDate: null, endDate: null });
+  const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
+  const [startDate, endDate] = dateRange;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [bankDetails, setBankDetails] = useState({
     accountHolderName: "",
@@ -43,7 +43,7 @@ const Page: React.FC = () => {
     swiftCode: "",
   });
 
-  const [doctorInfo, setDoctorInfo] = useState<DoctorInfo>({
+  const [doctorInfo, setDoctorInfo] = useState<any>({
     name: "",
     email: "",
     profileDescription: "",
@@ -129,7 +129,7 @@ const Page: React.FC = () => {
     e.preventDefault();
     console.log("Bank Details Submitted:", bankDetails);
     // Update the doctorInfo state with bank details
-    setDoctorInfo((prevState) => ({
+    setDoctorInfo((prevState: any) => ({
       ...prevState,
       bankDetails: bankDetails,
     }));
@@ -159,7 +159,7 @@ const Page: React.FC = () => {
     >,
   ) => {
     const { name, value } = e.target;
-    setDoctorInfo((prevState) => ({
+    setDoctorInfo((prevState: any) => ({
       ...prevState,
       [name]: value,
     }));
@@ -246,46 +246,41 @@ const Page: React.FC = () => {
   };
 
   const handleLanguagesChange = (selectedLanguages: string[]) => {
-    setDoctorInfo((prevState) => ({
+    setDoctorInfo((prevState: any) => ({
       ...prevState,
       languages: selectedLanguages,
     }));
   };
 
   const handleTopicChange = (selectedTopic: string[]) => {
-    setDoctorInfo((prevState) => ({
+    setDoctorInfo((prevState:any) => ({
       ...prevState,
       topic: selectedTopic,
     }));
   };
 
   const handleToolChange = (selectedTool: string[]) => {
-    setDoctorInfo((prevState) => ({
+    setDoctorInfo((prevState:any) => ({
       ...prevState,
       tools: selectedTool,
     }));
   };
 
   const handleAbilitiesChange = (selectedAbilities: string[]) => {
-    setDoctorInfo((prevState) => ({
+    setDoctorInfo((prevState:any) => ({
       ...prevState,
       abilities: selectedAbilities,
     }));
   };
-
-  const handleDateRangeChange = ({
-    startDate,
-    endDate,
-  }: {
-    startDate: Moment | null;
-    endDate: Moment | null;
-  }) => {
-    setDateRange({ startDate, endDate });
+  const handleDateRangeChange = (dates: [Date | null, Date | null]) => {
+    const [start, end] = dates;
+    // @ts-ignore
+    setDateRange([start || undefined, end || undefined]);
     setDoctorInfo((prevState: any) => ({
       ...prevState,
       availability: {
-        startDate: startDate ? startDate.format("YYYY-MM-DD") : null,
-        endDate: endDate ? endDate.format("YYYY-MM-DD") : null,
+        startDate: start ? moment(start).format("YYYY-MM-DD") : undefined,
+        endDate: end ? moment(end).format("YYYY-MM-DD") : undefined,
       },
     }));
   };
@@ -737,7 +732,18 @@ const Page: React.FC = () => {
           <label className="text-gray-700 mb-2 block text-sm font-bold">
             Availability Date
           </label>
-          <DateRangePicker
+          <DatePicker
+            selectsRange
+            // @ts-ignore
+            startDate={startDate}
+            // @ts-ignore
+            endDate={endDate}
+            onChange={handleDateRangeChange}
+            dateFormat="yyyy-MM-dd"
+            isClearable
+            minDate={new Date()}
+          />
+          {/* <DateRangePicker
             startDate={dateRange.startDate}
             startDateId="start_date_id"
             endDate={dateRange.endDate}
@@ -749,7 +755,7 @@ const Page: React.FC = () => {
             displayFormat="YYYY-MM-DD"
             isOutsideRange={() => false}
             minimumNights={0}
-          />
+          /> */}
         </div>
         <div className="flex justify-between">
           <button

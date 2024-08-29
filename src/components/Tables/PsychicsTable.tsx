@@ -87,127 +87,124 @@ const PsychicsTable = () => {
 
   return (
     <section className="bg-gray-50 dark:bg-gray-900 py-3 sm:py-5">
-      <div className="mx-auto max-w-screen-2xl px-4 lg:px-12">
+      {/* <div className="mx-auto max-w-screen-2xl px-4 lg:px-12">
         <div className="dark:bg-gray-800 relative overflow-hidden bg-white shadow-md sm:rounded-lg">
           <div className="flex flex-col space-y-3 px-4 py-3 lg:flex-row lg:items-center lg:justify-between lg:space-x-4 lg:space-y-0"></div>
-          <div className="overflow-x-auto">
-            <table className="text-gray-500 dark:text-gray-400 w-full text-left text-sm rtl:text-right">
-              <thead className="bg-gray-50 dark:bg-gray-700 dark:text-gray-400 bg-[#12a19b] text-xs uppercase text-white">
-                <tr>
-                  <th scope="col" className="p-4"></th>
-                  <th scope="col" className="px-4 py-3">
-                    Psychics
-                  </th>
-                  {/* <th scope="col" className="px-4 py-3">
+          <div className="overflow-x-auto"> */}
+      <table className="min-w-full border rounded-2xl overflow-hidden shadow-lg">
+        <thead className="bg-[#12A19B] text-white">
+          <tr>
+            {/* <th scope="col" className="p-4"></th> */}
+            <th scope="col" className="px-4 py-3">
+              Psychics
+            </th>
+            {/* <th scope="col" className="px-4 py-3">
                     Category
                   </th> */}
-                  <th scope="col" className="px-4 py-3">
-                    Status
-                  </th>
-                  <th scope="col" className="px-4 py-3">
-                    <FaEye />
-                  </th>
-                  <th scope="col" className="px-4 py-3">
-                    Employed
-                  </th>
-                  <th scope="col" className="px-4 py-3">
-                    Hours
-                  </th>
-                  <th scope="col" className="px-4 py-3">
-                    Earnings
-                  </th>
-                  <th scope="col" className="px-4 py-3">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {psychics &&
-                  psychics.map((psychic: any, index: any) => (
-                    <tr
-                      key={index}
-                      className="odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 dark:border-gray-700 border-b odd:bg-white"
+            <th scope="col" className="px-4 py-3">
+              Status
+            </th>
+            <th scope="col" className="px-4 py-3">
+              <FaEye />
+            </th>
+            <th scope="col" className="px-4 py-3">
+              Employed
+            </th>
+            <th scope="col" className="px-4 py-3">
+              Hours
+            </th>
+            <th scope="col" className="px-4 py-3">
+              Earnings
+            </th>
+            <th scope="col" className="px-4 py-3">
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {psychics &&
+            psychics.map((psychic: any, index: any) => (
+              <tr key={index} className={`hover:bg-[#a7ebd9] ${index % 2 !== 0 ? "bg-[#daedec]" : "bg-white"}`}>
+                {/* <td className="w-4 px-4 py-3">
+                  <div className="flex items-center">
+                    <input
+                      id="checkbox-table-search-1"
+                      type="checkbox"
+                      className="bg-gray-100 border-gray-300 text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded focus:ring-2"
+                    />
+                    <label
+                      htmlFor="checkbox-table-search-1"
+                      className="sr-only"
                     >
-                      <td className="w-4 px-4 py-3">
-                        <div className="flex items-center">
-                          <input
-                            id="checkbox-table-search-1"
-                            type="checkbox"
-                            className="bg-gray-100 border-gray-300 text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded focus:ring-2"
-                          />
-                          <label
-                            htmlFor="checkbox-table-search-1"
-                            className="sr-only"
-                          >
-                            checkbox
-                          </label>
-                        </div>
-                      </td>
-                      <th
-                        scope="row"
-                        className="text-gray-900 flex items-center whitespace-nowrap px-4 py-2 font-medium dark:text-white"
-                      >
-                        <Link
-                          href={`/psychics-table/psychics-details/${psychic.id}?name=${psychic.name}`}
-                        >
-                          <div className="flex items-center">
-                            <Image
-                              src={psychic?.profileUrl}
-                              alt="Psychic Image"
-                              className="mr-3 h-8 w-auto"
-                              width={100}
-                              height={100}
-                            />
-                            {psychic?.name}
-                          </div>
-                        </Link>
-                      </th>
-                      {/* <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
+                      checkbox
+                    </label>
+                  </div>
+                </td> */}
+                <td
+                  scope="row"
+                  className="text-gray-900 flex items-center whitespace-nowrap px-4 py-2 font-medium dark:text-white"
+                >
+                  <Link
+                    href={`/psychics-table/psychics-details/${psychic.id}?name=${psychic.name}`}
+                  >
+                    <div className="flex items-center">
+                      <Image
+                        src={psychic?.profileUrl}
+                        alt="Psychic Image"
+                        className="mr-3 h-8 w-auto mix-blend-normal"
+                        width={100}
+                        height={100}
+                      />
+                      {psychic?.name}
+                    </div>
+                  </Link>
+                </td>
+                {/* <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
                         <div className="flex items-center">
                           <div className="bg-red-700 mr-2 inline-block h-4 w-4 rounded-full" />
                           category
                         </div>
                       </td> */}
-                      <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                        {psychic?.status ? "Online" : "Offline"}
-                      </td>
-                      <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                        on/off
-                      </td>
-                      <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                        <div className="flex items-center">
-                          {psychic?.joiningDate}
-                        </div>
-                      </td>
-                      <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                        <div className="flex items-center">120 hours</div>
-                      </td>
-                      <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                        <div className="flex items-center">$6000</div>
-                      </td>
-                      <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                        <div className="flex items-center space-x-2">
-                          <button
-                            onClick={() => handleEdit(psychic)}
-                            className="text-blue-600 hover:text-blue-800"
-                          >
-                            <FaEdit />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(psychic.id)}
-                            className="text-red-600 hover:text-red-800"
-                          >
-                            <FaTrash />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
+                <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
+                  {psychic?.status ? "Online" : "Offline"}
+                </td>
+                <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
+                  on/off
+                </td>
+                <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
+                  <div className="flex items-center">
+                    {psychic?.joiningDate}
+                  </div>
+                </td>
+                <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
+                  <div className="flex items-center">120 hours</div>
+                </td>
+                <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
+                  <div className="flex items-center">$6000</div>
+                </td>
+                <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={() => handleEdit(psychic)}
+                      className="text-blue-600 hover:text-blue-800"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(psychic.id)}
+                      className="text-red-600 hover:text-red-800"
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+        </tbody>
+      </table>
+      {/* </div>
         </div>
-      </div>
+      </div> */}
       {editModalOpen && (
         <EditPsychicModal
           psychic={currentPsychic}

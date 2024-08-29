@@ -69,7 +69,7 @@ export const gettingAllPsychics = createAsyncThunk(
   "getAllPsychics",
   async (user, thunkAPI) => {
     try {
-      const response = await axios.get(`${URL}/api/psyscics/getAllPsychics`);
+      const response = await axios.get(`${URL}/api/psyscics/get-all-psychics`);
       const data = response.data;
 
       if (!data.success) {

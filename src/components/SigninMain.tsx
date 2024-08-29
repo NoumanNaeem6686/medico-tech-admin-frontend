@@ -24,9 +24,17 @@ const SignInMain = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) {
-      toast.error("Email and Password are required!");
-      return;
+    let missingFields = [];
+    if (!email) {
+      missingFields.push("Email");
+    }
+    if (!password) {
+      missingFields.push("Password");
+    }
+    if (missingFields.length > 0) {
+      let fieldsString = missingFields.join(", ");
+      toast.error(`Please fill out all required fields: ${fieldsString}`);
+      return false;
     }
     const data = {
       email,
@@ -78,8 +86,7 @@ const SignInMain = () => {
                 />
               </Link>
               <p className="2xl:px-20">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                suspendisse.
+                A psychic connection, like no other.
               </p>
               <span className="mt-15 inline-block">
                 <svg
@@ -109,15 +116,15 @@ const SignInMain = () => {
                       type="email"
                       placeholder="Enter your email"
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-[#12A19B] focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
                     <span className="absolute right-4 top-4">
                       <svg
-                        className="fill-current"
+                        className="fill-#12A19B"
                         width="22"
                         height="22"
                         viewBox="0 0 22 22"
-                        fill="none"
+                        fill="#12A19B"
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <g opacity="0.5">
@@ -139,16 +146,16 @@ const SignInMain = () => {
                       type={showPassword ? "text" : "password"}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Enter password"
-                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-[#12A19B] focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
                     <span
                       className="absolute right-4 top-4 cursor-pointer"
                       onClick={togglePasswordVisibility}
                     >
                       {showPassword ? (
-                        <FaRegEyeSlash fontSize={20} />
+                        <FaRegEyeSlash fontSize={20} className="text-[#12A19B]" />
                       ) : (
-                        <FaRegEye fontSize={20} />
+                        <FaRegEye fontSize={20} className="text-[#12A19B]" />
                       )}
                     </span>
                   </div>
