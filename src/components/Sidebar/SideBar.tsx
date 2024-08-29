@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import SidebarLinkGroup from "./SidebarLinkGroup";
 import { CiUser } from "react-icons/ci";
-import { Gem, LayoutDashboard, Newspaper, ShieldCheck, ShieldPlus, Store, UserRound } from 'lucide-react'
+import { DollarSign, Gem, HandCoins, LayoutDashboard, Newspaper, ShieldCheck, ShieldPlus, Store, UserRound } from 'lucide-react'
 interface SidebarProps {
   sidebarOpen: boolean;
   setSidebarOpen: (arg: boolean) => void;
@@ -392,6 +392,28 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     </defs>
                   </svg> */}
                   <Gem />                  Packages
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/transection"
+                  className={`group relative flex rounded-lg items-center gap-2.5 px-4 py-2 font-medium text-black duration-300 ease-in-out hover:bg-[#12a19b] hover:text-white dark:hover:bg-meta-4 ${pathname.includes("transection") &&
+                    "bg-[#12a19b] text-white dark:bg-meta-4"
+                    }`}
+                >
+
+                  <DollarSign />                  Transection
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/earning"
+                  className={`group relative flex rounded-lg items-center gap-2.5 px-4 py-2 font-medium text-black duration-300 ease-in-out hover:bg-[#12a19b] hover:text-white dark:hover:bg-meta-4 ${pathname.includes("earning") &&
+                    "bg-[#12a19b] text-white dark:bg-meta-4"
+                    }`}
+                >
+
+                  <HandCoins />                Psychics Earning
                 </Link>
               </li>
             </ul>
