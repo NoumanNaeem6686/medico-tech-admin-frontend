@@ -27,6 +27,7 @@ const tools = [
   "Crystals",
   "Pendulum",
   "Runes",
+
   "Numerology",
   "Astrology",
   ,
