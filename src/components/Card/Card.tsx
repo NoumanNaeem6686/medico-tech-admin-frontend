@@ -9,7 +9,7 @@ import { CircularProgress } from "@mui/material";
 
 export default function MediaCard({ blog, handleDelete, handleUpdate, loading }: any) {
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition-all duration-300 ease-in-out">
       <CardMedia
         sx={{ height: 140 }}
         image={blog.blogImageUrl}
@@ -26,15 +26,16 @@ export default function MediaCard({ blog, handleDelete, handleUpdate, loading }:
       <CardActions>
         <Button
           size="small"
+          variant="outlined" color="error"
           onClick={() => handleDelete(blog)}
           disabled={loading}
         >
           Delete
         </Button>
-        <Button onClick={handleUpdate} size="small" disabled={loading}>
+        <Button onClick={handleUpdate} size="small" variant="contained" color="success" disabled={loading}>
           Update
         </Button>
       </CardActions>
-    </Card>
+    </div>
   );
 }

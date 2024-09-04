@@ -225,7 +225,7 @@ const Packages = () => {
         </div>
         <button
           type="submit"
-          className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
+          className="focus:shadow-outline rounded-lg bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
         >
           {editingPackageId ? "Update Package" : "Add Package"}
         </button>
@@ -237,8 +237,8 @@ const Packages = () => {
         <p>Error loading packages: {error}</p>
       ) : packages.length > 0 ? (
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white">
-            <thead>
+          <table className="min-w-full border rounded-2xl overflow-hidden shadow-lg">
+            <thead className="bg-[#12A19B] text-white">
               <tr>
                 <th className="border-b px-4 py-2">Name</th>
                 <th className="border-b px-4 py-2">Price</th>
@@ -248,28 +248,37 @@ const Packages = () => {
               </tr>
             </thead>
             <tbody>
-              {packages.map((pkg: any) => (
-                <tr key={pkg.id}>
-                  <td className="border-b px-4 py-2">{pkg.name}</td>
-                  <td className="border-b px-4 py-2">{pkg.price}</td>
-                  <td className="border-b px-4 py-2">{pkg.category}</td>
-                  <td className="border-b px-4 py-2">
+              {packages.map((pkg: any, index: any) => (
+                <tr key={pkg.id} className={`hover:bg-[#a7ebd9] ${index % 2 !== 0 ? "bg-[#daedec]" : "bg-white"}`}>
+
+                  <td className="text-gray-900 whitespace-nowrap capitalize text-center px-4 py-2 font-medium dark:text-white">
+
+                    {pkg.name}</td>
+                  <td className="text-gray-900 whitespace-nowrap capitalize text-center px-4 py-2 font-medium dark:text-white">
+
+                    {pkg.price}</td>
+                  <td className="text-gray-900 whitespace-nowrap capitalize text-center px-4 py-2 font-medium dark:text-white">
+
+                    {pkg.category}</td>
+                  <td className="text-gray-900 whitespace-nowrap capitalize text-center px-4 py-2 font-medium dark:text-white">
+
                     <ul className="list-inside list-disc">
                       {pkg.benefits?.map((benefit: any, idx: any) => (
                         <li key={idx}>{benefit}</li>
                       ))}
                     </ul>
                   </td>
-                  <td className="border-b px-4 py-2">
+                  <td className="text-gray-900 whitespace-nowrap capitalize text-center px-4 py-2 font-medium dark:text-white">
+
                     <button
                       onClick={() => handleEdit(pkg)}
-                      className="focus:shadow-outline rounded bg-yellow-500 px-4 py-2 font-bold text-white hover:bg-yellow-700 focus:outline-none"
+                      className="focus:shadow-outline rounded-lg text-sm  bg-yellow-500 px-4 py-2 font-bold text-white hover:bg-yellow-700 focus:outline-none"
                     >
                       Update
                     </button>
                     <button
                       onClick={() => handleDelete(pkg.id)}
-                      className="focus:shadow-outline ml-2 rounded bg-red px-4 py-2 font-bold text-white hover:opacity-75 focus:outline-none"
+                      className="focus:shadow-outline ml-2 rounded-lg text-sm bg-red px-4 py-2 font-bold text-white hover:opacity-75 focus:outline-none"
                     >
                       Delete
                     </button>

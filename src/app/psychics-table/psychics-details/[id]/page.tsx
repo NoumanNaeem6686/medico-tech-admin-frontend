@@ -26,7 +26,7 @@ const Page = ({ params }: any) => {
     (state: any) => state.customerHistory,
   );
   const data = customerHistory.filter((item: any) => item.psychic.id == id);
-  // console.log("🚀 ~ Page ~ data:", data);
+  console.log("🚀 ~ Page ~ data:", data);
   // useEffect(() => {
   //   if (id) {
   //     fetchData(id);
@@ -184,9 +184,9 @@ const Page = ({ params }: any) => {
   return (
     <DefaultLayout>
       <div className="container mx-auto p-4">
-        <h1 className="mb-4 text-2xl font-bold">{name} Details</h1>
-        <table className="min-w-full border bg-white">
-          <thead>
+        <h1 className="mb-4 text-2xl font-bold text-black capitalize">{name} Details</h1>
+        <table className="min-w-full border rounded-2xl overflow-hidden shadow-lg">
+          <thead className="bg-[#12A19B] text-white">
             <tr>
               <th className="border-b px-4 py-2">User Name</th>
               <th className="border-b px-4 py-2">Selected Time</th>
@@ -200,22 +200,29 @@ const Page = ({ params }: any) => {
           <tbody>
             {data &&
               data.map((item: any, index: number) => (
-                <tr key={item.id}>
-                  <td className="border-b px-4 py-2">{item.user.userName}</td>
-                  <td className="border-b px-4 py-2">
+                <tr key={item.id} className={`hover:bg-[#a7ebd9] ${index % 2 !== 0 ? "bg-[#daedec]" : "bg-white"}`}>
+
+                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 text-center font-medium dark:text-white">
+
+                    {item.user.userName}</td>
+                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 text-center font-medium dark:text-white">
+
                     {(item.selectedTime / 60).toFixed(2)}m
                   </td>
-                  <td className="border-b px-4 py-2">
+                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 text-center font-medium dark:text-white">
+
                     ${" "}
                     {CalculateCustomerHistoryAmount(
                       item.selectedTime,
                       item.psychic.price,
                     )}
                   </td>
-                  <td className="border-b px-4 py-2">
+                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 text-center font-medium dark:text-white">
+
                     {new Date(item.createdAt).toLocaleString()}
                   </td>
-                  <td className="border-b px-4 py-2">
+                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 text-center font-medium dark:text-white">
+
                     <button
                       onClick={() =>
                         openReviewModal(
@@ -225,28 +232,31 @@ const Page = ({ params }: any) => {
                           index,
                         )
                       }
-                      className="rounded bg-blue-500 px-2 py-1 text-white"
+                      className="rounded-xl bg-blue-500 px-2 text-sm hover:scale-105 transition-all duration-200 py-1 text-white"
                     >
                       Notes & Reviews
                     </button>
                   </td>
-                  <td className="border-b px-4 py-2">
+                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 text-center font-medium dark:text-white">
+
                     {item.serviceType == "chat" ? (
                       <button
                         onClick={() =>
                           openChatModal(item.psychicId, item.userId)
                         }
-                        className="rounded bg-green-500 px-2 py-1 text-white"
+                        className="rounded-lg bg-green-500 px-2 hover:scale-105 transition-all duration-200 py-1 text-white"
                       >
                         Chat
                       </button>
                     ) : (
-                      <button className="rounded bg-red px-2 py-1 text-white">
+                      <button className="rounded-lg bg-red px-2 hover:scale-105 transition-all duration-200 py-1 text-white">
                         Call
                       </button>
                     )}
                   </td>
-                  <td className="border-b px-4 py-2">{item.status}</td>
+                  <td className="text-gray-900 whitespace-nowrap px-4 py-2 text-center font-medium dark:text-white">
+
+                    {item.status ? true : false}</td>
                 </tr>
               ))}
           </tbody>
