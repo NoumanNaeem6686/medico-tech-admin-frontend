@@ -1,14 +1,12 @@
 "use client";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import React, { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import axios from "axios";
 import Loader from "@/components/Loader";
-import { db } from "@/lib/firebase";
-import { doc, getDoc } from "firebase/firestore";
-import { useSelector } from "react-redux";
 import { CalculateCustomerHistoryAmount } from "@/components/utils/helper";
-import { isThenable } from "next/dist/client/components/router-reducer/router-reducer-types";
+// import { db } from "@/lib/firebase";
+// import { doc, getDoc } from "firebase/firestore";
+import { useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const Page = ({ params }: any) => {
   const { id } = params;
@@ -107,19 +105,20 @@ const Page = ({ params }: any) => {
   };
 
   const fetchChatMessages = async (psychicId: string, userId: string) => {
-    const combinedId = `${userId}_${psychicId}`;
-    try {
-      const docRef = doc(db, "chats", combinedId);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setMessages(docSnap.data().messages || []);
-      } else {
-        console.log("No such document!");
-        setMessages([]);
-      }
-    } catch (error) {
-      console.error("Error fetching chat messages:", error);
-    }
+    // TODO: commented due to build
+    // const combinedId = `${userId}_${psychicId}`;
+    // try {
+    //   const docRef = doc(db, "chats", combinedId);
+    //   const docSnap = await getDoc(docRef);
+    //   if (docSnap.exists()) {
+    //     setMessages(docSnap.data().messages || []);
+    //   } else {
+    //     console.log("No such document!");
+    //     setMessages([]);
+    //   }
+    // } catch (error) {
+    //   console.error("Error fetching chat messages:", error);
+    // }
   };
 
   const renderStars = (rating: number) => {
