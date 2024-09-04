@@ -232,7 +232,7 @@ const EditPsychicModal: React.FC<EditPsychicModalProps> = ({
               name="name"
               value={doctorInfo.name}
               onChange={handleInputChange}
-              className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+              className="text-gray-700 focus:shadow-outline w-full border-[#12A19B] appearance-none rounded-lg border px-3 py-2 leading-tight shadow focus:outline-none"
               required
             />
           </div>
@@ -245,7 +245,8 @@ const EditPsychicModal: React.FC<EditPsychicModalProps> = ({
               name="shortDescription"
               value={doctorInfo.shortDescription}
               onChange={handleInputChange}
-              className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+              className="text-gray-700 focus:shadow-outline w-full border-[#12A19B] appearance-none rounded-lg border px-3 py-2 leading-tight shadow focus:outline-none"
+
               required
             />
           </div>
@@ -258,7 +259,8 @@ const EditPsychicModal: React.FC<EditPsychicModalProps> = ({
               name="profileDescription"
               value={doctorInfo.profileDescription}
               onChange={handleInputChange}
-              className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+              className="text-gray-700 focus:shadow-outline w-full border-[#12A19B] appearance-none rounded-lg border px-3 py-2 leading-tight shadow focus:outline-none"
+
               required
             />
           </div>
@@ -271,7 +273,8 @@ const EditPsychicModal: React.FC<EditPsychicModalProps> = ({
               name="statusMessage"
               value={doctorInfo.statusMessage}
               onChange={handleInputChange}
-              className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+              className="text-gray-700 focus:shadow-outline w-full border-[#12A19B] appearance-none rounded-lg border px-3 py-2 leading-tight shadow focus:outline-none"
+
               required
             />
           </div>
@@ -284,7 +287,8 @@ const EditPsychicModal: React.FC<EditPsychicModalProps> = ({
               name="experience"
               value={doctorInfo.experience}
               onChange={handleInputChange}
-              className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+              className="text-gray-700 focus:shadow-outline w-full border-[#12A19B] appearance-none rounded-lg border px-3 py-2 leading-tight shadow focus:outline-none"
+
               required
             />
           </div>
@@ -297,7 +301,8 @@ const EditPsychicModal: React.FC<EditPsychicModalProps> = ({
               name="email"
               value={doctorInfo.email}
               onChange={handleInputChange}
-              className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+              className="text-gray-700 focus:shadow-outline w-full border-[#12A19B] appearance-none rounded-lg border px-3 py-2 leading-tight shadow focus:outline-none"
+
               required
             />
           </div>
@@ -310,7 +315,8 @@ const EditPsychicModal: React.FC<EditPsychicModalProps> = ({
               name="phoneNo"
               value={doctorInfo.phoneNo}
               onChange={handleInputChange}
-              className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+              className="text-gray-700 focus:shadow-outline w-full border-[#12A19B] appearance-none rounded-lg border px-3 py-2 leading-tight shadow focus:outline-none"
+
               required
             />
           </div>
@@ -323,7 +329,8 @@ const EditPsychicModal: React.FC<EditPsychicModalProps> = ({
               name="price"
               value={doctorInfo.price}
               onChange={handleInputChange}
-              className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+              className="text-gray-700 focus:shadow-outline w-full border-[#12A19B] appearance-none rounded-lg border px-3 py-2 leading-tight shadow focus:outline-none"
+
               required
             />
           </div>
@@ -371,7 +378,8 @@ const EditPsychicModal: React.FC<EditPsychicModalProps> = ({
               name="zodiac"
               value={doctorInfo.zodiacSign}
               onChange={handleInputChange}
-              className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+              className="text-gray-700 focus:shadow-outline w-full border-[#12A19B] appearance-none rounded-lg border px-3 py-2 leading-tight shadow focus:outline-none"
+
               required
             >
               <option value="">Select Zodiac Sign</option>
@@ -404,7 +412,8 @@ const EditPsychicModal: React.FC<EditPsychicModalProps> = ({
               name="joiningDate"
               value={doctorInfo.joiningDate || ""}
               onChange={handleInputChange}
-              className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+              className="text-gray-700 focus:shadow-outline w-full border-[#12A19B] appearance-none rounded-lg border px-3 py-2 leading-tight shadow focus:outline-none"
+
               required
             />
           </div>
@@ -416,7 +425,8 @@ const EditPsychicModal: React.FC<EditPsychicModalProps> = ({
               name="description"
               value={doctorInfo.description || ""}
               onChange={handleInputChange}
-              className="text-gray-700 focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight shadow focus:outline-none"
+              className="text-gray-700 focus:shadow-outline w-full border-[#12A19B] appearance-none rounded-lg border px-3 py-2 leading-tight shadow focus:outline-none"
+
               placeholder="Enter a brief description..."
               required
             ></textarea>
@@ -425,7 +435,7 @@ const EditPsychicModal: React.FC<EditPsychicModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="bg-gray-500 mr-4 rounded px-4 py-2 text-white"
+              className="bg-slate-400 mr-4 rounded px-4 py-2 text-white"
             >
               Cancel
             </button>

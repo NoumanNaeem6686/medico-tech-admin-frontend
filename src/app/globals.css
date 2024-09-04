@@ -52,3 +52,27 @@ body {
   scrollbar-width: thin;
   scrollbar-color: #12A19B #f1f1f1;
 }
+
+.custom-select {
+  color: #4a5568;
+  /* Equivalent to text-gray-700 */
+  border: 1px solid #12A19B;
+  width: 100%;
+  /* Equivalent to w-full */
+  appearance: none;
+  border-radius: 0.5rem;
+  /* Equivalent to rounded-lg */
+  padding: 0.5rem 0.75rem;
+  /* Equivalent to px-3 py-2 */
+  line-height: 1.5;
+  /* Equivalent to leading-tight */
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  /* Equivalent to shadow */
+}
+
+.custom-select:focus {
+  outline: none;
+  /* Equivalent to focus:outline-none */
+  box-shadow: 0 0.125rem 0.25rem rgba(18, 161, 155, 0.5);
+  /* Equivalent to focus:shadow-outline */
+}

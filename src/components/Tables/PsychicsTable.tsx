@@ -140,23 +140,20 @@ const PsychicsTable = () => {
                     </label>
                   </div>
                 </td> */}
-                <td
-                  scope="row"
-                  className="text-gray-900 flex items-center whitespace-nowrap px-4 py-2 font-medium dark:text-white"
-                >
+                <td className="text-gray-900 whitespace-nowrap text-center px-4 py-2 font-medium dark:text-white">
+
                   <Link
                     href={`/psychics-table/psychics-details/${psychic.id}?name=${psychic.name}`}
+                    className="flex items-center"
                   >
-                    <div className="flex items-center">
-                      <Image
-                        src={psychic?.profileUrl}
-                        alt="Psychic Image"
-                        className="mr-3 h-8 w-auto mix-blend-normal"
-                        width={100}
-                        height={100}
-                      />
-                      {psychic?.name}
-                    </div>
+                    <Image
+                      src={psychic?.profileUrl}
+                      alt="Psychic Image"
+                      className="mr-3 h-8 w-auto mix-blend-normal"
+                      width={100}
+                      height={100}
+                    />
+                    {psychic?.name}
                   </Link>
                 </td>
                 {/* <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
@@ -165,22 +162,24 @@ const PsychicsTable = () => {
                           category
                         </div>
                       </td> */}
-                <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
+                <td className="text-gray-900 whitespace-nowrap text-center px-4 py-2 font-medium dark:text-white">
+
                   {psychic?.status ? "Online" : "Offline"}
                 </td>
                 <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
                   on/off
                 </td>
-                <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                  <div className="flex items-center">
-                    {psychic?.joiningDate}
-                  </div>
+                <td className="text-gray-900 whitespace-nowrap text-center px-4 py-2 font-medium dark:text-white">
+
+                  {psychic?.joiningDate}
                 </td>
-                <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                  <div className="flex items-center">120 hours</div>
+                <td className="text-gray-900 whitespace-nowrap text-center px-4 py-2 font-medium dark:text-white">
+
+                  120 hours
                 </td>
-                <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
-                  <div className="flex items-center">$6000</div>
+                <td className="text-gray-900 whitespace-nowrap text-center px-4 py-2 font-medium dark:text-white">
+
+                  $6000
                 </td>
                 <td className="text-gray-900 whitespace-nowrap px-4 py-2 font-medium dark:text-white">
                   <div className="flex items-center space-x-2">
