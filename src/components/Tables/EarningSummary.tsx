@@ -4,9 +4,9 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 export default function EarningSummary({ data }: any) {
     console.log("🚀 ~ EarningSummary ~ data:", data);
 
-    const tableData = data && data.map((item: any, index: number) => ({
+    const tableData = data && [data].map((item: any) => ({
+
         id: item.id,
-        '#': index + 1, // Sequential numbering
         callReadings: item.callReadings || 0,
         'chat readings': item.chatReadings || 0,
         totalReadings: item.totalReadings || 0,
@@ -14,7 +14,7 @@ export default function EarningSummary({ data }: any) {
         netEarnings: item.netEarnings || 0,
         'bank transfer fees': item.bankTransferFees || 0,
         paidEarnings: item.paidEarnings || 0,
-    }));
+    }))
 
     const columns: GridColDef[] = [
         { field: '#', headerName: '#', width: 50 },

@@ -17,6 +17,8 @@ import { useSelector, useDispatch } from "react-redux";
 const Page = ({ params }: any) => {
   const { id } = params;
   const searchParams = useSearchParams();
+  const [selectedEarningDetail, setSelectedEarningDetail] = useState<any>(null);
+  console.log("🚀 ~ Page ~ selectedEarningDetail:", selectedEarningDetail)
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const name = searchParams?.get("name") || "psychic";
   // const [data, setData] = useState(null);
@@ -204,7 +206,7 @@ const Page = ({ params }: any) => {
         </p>
         {
           psychicEarnings &&
-          <BillingTable data={psychicEarnings} />
+          <BillingTable data={psychicEarnings} setSelectedEarningDetail={setSelectedEarningDetail} />
         }
         <div className="w-full flex items-center mt-2">
           <p className="text-gray-500 w-11/12">
@@ -214,76 +216,85 @@ const Page = ({ params }: any) => {
           </p>
         </div>
       </div>
-
-      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-10">
-        <div className="mb-4">
-          <h2 className="text-[22px] leading-normal font-normal tracking-normal text-[#12a19b] text-center text-2xl  ">
-            <strong className="font-semibold text-[35px]  ">
-              Earning Summary
-            </strong>
-          </h2>
-        </div>
-
-        <div className="w-full mr-4">
-          <h3 className="text-xl font-bold text-end mb-4 text-[#363636]">
-            Earning Summary for {psychicEarnings && psychicEarnings[0] && psychicEarnings[0].period}
-          </h3>
-        </div>
-
-        <div className="summaryTable">
-          {
-            psychicEarnings &&
-            <EarningSummary data={psychicEarnings} />
-          }
-        </div>
-      </div>
-      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-10">
-
-        <div className="statisticsTable">
+      {
+        selectedEarningDetail &&
+        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-10">
           <div className="mb-4">
             <h2 className="text-[22px] leading-normal font-normal tracking-normal text-[#12a19b] text-center text-2xl  ">
               <strong className="font-semibold text-[35px]  ">
-                Statistics
+                Earning Summary
               </strong>
             </h2>
           </div>
 
           <div className="w-full mr-4">
             <h3 className="text-xl font-bold text-end mb-4 text-[#363636]">
-              Statistics for {psychicEarnings && psychicEarnings[0] && psychicEarnings[0].period}
+              Earning Summary for {selectedEarningDetail && selectedEarningDetail[0] && selectedEarningDetail[0].period}
             </h3>
           </div>
+
+          <div className="summaryTable">
+            {
+              selectedEarningDetail &&
+              <EarningSummary data={selectedEarningDetail} />
+            }
+          </div>
+        </div>
+      }
+      {
+        selectedEarningDetail &&
+        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-10">
+
+          <div className="statisticsTable">
+            <div className="mb-4">
+              <h2 className="text-[22px] leading-normal font-normal tracking-normal text-[#12a19b] text-center text-2xl  ">
+                <strong className="font-semibold text-[35px]  ">
+                  Statistics
+                </strong>
+              </h2>
+            </div>
+
+            <div className="w-full mr-4">
+              <h3 className="text-xl font-bold text-end mb-4 text-[#363636]">
+                Statistics for {selectedEarningDetail && selectedEarningDetail[0] && selectedEarningDetail[0].period}
+              </h3>
+            </div>
+            {
+              selectedEarningDetail &&
+              <StatisticsTable data={selectedEarningDetail} />
+            }
+            <div className="w-full flex items-center justify-center mr-4">
+
+              <p className="text-gray-500 w-11/12">
+                {" "}
+                Statictics include only readings made in the current calender month
+                and does not include refunds
+              </p>
+            </div>
+          </div>
+        </div>
+      }
+      {
+        selectedEarningDetail &&
+        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-10">
+          <h3 className="text-xl font-bold text-center mt-4 mb-4 text-[#363636]">
+            Earning Statement Details for {selectedEarningDetail && selectedEarningDetail[0] && selectedEarningDetail[0].period}
+          </h3>
           {
-            psychicEarnings &&
-            <StatisticsTable data={psychicEarnings} />
+            selectedEarningDetail &&
+            <EarningStatement data={selectedEarningDetail} />
           }
           <div className="w-full flex items-center justify-center mr-4">
 
             <p className="text-gray-500 w-11/12">
               {" "}
-              Statictics include only readings made in the current calender month
-              and does not include refunds
+              Readings shows number of cahrge and refunded in that period, pending
+              readings are not counted and we also dont c0pint rolled-over
             </p>
           </div>
         </div>
-      </div>
-      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-10">
-        <h3 className="text-xl font-bold text-center mt-4 mb-4 text-[#363636]">
-          Earning Statement Details for Dec 2023
-        </h3>
-        {
-          psychicEarnings &&
-          <EarningStatement data={psychicEarnings} />
-        }
-        <div className="w-full flex items-center justify-center mr-4">
+      }
 
-          <p className="text-gray-500 w-11/12">
-            {" "}
-            Readings shows number of cahrge and refunded in that period, pending
-            readings are not counted and we also dont c0pint rolled-over
-          </p>
-        </div>
-      </div>
       {/* <div className="container mx-auto p-4">
         <h1 className="mb-4 text-2xl font-bold text-black capitalize">{name} Details</h1>
         <table className="min-w-full border rounded-2xl overflow-hidden shadow-lg">

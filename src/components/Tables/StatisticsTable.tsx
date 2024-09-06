@@ -31,20 +31,20 @@ const columns: GridColDef[] = [
 export default function StatisticsTable({ data }: any) {
     console.log("🚀 ~ StatisticsTable ~ data:", data);
 
-    // Map the data array to match the structure for DataGrid
-    const tableData = data.map((item: any, index: number) => ({
-        id: item.id,
-        readings: item.totalReadings, // Total readings
-        answered: item.answeredCalls + item.answeredChats, // Total answered (calls + chats)
-        charged: item.chargedCalls + item.chargedChats, // Total charged (calls + chats)
-        missed: item.missedCalls + item.missedChats, // Total missed (calls + chats)
-        acceptanceRate: `${item.acceptanceRateCalls || item.acceptanceRateChats}%`, // Acceptance rate (calls or chats)
+    // Ensure data is an array with one object
+    const rows = [data].map((item: any) => ({
+        id: item.id, // Ensure each item has a unique id
+        readings: item.totalReadings,
+        answered: item.answeredCalls + item.answeredChats,
+        charged: item.chargedCalls + item.chargedChats,
+        missed: item.missedCalls + item.missedChats,
+        acceptanceRate: `${item.acceptanceRateCalls || item.acceptanceRateChats}%`,
     }));
 
     return (
         <div style={{ height: 400, width: '100%' }}>
             <DataGrid
-                rows={tableData}
+                rows={rows} // Pass the array of row objects
                 columns={columns}
                 initialState={{
                     pagination: {

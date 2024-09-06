@@ -11,6 +11,11 @@ const columns: GridColDef[] = [
         flex: 1,
     },
     {
+        field: 'email',
+        headerName: 'Email',
+        flex: 1,
+    },
+    {
         field: 'date',
         headerName: 'Date/Time',
         flex: 1,
@@ -32,14 +37,15 @@ export default function EarningStatement({ data }: any) {
     console.log("🚀 ~ EarningStatement ~ data:", data);
 
     // Map the relevant fields from `customerHistories` in the data array to table rows
-    const tableData = data && data.map((item: any, index: number) => ({
-        '#': index + 1, 
-        id: item.customerHistories[0]?.id || '', 
-        type: item.customerHistories[0]?.serviceType || '', 
-        customer: item.customerHistories[0]?.userId || '', 
-        date: new Date(item.customerHistories[0]?.createdAt).toLocaleString(),
-        duration: `${item.customerHistories[0]?.selectedTime}m`, // Selected time duration
-        nzd: item.customerHistories[0]?.amount || 0, // Amount earned in NZD
+    const tableData = data && data.customerHistories.map((item: any, index: number) => ({
+        '#': index + 1,
+        id: item.id || '',
+        type: item.serviceType || '',
+        customer: item.user.userName || '',
+        email: item.user.email || '',
+        date: new Date(item.createdAt).toLocaleString(),
+        duration: `${item.selectedTime}m`, // Selected time duration
+        nzd: item.amount || 0, // Amount earned in NZD
     }));
 
     return (

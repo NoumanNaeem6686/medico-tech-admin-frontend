@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
 
 const columnsEarning: GridColDef[] = [
     { field: "period", headerName: "Period", flex: 1 },
@@ -16,7 +16,7 @@ const columnsEarning: GridColDef[] = [
     { field: "paidOut", headerName: "Paid Out (NZ$)", flex: 1 },
 ];
 
-export default function BillingTable({ data }: any) {
+export default function BillingTable({ data, setSelectedEarningDetail }: any) {
     console.log("🚀 ~ BillingTable ~ data:", data);
 
     const rowsEarning = data.map((item: any) => ({
@@ -28,7 +28,12 @@ export default function BillingTable({ data }: any) {
         refunds: `NZ$ ${item.refunds.toFixed(2)}`,
         rollOver: `NZ$ ${item.rollOver.toFixed(2)}`,
         paidOut: `NZ$ ${item.paidOut.toFixed(2)}`,
+        originalData: item, // Include the original data
     }));
+
+    const handleRowClick = (params: GridRowParams) => {
+        setSelectedEarningDetail(params.row.originalData);
+    };
 
     return (
         <>
@@ -43,6 +48,7 @@ export default function BillingTable({ data }: any) {
                     }}
                     pageSizeOptions={[5, 10]}
                     checkboxSelection
+                    onRowClick={handleRowClick} // Handle row clicks
                 />
             </div>
         </>
