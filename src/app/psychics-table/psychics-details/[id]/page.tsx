@@ -1,38 +1,46 @@
 "use client";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Loader from "@/components/Loader";
+import BillingTable from "@/components/Tables/BliingDetail";
+import EarningStatement from "@/components/Tables/EarningStatement";
+import EarningSummary from "@/components/Tables/EarningSummary";
+import StatisticsTable from "@/components/Tables/StatisticsTable";
 import { CalculateCustomerHistoryAmount } from "@/components/utils/helper";
+import { gettingAllPsychicEarnings } from "@/store/slices/billingSlice";
+import { ThunkDispatch } from "@reduxjs/toolkit";
 // import { db } from "@/lib/firebase";
 // import { doc, getDoc } from "firebase/firestore";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 const Page = ({ params }: any) => {
   const { id } = params;
   const searchParams = useSearchParams();
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const name = searchParams?.get("name") || "psychic";
-  console.log("🚀 ~ Page ~ name:", name);
   // const [data, setData] = useState(null);
   // const [reviews, setReviews] = useState([]);
-  const [filteredReviews, setFilteredReviews] = useState([]);
+  // const [filteredReviews, setFilteredReviews] = useState([]);
   // const [loading, setLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isChatModalOpen, setIsChatModalOpen] = useState(false);
-  const [selectedNote, setSelectedNote] = useState("");
-  const [selectedUserId, setSelectedUserId] = useState("");
-  const [messages, setMessages] = useState([]);
-  const { customerHistory, loading } = useSelector(
-    (state: any) => state.customerHistory,
+  // const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isChatModalOpen, setIsChatModalOpen] = useState(false);
+  // const [selectedNote, setSelectedNote] = useState("");
+  // const [selectedUserId, setSelectedUserId] = useState("");
+  // const [messages, setMessages] = useState([]);
+  const { psychicEarnings, loading } = useSelector(
+    (state: any) => state.billing,
   );
-  const data = customerHistory.filter((item: any) => item.psychic.id == id);
-  console.log("🚀 ~ Page ~ data:", data);
-  // useEffect(() => {
-  //   if (id) {
-  //     fetchData(id);
-  //     fetchAllReviews();
-  //   }
-  // }, [id]);
+
+  console.log("🚀 ~ Page ~ psychicEarnings:", psychicEarnings)
+  useEffect(() => {
+    if (id) {
+      // @ts-ignore
+      dispatch(gettingAllPsychicEarnings(id))
+      // fetchData(id);
+      // fetchAllReviews();
+    }
+  }, [id]);
 
   // const fetchData = async (psychicId: string) => {
   //   try {
@@ -58,112 +66,112 @@ const Page = ({ params }: any) => {
   //   }
   // };
 
-  const openReviewModal = (
-    note: string,
-    psychicId: string,
-    userId: string,
-    index: number,
-  ) => {
-    // console.log("🚀 ~ Page ~ userId:", userId);
-    // console.log("🚀 ~ Page ~ psychicId:", psychicId);
-    // console.log("🚀 ~ openReviewModal ~ note:", note);
-    // console.log("cuetom", customerHistory[index]);
-    const notes = customerHistory[index].psychic.notes.filter(
-      (item: any) => item.userId === userId,
-    );
-    console.log("🚀 ~ Page ~ notes:", notes);
-    setSelectedNote(notes[0]?.note || "");
-    setSelectedUserId(userId);
-    const filtered = customerHistory[index].psychic.reviews.filter(
-      (review: any) =>
-        review.psychicId === psychicId && review.userId === userId,
-    );
-    console.log("🚀 ~ openReviewModal ~ filtered:", filtered);
-    setFilteredReviews(filtered);
-    setIsModalOpen(true);
-  };
+  // const openReviewModal = (
+  //   note: string,
+  //   psychicId: string,
+  //   userId: string,
+  //   index: number,
+  // ) => {
+  //   // console.log("🚀 ~ Page ~ userId:", userId);
+  //   // console.log("🚀 ~ Page ~ psychicId:", psychicId);
+  //   // console.log("🚀 ~ openReviewModal ~ note:", note);
+  //   // console.log("cuetom", customerHistory[index]);
+  //   const notes = customerHistory[index].psychic.notes.filter(
+  //     (item: any) => item.userId === userId,
+  //   );
+  //   console.log("🚀 ~ Page ~ notes:", notes);
+  //   setSelectedNote(notes[0]?.note || "");
+  //   setSelectedUserId(userId);
+  //   const filtered = customerHistory[index].psychic.reviews.filter(
+  //     (review: any) =>
+  //       review.psychicId === psychicId && review.userId === userId,
+  //   );
+  //   console.log("🚀 ~ openReviewModal ~ filtered:", filtered);
+  //   setFilteredReviews(filtered);
+  //   setIsModalOpen(true);
+  // };
 
-  const openChatModal = (psychicId: string, userId: string) => {
-    console.log("psychicId", psychicId);
-    console.log("userId", userId);
-    setSelectedUserId(userId);
-    fetchChatMessages(psychicId, userId);
-    setIsChatModalOpen(true);
-  };
+  // const openChatModal = (psychicId: string, userId: string) => {
+  //   console.log("psychicId", psychicId);
+  //   console.log("userId", userId);
+  //   setSelectedUserId(userId);
+  //   fetchChatMessages(psychicId, userId);
+  //   setIsChatModalOpen(true);
+  // };
 
-  const closeReviewModal = () => {
-    setIsModalOpen(false);
-    setSelectedNote("");
-    setSelectedUserId("");
-    setFilteredReviews([]);
-  };
+  // const closeReviewModal = () => {
+  //   setIsModalOpen(false);
+  //   setSelectedNote("");
+  //   setSelectedUserId("");
+  //   setFilteredReviews([]);
+  // };
 
-  const closeChatModal = () => {
-    setIsChatModalOpen(false);
-    setSelectedUserId("");
-    setMessages([]);
-  };
+  // const closeChatModal = () => {
+  //   setIsChatModalOpen(false);
+  //   setSelectedUserId("");
+  //   setMessages([]);
+  // };
 
-  const fetchChatMessages = async (psychicId: string, userId: string) => {
-    // TODO: commented due to build
-    // const combinedId = `${userId}_${psychicId}`;
-    // try {
-    //   const docRef = doc(db, "chats", combinedId);
-    //   const docSnap = await getDoc(docRef);
-    //   if (docSnap.exists()) {
-    //     setMessages(docSnap.data().messages || []);
-    //   } else {
-    //     console.log("No such document!");
-    //     setMessages([]);
-    //   }
-    // } catch (error) {
-    //   console.error("Error fetching chat messages:", error);
-    // }
-  };
+  // const fetchChatMessages = async (psychicId: string, userId: string) => {
+  //   // TODO: commented due to build
+  //   // const combinedId = `${userId}_${psychicId}`;
+  //   // try {
+  //   //   const docRef = doc(db, "chats", combinedId);
+  //   //   const docSnap = await getDoc(docRef);
+  //   //   if (docSnap.exists()) {
+  //   //     setMessages(docSnap.data().messages || []);
+  //   //   } else {
+  //   //     console.log("No such document!");
+  //   //     setMessages([]);
+  //   //   }
+  //   // } catch (error) {
+  //   //   console.error("Error fetching chat messages:", error);
+  //   // }
+  // };
 
-  const renderStars = (rating: number) => {
-    const fullStars = Math.floor(rating);
-    const halfStars = rating % 1 !== 0;
-    const emptyStars = 5 - fullStars - (halfStars ? 1 : 0);
+  // const renderStars = (rating: number) => {
+  //   const fullStars = Math.floor(rating);
+  //   const halfStars = rating % 1 !== 0;
+  //   const emptyStars = 5 - fullStars - (halfStars ? 1 : 0);
 
-    return (
-      <div className="flex">
-        {Array(fullStars)
-          .fill(0)
-          .map((_, index) => (
-            <svg
-              key={`full-star-${index}`}
-              className="h-5 w-5 text-yellow-500"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path d="M9.049 2.927C9.316 2.154 10.684 2.154 10.951 2.927L12.27 6.363C12.362 6.622 12.615 6.822 12.888 6.883L16.614 7.709C17.453 7.898 17.765 8.92 17.174 9.504L14.409 12.258C14.207 12.455 14.116 12.745 14.172 13.024L15.018 16.765C15.178 17.578 14.302 18.202 13.59 17.841L10.163 16.065C9.907 15.934 9.593 15.934 9.337 16.065L5.91 17.841C5.198 18.202 4.322 17.578 4.482 16.765L5.328 13.024C5.384 12.745 5.293 12.455 5.091 12.258L2.326 9.504C1.735 8.92 2.047 7.898 2.886 7.709L6.612 6.883C6.885 6.822 7.138 6.622 7.23 6.363L8.549 2.927z" />
-            </svg>
-          ))}
-        {halfStars && (
-          <svg
-            className="h-5 w-5 text-yellow-500"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path d="M10 15l-5.878 3.09L5.07 10.92.5 6.32 6.243 5.06 10 0l3.757 5.06L19.5 6.32l-4.57 4.6L15.878 18.09zM10 12.82V2.184l1.55 3.125.792.312 3.408.49-2.463 2.404-.428.422.108.64.618 3.605-3.244-1.657-.62-.317-.621.317L6.235 18l.618-3.605.108-.64-.428-.422L4.07 6.123l3.408-.49.792-.312L10 2.184V12.82z" />
-          </svg>
-        )}
-        {Array(emptyStars)
-          .fill(0)
-          .map((_, index) => (
-            <svg
-              key={`empty-star-${index}`}
-              className="text-gray-300 h-5 w-5"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path d="M9.049 2.927C9.316 2.154 10.684 2.154 10.951 2.927L12.27 6.363C12.362 6.622 12.615 6.822 12.888 6.883L16.614 7.709C17.453 7.898 17.765 8.92 17.174 9.504L14.409 12.258C14.207 12.455 14.116 12.745 14.172 13.024L15.018 16.765C15.178 17.578 14.302 18.202 13.59 17.841L10.163 16.065C9.907 15.934 9.593 15.934 9.337 16.065L5.91 17.841C5.198 18.202 4.322 17.578 4.482 16.765L5.328 13.024C5.384 12.745 5.293 12.455 5.091 12.258L2.326 9.504C1.735 8.92 2.047 7.898 2.886 7.709L6.612 6.883C6.885 6.822 7.138 6.622 7.23 6.363L8.549 2.927z" />
-            </svg>
-          ))}
-      </div>
-    );
-  };
+  //   return (
+  //     <div className="flex">
+  //       {Array(fullStars)
+  //         .fill(0)
+  //         .map((_, index) => (
+  //           <svg
+  //             key={`full-star-${index}`}
+  //             className="h-5 w-5 text-yellow-500"
+  //             fill="currentColor"
+  //             viewBox="0 0 20 20"
+  //           >
+  //             <path d="M9.049 2.927C9.316 2.154 10.684 2.154 10.951 2.927L12.27 6.363C12.362 6.622 12.615 6.822 12.888 6.883L16.614 7.709C17.453 7.898 17.765 8.92 17.174 9.504L14.409 12.258C14.207 12.455 14.116 12.745 14.172 13.024L15.018 16.765C15.178 17.578 14.302 18.202 13.59 17.841L10.163 16.065C9.907 15.934 9.593 15.934 9.337 16.065L5.91 17.841C5.198 18.202 4.322 17.578 4.482 16.765L5.328 13.024C5.384 12.745 5.293 12.455 5.091 12.258L2.326 9.504C1.735 8.92 2.047 7.898 2.886 7.709L6.612 6.883C6.885 6.822 7.138 6.622 7.23 6.363L8.549 2.927z" />
+  //           </svg>
+  //         ))}
+  //       {halfStars && (
+  //         <svg
+  //           className="h-5 w-5 text-yellow-500"
+  //           fill="currentColor"
+  //           viewBox="0 0 20 20"
+  //         >
+  //           <path d="M10 15l-5.878 3.09L5.07 10.92.5 6.32 6.243 5.06 10 0l3.757 5.06L19.5 6.32l-4.57 4.6L15.878 18.09zM10 12.82V2.184l1.55 3.125.792.312 3.408.49-2.463 2.404-.428.422.108.64.618 3.605-3.244-1.657-.62-.317-.621.317L6.235 18l.618-3.605.108-.64-.428-.422L4.07 6.123l3.408-.49.792-.312L10 2.184V12.82z" />
+  //         </svg>
+  //       )}
+  //       {Array(emptyStars)
+  //         .fill(0)
+  //         .map((_, index) => (
+  //           <svg
+  //             key={`empty-star-${index}`}
+  //             className="text-gray-300 h-5 w-5"
+  //             fill="currentColor"
+  //             viewBox="0 0 20 20"
+  //           >
+  //             <path d="M9.049 2.927C9.316 2.154 10.684 2.154 10.951 2.927L12.27 6.363C12.362 6.622 12.615 6.822 12.888 6.883L16.614 7.709C17.453 7.898 17.765 8.92 17.174 9.504L14.409 12.258C14.207 12.455 14.116 12.745 14.172 13.024L15.018 16.765C15.178 17.578 14.302 18.202 13.59 17.841L10.163 16.065C9.907 15.934 9.593 15.934 9.337 16.065L5.91 17.841C5.198 18.202 4.322 17.578 4.482 16.765L5.328 13.024C5.384 12.745 5.293 12.455 5.091 12.258L2.326 9.504C1.735 8.92 2.047 7.898 2.886 7.709L6.612 6.883C6.885 6.822 7.138 6.622 7.23 6.363L8.549 2.927z" />
+  //           </svg>
+  //         ))}
+  //     </div>
+  //   );
+  // };
 
   if (loading) {
     return (
@@ -173,7 +181,7 @@ const Page = ({ params }: any) => {
     );
   }
 
-  if (!data) {
+  if (!psychicEarnings && !loading) {
     return (
       <DefaultLayout>
         <div>No data found</div>
@@ -183,7 +191,100 @@ const Page = ({ params }: any) => {
 
   return (
     <DefaultLayout>
-      <div className="container mx-auto p-4">
+      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-10">
+        <div className="mb-4">
+          <h1 className="mb-4 text-2xl font-bold text-black capitalize">{name} Earning Details</h1>
+
+        </div>
+        <h3 className="text-xl font-bold text-end mb-2 text-[#363636]">
+          Monthly Earning & Payment
+        </h3>
+        <p className="text-gray-500 text-end w-full mb-4">
+          This table shows your earnings for each payout month. Select a period to see detailed information.
+        </p>
+        {
+          psychicEarnings &&
+          <BillingTable data={psychicEarnings} />
+        }
+        <div className="w-full flex items-center mt-2">
+          <p className="text-gray-500 w-11/12">
+            {" "}
+            Readings shows number of cahrge and refunded in that period, pending
+            readings are not counted and we also dont c0pint rolled-over
+          </p>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-10">
+        <div className="mb-4">
+          <h2 className="text-[22px] leading-normal font-normal tracking-normal text-[#12a19b] text-center text-2xl  ">
+            <strong className="font-semibold text-[35px]  ">
+              Earning Summary
+            </strong>
+          </h2>
+        </div>
+
+        <div className="w-full mr-4">
+          <h3 className="text-xl font-bold text-end mb-4 text-[#363636]">
+            Earning Summary for {psychicEarnings && psychicEarnings[0] && psychicEarnings[0].period}
+          </h3>
+        </div>
+
+        <div className="summaryTable">
+          {
+            psychicEarnings &&
+            <EarningSummary data={psychicEarnings} />
+          }
+        </div>
+      </div>
+      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-10">
+
+        <div className="statisticsTable">
+          <div className="mb-4">
+            <h2 className="text-[22px] leading-normal font-normal tracking-normal text-[#12a19b] text-center text-2xl  ">
+              <strong className="font-semibold text-[35px]  ">
+                Statistics
+              </strong>
+            </h2>
+          </div>
+
+          <div className="w-full mr-4">
+            <h3 className="text-xl font-bold text-end mb-4 text-[#363636]">
+              Statistics for {psychicEarnings && psychicEarnings[0] && psychicEarnings[0].period}
+            </h3>
+          </div>
+          {
+            psychicEarnings &&
+            <StatisticsTable data={psychicEarnings} />
+          }
+          <div className="w-full flex items-center justify-center mr-4">
+
+            <p className="text-gray-500 w-11/12">
+              {" "}
+              Statictics include only readings made in the current calender month
+              and does not include refunds
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-10">
+        <h3 className="text-xl font-bold text-center mt-4 mb-4 text-[#363636]">
+          Earning Statement Details for Dec 2023
+        </h3>
+        {
+          psychicEarnings &&
+          <EarningStatement data={psychicEarnings} />
+        }
+        <div className="w-full flex items-center justify-center mr-4">
+
+          <p className="text-gray-500 w-11/12">
+            {" "}
+            Readings shows number of cahrge and refunded in that period, pending
+            readings are not counted and we also dont c0pint rolled-over
+          </p>
+        </div>
+      </div>
+      {/* <div className="container mx-auto p-4">
         <h1 className="mb-4 text-2xl font-bold text-black capitalize">{name} Details</h1>
         <table className="min-w-full border rounded-2xl overflow-hidden shadow-lg">
           <thead className="bg-[#12A19B] text-white">
@@ -366,7 +467,8 @@ const Page = ({ params }: any) => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
+
     </DefaultLayout>
   );
 };

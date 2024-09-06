@@ -11,7 +11,7 @@ import packageReducer, { getAllPackages } from "@/store/slices/packagSlice";
 import customerHistoryReducer, {
   gettingAllCustomerHistories,
 } from "@/store/slices/customerHistorySlice";
-
+import psychicsDetailSlice from '@/store/slices/billingSlice'
 export const store = configureStore({
   reducer: {
     admin: adminReducer,
@@ -20,6 +20,7 @@ export const store = configureStore({
     blog: blogReducer,
     packages: packageReducer,
     customerHistory: customerHistoryReducer,
+    billing: psychicsDetailSlice,
   },
 });
 

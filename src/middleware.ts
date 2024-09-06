@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
-  const loginToken= request.cookies.get('login');
+  const loginToken = request.cookies.get('login');
   const protectedRoutes = ['/auth/signin', '/'];
   const nonProtected = ['/auth/signin'];
 
@@ -21,10 +21,10 @@ export const config = {
     '/customer-history',
     '/add-psychics',
     '/product',
-    '/packages',
+    // '/packages',
     '/profile',
     '/settings',
     '/auth/signup',
-   '/auth/signin'
+    '/auth/signin'
   ]
 };
