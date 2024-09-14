@@ -12,6 +12,7 @@ import customerHistoryReducer, {
   gettingAllCustomerHistories,
 } from "@/store/slices/customerHistorySlice";
 import psychicsDetailSlice from '@/store/slices/billingSlice'
+import psychicsTransection, { gettingAllPsychicsTransection } from '@/store/slices/psychicsTransection'
 export const store = configureStore({
   reducer: {
     admin: adminReducer,
@@ -21,6 +22,7 @@ export const store = configureStore({
     packages: packageReducer,
     customerHistory: customerHistoryReducer,
     billing: psychicsDetailSlice,
+    transection: psychicsTransection
   },
 });
 
@@ -30,3 +32,4 @@ store.dispatch(getCurrentAdmin());
 store.dispatch(getAllBlogs());
 store.dispatch(getAllPackages());
 store.dispatch(gettingAllPsychics());
+store.dispatch(gettingAllPsychicsTransection());
