@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { Button } from '@mui/material';
 
 export default function EarningSummary({ data }: any) {
     console.log("🚀 ~ EarningSummary ~ data:", data);
@@ -25,6 +26,7 @@ export default function EarningSummary({ data }: any) {
         { field: 'netEarnings', headerName: 'Net Earnings (NZ$)', width: 150, type: 'number' },
         { field: 'bank transfer fees', headerName: 'Bank Transfer Fees (NZ$)', width: 180, type: 'number' },
         { field: 'paidEarnings', headerName: 'Paid Earnings (NZ$)', width: 150, type: 'number' },
+
     ];
 
     return (
