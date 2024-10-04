@@ -6,11 +6,12 @@ import ChartTwo from "../Charts/ChartTwo";
 import ChatCard from "../Chat/ChatCard";
 import TableOne from "../Tables/TableOne";
 import CardDataStats from "../CardDataStats";
-const API_URL = `${process.env.NEXT_PUBLIC_BACKEND_UR}/api/analytics`;
+const API_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/analytics`;
 
-const Dashboard: React.FC = () => {
-  
-  console.log("🚀 ~ API_URL:", API_URL)
+const Dashboard = ({ data }: any) => {
+  console.log("🚀 ~ Dashboard ~ data:", data)
+
+
   const [analyticsData, setAnalyticsData] = useState({
     daily: { earnings: 0, users: 0, psychics: 0, reviews: 0 },
     weekly: { earnings: 0, users: 0, psychics: 0, reviews: 0 },
@@ -19,18 +20,10 @@ const Dashboard: React.FC = () => {
   });
 
   useEffect(() => {
-    const fetchAnalyticsData = async () => {
-      try {
-        const response = await fetch(`${API_URL}`); 
-        const data = await response.json();
-        setAnalyticsData(data); // Store the fetched data in the state
-      } catch (error) {
-        console.error("Error fetching analytics data:", error);
-      }
-    };
-
-    fetchAnalyticsData(); // Trigger the data fetch
-  }, []);
+    if (data) {
+      setAnalyticsData(data)
+    }
+  }, [data]);
 
   return (
     <>

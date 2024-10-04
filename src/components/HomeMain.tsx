@@ -5,7 +5,7 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import SignIn from "@/app/auth/signin/page";
 import Dashboard from "./Dashboard/Dashboard";
 
-export default function HomeMain() {
+export default function HomeMain({ data }:any) {
   //@ts-ignore
   const loggedInUser = useSelector((state) => state.admin.isUserLogined);
   console.log("🚀 ~ HomeMain ~ loggedInUser:", loggedInUser);
@@ -18,7 +18,7 @@ export default function HomeMain() {
     <>
       {loggedInUser ? (
         <DefaultLayout>
-          <Dashboard />
+          <Dashboard data={data} />
         </DefaultLayout>
       ) : (
         <SignIn />
