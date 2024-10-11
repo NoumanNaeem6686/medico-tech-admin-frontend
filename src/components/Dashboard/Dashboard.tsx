@@ -1,23 +1,44 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ChartOne from "../Charts/ChartOne";
 import ChartThree from "../Charts/ChartThree";
 import ChartTwo from "../Charts/ChartTwo";
 import ChatCard from "../Chat/ChatCard";
 import TableOne from "../Tables/TableOne";
 import CardDataStats from "../CardDataStats";
+const API_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/analytics`;
+
+const Dashboard = ({ data }: any) => {
+  console.log("🚀 ~ Dashboard ~ data:", data)
 
 
-const Dashboard: React.FC = () => {
+  const [analyticsData, setAnalyticsData] = useState({
+    daily: { earnings: 0, users: 0, psychics: 0, reviews: 0 },
+    weekly: { earnings: 0, users: 0, psychics: 0, reviews: 0 },
+    monthly: { earnings: 0, users: 0, psychics: 0, reviews: 0 },
+    yearly: { earnings: 0, users: 0, psychics: 0, reviews: 0 },
+  });
+
+  useEffect(() => {
+    if (data) {
+      setAnalyticsData(data)
+    }
+  }, [data]);
+
   return (
     <>
       <h2 className="mb-10 text-title-md2 font-semibold text-black dark:text-white">
         Today Report
       </h2>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-        <CardDataStats title="Money" total="$3.456K" rate="0.43%" levelUp>
+        <CardDataStats
+          title="Money"
+          total={`$${analyticsData.daily.earnings}K`}
+          rate="0.43%"
+          levelUp
+        >
           <svg
-            className="fill-[#12a19b] dark:fill-white group-hover:fill-white"
+            className="fill-[#12a19b] group-hover:fill-white dark:fill-white"
             width="22"
             height="16"
             viewBox="0 0 22 16"
@@ -34,9 +55,14 @@ const Dashboard: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Users" total="$45,2K" rate="4.35%" levelUp>
+        <CardDataStats
+          title="Users"
+          total={`${analyticsData.daily.users}`}
+          rate="4.35%"
+          levelUp
+        >
           <svg
-            className="fill-[#12a19b] dark:fill-white group-hover:fill-white"
+            className="fill-[#12a19b] group-hover:fill-white dark:fill-white"
             width="20"
             height="22"
             viewBox="0 0 20 22"
@@ -57,9 +83,14 @@ const Dashboard: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="New Clients" total="2.450" rate="2.59%" levelUp>
+        <CardDataStats
+          title="New Clients"
+          total={`${analyticsData.daily.psychics}`}
+          rate="2.59%"
+          levelUp
+        >
           <svg
-            className="fill-[#12a19b] dark:fill-white group-hover:fill-white"
+            className="fill-[#12a19b] group-hover:fill-white dark:fill-white"
             width="22"
             height="22"
             viewBox="0 0 22 22"
@@ -78,12 +109,12 @@ const Dashboard: React.FC = () => {
         </CardDataStats>
         <CardDataStats
           title="Feedback and Reviews"
-          total="3.456"
+          total={`${analyticsData.daily.reviews}`}
           rate="0.95%"
           levelDown
         >
           <svg
-            className="fill-[#12a19b] dark:fill-white group-hover:fill-white"
+            className="fill-[#12a19b] group-hover:fill-white dark:fill-white"
             width="22"
             height="18"
             viewBox="0 0 22 18"
@@ -104,9 +135,14 @@ const Dashboard: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Earnings" total="3.456" rate="0.95%" levelDown>
+        <CardDataStats
+          title="Earnings"
+          total={`$${analyticsData.weekly.earnings}K`}
+          rate="0.95%"
+          levelDown
+        >
           <svg
-            className="fill-[#12a19b] dark:fill-white group-hover:fill-white"
+            className="fill-[#12a19b] group-hover:fill-white dark:fill-white"
             width="22"
             height="18"
             viewBox="0 0 22 18"
@@ -142,9 +178,14 @@ const Dashboard: React.FC = () => {
         Weekly Report
       </h2>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-        <CardDataStats title="Money" total="$3.456K" rate="0.43%" levelUp>
+        <CardDataStats
+          title="Money"
+          total={`${analyticsData.weekly.earnings}`}
+          rate="0.43%"
+          levelUp
+        >
           <svg
-            className="fill-[#12a19b] dark:fill-white group-hover:fill-white"
+            className="fill-[#12a19b] group-hover:fill-white dark:fill-white"
             width="22"
             height="16"
             viewBox="0 0 22 16"
@@ -161,9 +202,14 @@ const Dashboard: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Users" total="$45,2K" rate="4.35%" levelUp>
+        <CardDataStats
+          title="Users"
+          total={`${analyticsData.weekly.users}`}
+          rate="4.35%"
+          levelUp
+        >
           <svg
-            className="fill-[#12a19b] dark:fill-white group-hover:fill-white"
+            className="fill-[#12a19b] group-hover:fill-white dark:fill-white"
             width="20"
             height="22"
             viewBox="0 0 20 22"
@@ -184,9 +230,14 @@ const Dashboard: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="New Clients" total="2.450" rate="2.59%" levelUp>
+        <CardDataStats
+          title="New Clients"
+          total={`${analyticsData.weekly.users}`}
+          rate="2.59%"
+          levelUp
+        >
           <svg
-            className="fill-[#12a19b] dark:fill-white group-hover:fill-white"
+            className="fill-[#12a19b] group-hover:fill-white dark:fill-white"
             width="22"
             height="22"
             viewBox="0 0 22 22"
@@ -205,12 +256,12 @@ const Dashboard: React.FC = () => {
         </CardDataStats>
         <CardDataStats
           title="Feedback and Reviews"
-          total="3.456"
+          total={`${analyticsData.weekly.reviews}`}
           rate="0.95%"
           levelDown
         >
           <svg
-            className="fill-[#12a19b] dark:fill-white group-hover:fill-white"
+            className="fill-[#12a19b] group-hover:fill-white dark:fill-white"
             width="22"
             height="18"
             viewBox="0 0 22 18"
@@ -233,7 +284,7 @@ const Dashboard: React.FC = () => {
         </CardDataStats>
         <CardDataStats title="Earnings" total="3.456" rate="0.95%" levelDown>
           <svg
-            className="fill-[#12a19b] dark:fill-white group-hover:fill-white"
+            className="fill-[#12a19b] group-hover:fill-white dark:fill-white"
             width="22"
             height="18"
             viewBox="0 0 22 18"
@@ -269,9 +320,14 @@ const Dashboard: React.FC = () => {
         Monthly Report
       </h2>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-        <CardDataStats title="Money" total="$3.456K" rate="0.43%" levelUp>
+        <CardDataStats
+          title="Money"
+          total={`$${analyticsData.monthly.earnings}K`}
+          rate="0.43%"
+          levelUp
+        >
           <svg
-            className="fill-[#12a19b] dark:fill-white group-hover:fill-white"
+            className="fill-[#12a19b] group-hover:fill-white dark:fill-white"
             width="22"
             height="16"
             viewBox="0 0 22 16"
@@ -288,9 +344,14 @@ const Dashboard: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Users" total="$45,2K" rate="4.35%" levelUp>
+        <CardDataStats
+          title="Users"
+          total={`$${analyticsData.monthly.users}K`}
+          rate="4.35%"
+          levelUp
+        >
           <svg
-            className="fill-[#12a19b] dark:fill-white group-hover:fill-white"
+            className="fill-[#12a19b] group-hover:fill-white dark:fill-white"
             width="20"
             height="22"
             viewBox="0 0 20 22"
@@ -311,9 +372,14 @@ const Dashboard: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="New Clients" total="2.450" rate="2.59%" levelUp>
+        <CardDataStats
+          title="New Clients"
+          total={`$${analyticsData.monthly.users}K`}
+          rate="2.59%"
+          levelUp
+        >
           <svg
-            className="fill-[#12a19b] dark:fill-white group-hover:fill-white"
+            className="fill-[#12a19b] group-hover:fill-white dark:fill-white"
             width="22"
             height="22"
             viewBox="0 0 22 22"
@@ -332,12 +398,12 @@ const Dashboard: React.FC = () => {
         </CardDataStats>
         <CardDataStats
           title="Feedback and Reviews"
-          total="3.456"
+          total={`$${analyticsData.monthly.reviews}K`}
           rate="0.95%"
           levelDown
         >
           <svg
-            className="fill-[#12a19b] dark:fill-white group-hover:fill-white"
+            className="fill-[#12a19b] group-hover:fill-white dark:fill-white"
             width="22"
             height="18"
             viewBox="0 0 22 18"
@@ -360,7 +426,7 @@ const Dashboard: React.FC = () => {
         </CardDataStats>
         <CardDataStats title="Earnings" total="3.456" rate="0.95%" levelDown>
           <svg
-            className="fill-[#12a19b] dark:fill-white group-hover:fill-white"
+            className="fill-[#12a19b] group-hover:fill-white dark:fill-white"
             width="22"
             height="18"
             viewBox="0 0 22 18"
@@ -395,9 +461,14 @@ const Dashboard: React.FC = () => {
         Yearly Report
       </h2>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-        <CardDataStats title="Money" total="$3.456K" rate="0.43%" levelUp>
+        <CardDataStats
+          title="Money"
+          total={`$${analyticsData.yearly.earnings}`}
+          rate="0.43%"
+          levelUp
+        >
           <svg
-            className="fill-[#12a19b] dark:fill-white group-hover:fill-white"
+            className="fill-[#12a19b] group-hover:fill-white dark:fill-white"
             width="22"
             height="16"
             viewBox="0 0 22 16"
@@ -414,9 +485,14 @@ const Dashboard: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Users" total="$45,2K" rate="4.35%" levelUp>
+        <CardDataStats
+          title="Users"
+          total={`${analyticsData.yearly.users}`}
+          rate="4.35%"
+          levelUp
+        >
           <svg
-            className="fill-[#12a19b] dark:fill-white group-hover:fill-white"
+            className="fill-[#12a19b] group-hover:fill-white dark:fill-white"
             width="20"
             height="22"
             viewBox="0 0 20 22"
@@ -437,9 +513,14 @@ const Dashboard: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="New Clients" total="2.450" rate="2.59%" levelUp>
+        <CardDataStats
+          title="New Clients"
+          total={`${analyticsData.yearly.users}`}
+          rate="2.59%"
+          levelUp
+        >
           <svg
-            className="fill-[#12a19b] dark:fill-white group-hover:fill-white"
+            className="fill-[#12a19b] group-hover:fill-white dark:fill-white"
             width="22"
             height="22"
             viewBox="0 0 22 22"
@@ -458,12 +539,12 @@ const Dashboard: React.FC = () => {
         </CardDataStats>
         <CardDataStats
           title="Feedback and Reviews"
-          total="3.456"
+          total={`${analyticsData.yearly.reviews}`}
           rate="0.95%"
           levelDown
         >
           <svg
-            className="fill-[#12a19b] dark:fill-white group-hover:fill-white"
+            className="fill-[#12a19b] group-hover:fill-white dark:fill-white"
             width="22"
             height="18"
             viewBox="0 0 22 18"
@@ -486,7 +567,7 @@ const Dashboard: React.FC = () => {
         </CardDataStats>
         <CardDataStats title="Earnings" total="3.456" rate="0.95%" levelDown>
           <svg
-            className="fill-[#12a19b] dark:fill-white group-hover:fill-white"
+            className="fill-[#12a19b] group-hover:fill-white dark:fill-white"
             width="22"
             height="18"
             viewBox="0 0 22 18"
