@@ -5,14 +5,13 @@ import BillingTable from "@/components/Tables/BliingDetail";
 import EarningStatement from "@/components/Tables/EarningStatement";
 import EarningSummary from "@/components/Tables/EarningSummary";
 import StatisticsTable from "@/components/Tables/StatisticsTable";
-import { CalculateCustomerHistoryAmount } from "@/components/utils/helper";
 import { gettingAllPsychicEarnings } from "@/store/slices/billingSlice";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 // import { db } from "@/lib/firebase";
 // import { doc, getDoc } from "firebase/firestore";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Page = ({ params }: any) => {
   const { id } = params;
