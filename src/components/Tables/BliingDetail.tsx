@@ -1,30 +1,32 @@
 import * as React from "react";
 import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
-const handleActionClick = async (psychicBillingId: any, adminId: any) => {
-    try {
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/transaction/create`, {
-            psychicBillingId,
-            adminId
-        });
-        console.log("🚀 ~ handleActionClick ~ response:", response);
-    } catch (error) {
-        console.log("🚀 ~ handleActionClick ~ error:", error);
-    }
-};
-
-
 export default function BillingTable({ data, setSelectedEarningDetail }: any) {
-    console.log("🚀 ~ BillingTable ~ data:", data);
     const { admin } = useSelector((state: any) => state.admin);
     const adminId = admin?.id; // Ensure safe access to admin.id
 
-    if (!adminId) {
-        console.error("Admin ID is not available.");
-    }
+    const [loadingRow, setLoadingRow] = React.useState<string | null>(null); // Track which row is loading
+
+    const handleActionClick = async (psychicBillingId: any, adminId: any) => {
+        setLoadingRow(psychicBillingId); // Set the loading row when the button is clicked
+
+        try {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/transaction/create`, {
+                psychicBillingId,
+                adminId
+            });
+            console.log("🚀 ~ handleActionClick ~ response:", response);
+
+            // Reset loading state after receiving the response
+            setLoadingRow(null);
+        } catch (error) {
+            console.log("🚀 ~ handleActionClick ~ error:", error);
+            setLoadingRow(null); // Reset loading state on error
+        }
+    };
 
     const columnsEarning: GridColDef[] = [
         { field: "period", headerName: "Period", flex: 1 },
@@ -48,14 +50,20 @@ export default function BillingTable({ data, setSelectedEarningDetail }: any) {
                     variant="contained"
                     color="success"
                     onClick={() => {
-                        if (adminId) {
+                        // Only call the function if the payment status is UnPaid
+                        if (adminId && !params.row.paid) {
                             handleActionClick(params.row.id, adminId);
                         } else {
-                            console.error("Admin ID is not available.");
+                            console.log("This transaction is already paid.");
                         }
                     }}
+                    disabled={loadingRow === params.row.id || params.row.paid} // Disable the button while loading or if it's already paid
                 >
-                    {params.row.paid == true ? "Paid" : "UnPaid"}
+                    {loadingRow === params.row.id ? (
+                        <CircularProgress size={20} /> // Show loader while processing
+                    ) : (
+                        params.row.paid === true ? "Paid" : "UnPaid"
+                    )}
                 </Button>
             ),
         },
