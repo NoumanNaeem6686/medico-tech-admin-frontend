@@ -408,7 +408,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               <li>
                 <Link
                   href="/free-minutes"
-                  className={`group relative flex rounded-lg items-center gap-2.5 px-4 py-2 font-medium text-black duration-300 ease-in-out hover:bg-[#12a19b] hover:text-white dark:hover:bg-meta-4 ${pathname.includes("earning") &&
+                  className={`group relative flex rounded-lg items-center gap-2.5 px-4 py-2 font-medium text-black duration-300 ease-in-out hover:bg-[#12a19b] hover:text-white dark:hover:bg-meta-4 ${pathname.includes("free-minutes") &&
                     "bg-[#12a19b] text-white dark:bg-meta-4"
                     }`}
                 >
