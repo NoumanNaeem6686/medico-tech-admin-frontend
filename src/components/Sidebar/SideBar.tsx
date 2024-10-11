@@ -405,17 +405,17 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   <DollarSign />                  Transection
                 </Link>
               </li>
-              {/* <li>
+              <li>
                 <Link
-                  href="/psychics/earning"
+                  href="/free-minutes"
                   className={`group relative flex rounded-lg items-center gap-2.5 px-4 py-2 font-medium text-black duration-300 ease-in-out hover:bg-[#12a19b] hover:text-white dark:hover:bg-meta-4 ${pathname.includes("earning") &&
                     "bg-[#12a19b] text-white dark:bg-meta-4"
                     }`}
                 >
 
-                  <HandCoins />                Psychics Earning
+                  <HandCoins />               Free Minutes
                 </Link>
-              </li> */}
+              </li>
             </ul>
           </div>
         </nav>
