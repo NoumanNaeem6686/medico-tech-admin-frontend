@@ -11,7 +11,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: {
     template: "%s | Eleven Psychics",
-    default: "Eleven Psychics", // a default is required when creating a template
+    default: "Eleven Psychics", 
   },
   description: "This is eleven psychic webiste",
 };
