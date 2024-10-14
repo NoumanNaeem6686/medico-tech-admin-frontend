@@ -109,6 +109,7 @@ export const deletePsychic = createAsyncThunk(
 export const updatePsychic = createAsyncThunk(
   "updatePsychic",
   async (psychic: any, thunkAPI) => {
+    console.log("🚀 ~ psychic:", psychic)
     try {
       const response = await axios.put(
         `${URL}/api/psyscics/update-psychic/${psychic.id}`,
@@ -210,6 +211,7 @@ const psychicsSlice = createSlice({
       const data: any = state.psychics.map((psychic: any) =>
         psychic.id === action.payload.data.id ? action.payload.data : psychic,
       );
+      console.log("🚀 ~ builder.addCase ~ data:", data)
       state.psychics = data;
     });
     builder.addCase(
