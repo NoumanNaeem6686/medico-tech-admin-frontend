@@ -16,6 +16,41 @@
   }
 }
 
+/* Custom styles for react-tagsinput */
+.react-tagsinput {
+  border: 1px solid #d1d5db;
+  /* Tailwind border-gray-300 */
+  padding: 0.5rem;
+  /* Tailwind p-2 */
+  border-radius: 0.375rem;
+  /* Tailwind rounded-lg */
+}
+
+.react-tagsinput-input {
+  border: none !important;
+  outline: none !important;
+  /* padding: 0.25rem !important; */
+  font-size: 1rem !important;
+  margin-bottom: 0px !important;
+}
+
+.react-tagsinput-tag {
+  background-color: #e5e7eb !important;
+  /* Tailwind bg-gray-200 */
+  border-radius: 0.375rem !important;
+  /* Tailwind rounded-lg */
+  padding: 0.25rem 0.5rem !important;
+  margin-right: 0.5rem !important;
+  color: #374151 !important;
+  /* Tailwind text-gray-800 */
+}
+
+.react-tagsinput-remove {
+  color: #f87171 !important;
+  /* Tailwind text-red-400 */
+  cursor: pointer !important;
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(to bottom,
@@ -40,7 +75,7 @@ body {
 }
 
 *::-webkit-scrollbar-thumb {
-  background: #12A19B;
+  background: #547587;
   border-radius: 10px;
 }
 
@@ -50,13 +85,13 @@ body {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #12A19B #f1f1f1;
+  scrollbar-color: #547587 #f1f1f1;
 }
 
 .custom-select {
   color: #4a5568;
   /* Equivalent to text-gray-700 */
-  border: 1px solid #12A19B;
+  border: 1px solid #547587;
   width: 100%;
   /* Equivalent to w-full */
   appearance: none;

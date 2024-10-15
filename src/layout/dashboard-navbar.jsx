@@ -35,20 +35,18 @@ export function DashboardNavbar() {
   return (
     <Navbar
       color={fixedNavbar ? "white" : "transparent"}
-      className={`rounded-xl transition-all ${
-        fixedNavbar
-          ? "sticky top-4 z-40 py-3 shadow-md shadow-blue-gray-500/5"
-          : "px-0 py-1"
-      }`}
+      className={`rounded-xl transition-all ${fixedNavbar
+        ? "sticky top-4 z-40 py-3 shadow-md shadow-blue-gray-500/5"
+        : "px-0 py-1"
+        }`}
       fullWidth
       blurred={fixedNavbar}
     >
       <div className="flex flex-col-reverse justify-between gap-6 md:flex-row md:items-center">
         <div className="capitalize">
           <Breadcrumbs
-            className={`bg-transparent p-0 transition-all ${
-              fixedNavbar ? "mt-1" : ""
-            }`}
+            className={`bg-transparent p-0 transition-all ${fixedNavbar ? "mt-1" : ""
+              }`}
           >
             <Link to={`/${layout}`}>
               <Typography
@@ -156,7 +154,7 @@ export function DashboardNavbar() {
                 </div>
               </MenuItem>
               <MenuItem className="flex items-center gap-4">
-                <div className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-tr from-blue-[#12a19b] to-blue-gray-900">
+                <div className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-tr from-blue-[#547587] to-blue-gray-900">
                   <CreditCardIcon className="h-4 w-4 text-white" />
                 </div>
                 <div>

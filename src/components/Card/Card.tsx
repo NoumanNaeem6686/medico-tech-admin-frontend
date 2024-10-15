@@ -9,32 +9,45 @@ import { CircularProgress } from "@mui/material";
 
 export default function MediaCard({ blog, handleDelete, handleUpdate, loading }: any) {
   return (
-    <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition-all duration-300 ease-in-out">
+    <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:scale-[102%] transition-all duration-300 ease-in-out">
       <CardMedia
         sx={{ height: 140 }}
         image={blog.blogImageUrl}
         title={blog.title}
       />
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          {blog.title}
-        </Typography>
         <Typography variant="body2" color="text.secondary">
           {blog.category}
         </Typography>
+        <Typography gutterBottom variant="h5" component="div">
+          {blog.title}
+        </Typography>
       </CardContent>
       <CardActions>
-        <Button
-          size="small"
-          variant="outlined" color="error"
-          onClick={() => handleDelete(blog)}
-          disabled={loading}
-        >
-          Delete
-        </Button>
-        <Button onClick={handleUpdate} size="small" variant="contained" color="success" disabled={loading}>
-          Update
-        </Button>
+        <div className="flex items-center gap-4 ml-5 pb-4">
+
+          <button
+            className="bg-transparent border-2 border-red p-2 rounded-lg text-red px-4 hover:bg-red hover:text-white"
+            onClick={() => handleDelete(blog)}
+            disabled={loading}
+          >
+            {
+              loading ? "Deleting.." : "Delete"
+            }
+
+          </button>
+          <button
+            className="bg-green-700 border-2 border-green-700 p-2 rounded-lg hover:bg-transparent hover:text-green-700 px-4 text-white"
+            onClick={handleUpdate}
+            disabled={loading}
+          >
+            {
+              loading ? "Editing.." : "Update"
+            }
+
+          </button>
+        </div>
+
       </CardActions>
     </div>
   );

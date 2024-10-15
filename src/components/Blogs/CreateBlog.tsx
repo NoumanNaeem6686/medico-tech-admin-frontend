@@ -1,31 +1,29 @@
-"use client";
-import axios from "axios";
-import dynamic from "next/dynamic";
-import Image from "next/image";
 import React, { useState, useEffect } from "react";
+import { TextField, Chip, Box } from "@mui/material";
+import dynamic from "next/dynamic";
+import axios from "axios";
+import Image from "next/image";
+
 // Dynamically import ReactQuill to avoid SSR issues
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
-import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
 
-const CreateBlog = ({ initialValues, onSubmit }: any) => {
-  const [file, setFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
+interface BlogProps {
+  initialValues: any;
+  onSubmit: (data: any) => void;
+}
+
+const CreateBlog = ({ initialValues, onSubmit }: BlogProps) => {
+  const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [title, setTitle] = useState(initialValues?.title || "");
-  const [category, setCategory] = useState(initialValues?.category || "");
+  const [doctorName, setDoctorName] = useState(initialValues?.doctorName || "");
   const [imageUrl, setImageUrl] = useState(initialValues?.blogImageUrl || "");
   const [imageId, setImageId] = useState(initialValues?.blogImageId || "");
-  const [errors, setErrors] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [description, setDescription] = useState(
-    initialValues?.description || "",
-  );
-  const [psychicId, setPsychicId] = useState(initialValues?.psychicId || ""); // New state for psychic selection
-  const [psychicName, setPsychicName] = useState(""); //@ts-ignore
-  const psychics = useSelector((state) => state.psychics.psychics);
-  console.log("🚀 ~ CreateBlog ~ psychics:", psychics);
+  const [tags, setTags] = useState<string[]>([]);
+  const [inputValue, setInputValue] = useState("");
+  const [description, setDescription] = useState(initialValues?.description || "");
 
   useEffect(() => {
     if (initialValues?.blogImageUrl) {
@@ -33,27 +31,24 @@ const CreateBlog = ({ initialValues, onSubmit }: any) => {
     }
   }, [initialValues]);
 
-  const handleFileChange = (e: any) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
       setFile(files[0]);
       updatePreview(files[0]);
       uploadFileToCloudinary(files[0]);
-    } else {
-      setErrors("Please upload an image");
     }
   };
 
-  const updatePreview = (file: any) => {
+  const updatePreview = (file: File) => {
     const reader = new FileReader();
     reader.onloadend = () => {
-      //@ts-ignore
-      setPreviewUrl(reader.result);
+      setPreviewUrl(reader.result as string);
     };
     reader.readAsDataURL(file);
   };
 
-  const uploadFileToCloudinary = async (file: any) => {
+  const uploadFileToCloudinary = async (file: File) => {
     const formData = new FormData();
     formData.append("image", file);
     setIsLoading(true);
@@ -65,7 +60,7 @@ const CreateBlog = ({ initialValues, onSubmit }: any) => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        },
+        }
       );
       setImageUrl(response.data.data.secure_url);
       setImageId(response.data.data.public_id);
@@ -76,17 +71,14 @@ const CreateBlog = ({ initialValues, onSubmit }: any) => {
     }
   };
 
-  const clearImage = async (e: any) => {
+  const clearImage = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
     if (imageId) {
       setIsLoading(true);
       try {
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/image/deleteImage`,
-          { id: imageId },
-        );
+        await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/image/deleteImage`, { id: imageId });
         setFile(null);
         setPreviewUrl(null);
       } catch (error) {
@@ -99,69 +91,54 @@ const CreateBlog = ({ initialValues, onSubmit }: any) => {
     }
   };
 
-  const handlePsychicChange = (e: any) => {
-    const selectedPsychic = psychics.find(
-      (psychic: any) => psychic.id === e.target.value,
-    );
-    setPsychicId(selectedPsychic.id);
-    setPsychicName(selectedPsychic.name);
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter" && inputValue.trim() !== "") {
+      if (doctorName === "Dr. Smith" && !tags.includes(inputValue)) {
+        setTags((prevTags) => [...prevTags, `${inputValue} (Smith's Tag)`]);
+      } else if (!tags.includes(inputValue)) {
+        setTags((prevTags) => [...prevTags, inputValue]);
+      }
+      setInputValue("");
+      event.preventDefault();
+    }
   };
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
+  const handleDelete = (tagToDelete: string) => {
+    setTags((prevTags) => prevTags.filter((tag) => tag !== tagToDelete));
+  };
 
-    if (
-      !category ||
-      !title ||
-      !imageUrl ||
-      !imageId ||
-      !description ||
-      !psychicId
-    ) {
-      setErrors("Please fill in all fields");
-      return;
-    }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     const blogData = {
-      category,
       title,
+      doctorName,
       blogImageUrl: imageUrl,
       blogImageId: imageId,
       description,
-      psychicId, // Include psychicId in the blog data
-      psychicName, // Include psychicName in the blog data
-      adminId: "663080c4341f818233e4ce87",
+      tags,
     };
 
-    console.log("blogData", blogData);
-
     try {
-      setLoading(true);
+      setIsLoading(true);
       await onSubmit(blogData);
-      setLoading(false);
+      setIsLoading(false);
     } catch (error) {
       console.error(error);
-      toast.error("An error occurred while submitting the blog");
-      setLoading(false);
     }
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 rounded-xl overflow-hidden">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="flex items-center justify-center">
           <label
-            className="hover:bg-gray-100 hover:border-gray-300 relative flex h-96 w-full cursor-pointer flex-col justify-center border-2 border-dashed"
+            className="hover:bg-gray-100 hover:border-gray-300 relative flex h-70 rounded-xl w-full cursor-pointer flex-col justify-center border-2 border-dashed"
             onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => {
               e.preventDefault();
               const files = e.dataTransfer.files;
               if (files && files.length > 0) {
-                //@ts-ignore
                 setFile(files[0]);
-                updatePreview(files[0]);
-                uploadFileToCloudinary(files[0]);
-              } else {
-                setErrors("Please upload an image");
               }
             }}
           >
@@ -172,120 +149,62 @@ const CreateBlog = ({ initialValues, onSubmit }: any) => {
               </div>
             ) : previewUrl ? (
               <>
-                <Image
-                  src={previewUrl}
-                  alt="Preview"
-                  className="h-full w-full object-cover"
-                  height={200}
-                  width={200}
-                />
-                <button
-                  onClick={clearImage}
-                  className="absolute right-0 top-0 p-2"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="text-red-600 h-6 w-6"
-                    fill="red"
-                    viewBox="0 0 24 24"
-                    stroke="red"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
+                <Image src={previewUrl} alt="Preview" height={100} width={100} className="h-full w-full object-cover" />
               </>
             ) : (
-              <div className="flex flex-col items-center justify-center pt-5">
-                <p className="text-gray-400 ps-3 pt-1 text-sm tracking-wider">
-                  Drag your photo here or{" "}
-                  <span className="text-lg text-primary">click to select</span>
-                </p>
-              </div>
+              <p className="text-center text-blue-600">Drag your photo here or click to select</p>
             )}
             <input type="file" onChange={handleFileChange} className="hidden" />
           </label>
         </div>
-        <div>
-          <label className="text-gray-700 block text-sm font-medium">
-            Title
-          </label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="border-gray-300 mt-1 block w-full rounded-md border p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-          />
-        </div>
 
-        <div>
-          <label className="text-gray-700 block text-sm font-medium">
-            Category
-          </label>
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="border-gray-300 mt-1 block w-full rounded-md border p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-          >
-            <option value="">Select Category</option>
-            <option value="Love & Relationships">Love & Relationships</option>
-            <option value="Zodiac Sign Compatibility">
-              Zodiac Sign Compatibility
-            </option>
-            <option value="Astrology & Numerology">
-              Astrology & Numerology
-            </option>
-            <option value="Animal Sightings & Symbolism">
-              Animal Sightings & Symbolism
-            </option>
-            <option value="Mind, Body & Spirit">Mind, Body & Spirit</option>
-            <option value="Destiny & Life Path">Destiny & Life Path</option>
-            <option value="Dreams & Interpretation">
-              Dreams & Interpretation
-            </option>
-            <option value="Career & Money">Career & Money</option>
-            <option value="Psychic Tools & Abilities">
-              Psychic Tools & Abilities
-            </option>
-            <option value="Psychic Questions">Psychic Questions</option>
-          </select>
-        </div>
-        <div>
-          <label className="text-gray-700 block text-sm font-medium">
-            Description
-          </label>
-          <ReactQuill
-            value={description}
-            onChange={setDescription}
-            className="mb-15 mt-1 h-40"
-            theme="snow"
-          />
-        </div>
-        <div>
-          <label className="text-gray-700 block text-sm font-medium">
-            Psychic
-          </label>
-          <select
-            value={psychicId}
-            onChange={handlePsychicChange}
-            className="border-gray-300 mt-1 block w-full rounded-md border p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-          >
-            <option value="">Select Psychic</option>
-            {psychics?.map((psychic: any) => (
-              <option key={psychic.id} value={psychic.id}>
-                {psychic.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <button
-          type="submit"
-          className="w-full rounded-md bg-[#12a19b] px-4 py-2 font-semibold text-white shadow hover:opacity-75 focus:outline-none focus:ring-2 "
-        >
+        <TextField
+          label="Blog Title"
+          sx={{
+            mt: 1,
+            borderRadius: "10px",
+          }}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          fullWidth
+          placeholder="Blog Title"
+        />
+
+        <TextField
+          label="Doctor's Name"
+          sx={{
+            mt: 1,
+            borderRadius: "10px",
+          }}
+          value={doctorName}
+          onChange={(e) => setDoctorName(e.target.value)}
+          fullWidth
+          placeholder="Doctor's Name"
+        />
+
+        <TextField
+          label="Add Tags"
+          sx={{
+            mt: 1,
+            borderRadius: "10px",
+          }}
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={handleKeyDown}
+          variant="outlined"
+          fullWidth
+          placeholder="Press Enter to add tags"
+        />
+        <Box sx={{ mt: 2 }}>
+          {tags.map((tag) => (
+            <Chip key={tag} label={tag} onDelete={() => handleDelete(tag)} sx={{ mr: 1, mb: 1 }} />
+          ))}
+        </Box>
+
+        <label className="text-black block text-sm font-medium">Description</label>
+        <ReactQuill value={description} onChange={setDescription} className="mb-15 mt-1 h-50" />
+
+        <button type="submit" className="w-full rounded-md bg-[#547587] px-4 py-2 font-semibold text-white shadow">
           {initialValues ? "Update Blog" : "Create Blog"}
         </button>
       </form>

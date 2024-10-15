@@ -14,6 +14,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { Box, Modal } from "@mui/material";
 import { toast } from "react-toastify";
 import CreateBlog from "./CreateBlog";
+import { Plus } from "lucide-react";
 
 const AllBlogs = () => {
   const dispatch = useDispatch();
@@ -110,13 +111,17 @@ const AllBlogs = () => {
           <CircularProgress />
         </div>
       )}
-      <button
-        onClick={() => openModal()}
-        className="my-4 rounded-md bg-[#12a19b] p-2 text-white hover:opacity-75"
-      >
-        Create New Blog
-      </button>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className=" flex justify-end mb-5">
+
+        <button
+          onClick={() => openModal()}
+          className="my-4 rounded-md flex items-center bg-[#547587] p-3 text-white hover:opacity-75"
+        >
+          <Plus />
+          Add New Blog
+        </button>
+      </div>
+      <div className="grid grid-cols-1 mt-10 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {blogs?.map((blog: any) => (
           <MediaCard
             key={blog.id}
@@ -135,7 +140,7 @@ const AllBlogs = () => {
         aria-describedby="modal-modal-description"
         className="flex items-center justify-center"
       >
-        <Box className="max-h-[98vh] w-full max-w-3xl overflow-y-auto bg-white p-4 shadow-lg">
+        <Box className="max-h-[98vh] w-full max-w-3xl rounded-2xl overflow-y-auto bg-white p-4 shadow-lg">
           <CreateBlog
             initialValues={selectedBlog}
             onSubmit={isUpdating ? handleUpdate : handleCreate}

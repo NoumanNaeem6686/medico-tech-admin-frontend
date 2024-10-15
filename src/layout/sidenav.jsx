@@ -13,16 +13,15 @@ export function Sidenav({ brandImg, brandName, routes }) {
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavColor, sidenavType, openSidenav } = controller;
   const sidenavTypes = {
-    dark: "bg-gradient-to-br from-[#12a19b] to-gray-900",
+    dark: "bg-gradient-to-br from-[#547587] to-gray-900",
     white: "bg-white shadow-sm",
     transparent: "bg-transparent",
   };
 
   return (
     <aside
-      className={`${sidenavTypes[sidenavType]} ${
-        openSidenav ? "translate-x-0" : "-translate-x-80"
-      } fixed inset-0 z-50 my-4 ml-4 h-[calc(100vh-32px)] w-72 rounded-xl transition-transform duration-300 xl:translate-x-0 border border-blue-[#12a19b]`}
+      className={`${sidenavTypes[sidenavType]} ${openSidenav ? "translate-x-0" : "-translate-x-80"
+        } fixed inset-0 z-50 my-4 ml-4 h-[calc(100vh-32px)] w-72 rounded-xl transition-transform duration-300 xl:translate-x-0 border border-blue-[#547587]`}
     >
       <div className={`relative`}>
         <Link to="/" className=" px-8 text-center">
@@ -74,8 +73,8 @@ export function Sidenav({ brandImg, brandName, routes }) {
                         isActive
                           ? sidenavColor
                           : sidenavType === "dark"
-                          ? "white"
-                          : "blue-gray"
+                            ? "white"
+                            : "blue-gray"
                       }
                       className="flex items-center gap-4 px-4 capitalize"
                       fullWidth

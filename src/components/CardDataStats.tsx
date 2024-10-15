@@ -18,7 +18,7 @@ const CardDataStats: React.FC<CardDataStatsProps> = ({
   children,
 }) => {
   return (
-    <div className="hover:scale-105 transition-all duration-300 cursor-pointer group hover:bg-[#12A19B] border border-stroke bg-white  px-7.5 py-6 shadow-default dark:border-strokedark rounded-xl dark:bg-boxdark">
+    <div className="hover:scale-105 transition-all duration-300 cursor-pointer group hover:bg-[#547587] border border-stroke bg-white  px-7.5 py-6 shadow-default dark:border-strokedark rounded-xl dark:bg-boxdark">
       <div className="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 group-hover:bg-[#2a8581] dark:bg-meta-4">
         {children}
       </div>
