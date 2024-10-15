@@ -202,9 +202,9 @@ const CreateBlog = ({ initialValues, onSubmit }: BlogProps) => {
         </Box>
 
         <label className="text-black block text-sm font-medium">Description</label>
-        <ReactQuill value={description} onChange={setDescription} className="mb-15 mt-1 h-50" />
+        <ReactQuill value={description} onChange={setDescription} className="mb-15 overflow-y-scroll mt-1 h-50" />
 
-        <button type="submit" className="w-full rounded-md bg-[#547587] px-4 py-2 font-semibold text-white shadow">
+        <button type="submit" className="w-full rounded-md mt-9 bg-[#547587] px-4 py-2 font-semibold text-white shadow">
           {initialValues ? "Update Blog" : "Create Blog"}
         </button>
       </form>
