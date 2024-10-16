@@ -21,13 +21,18 @@ const CreateBlog = ({ initialValues, onSubmit }: BlogProps) => {
   const [doctorName, setDoctorName] = useState(initialValues?.doctorName || "");
   const [imageUrl, setImageUrl] = useState(initialValues?.blogImageUrl || "");
   const [imageId, setImageId] = useState(initialValues?.blogImageId || "");
-  const [tags, setTags] = useState<string[]>([]);
+  const [tags, setTags] = useState<string[]>(initialValues?.tags || []); // Initialize with initialValues.tags
   const [inputValue, setInputValue] = useState("");
   const [description, setDescription] = useState(initialValues?.description || "");
 
   useEffect(() => {
     if (initialValues?.blogImageUrl) {
       setPreviewUrl(initialValues.blogImageUrl);
+    }
+
+    // Prepopulate tags when editing a blog
+    if (initialValues?.tags) {
+      setTags(initialValues.tags);
     }
   }, [initialValues]);
 
@@ -93,10 +98,8 @@ const CreateBlog = ({ initialValues, onSubmit }: BlogProps) => {
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter" && inputValue.trim() !== "") {
-      if (doctorName === "Dr. Smith" && !tags.includes(inputValue)) {
-        setTags((prevTags) => [...prevTags, `${inputValue} (Smith's Tag)`]);
-      } else if (!tags.includes(inputValue)) {
-        setTags((prevTags) => [...prevTags, inputValue]);
+      if (!tags.includes(inputValue.trim())) {
+        setTags((prevTags) => [...prevTags, inputValue.trim()]);
       }
       setInputValue("");
       event.preventDefault();
@@ -115,7 +118,7 @@ const CreateBlog = ({ initialValues, onSubmit }: BlogProps) => {
       blogImageUrl: imageUrl,
       blogImageId: imageId,
       description,
-      tags,
+      tags,  // Include the updated tags array
     };
 
     try {
@@ -130,6 +133,7 @@ const CreateBlog = ({ initialValues, onSubmit }: BlogProps) => {
   return (
     <div className="container mx-auto p-4 rounded-xl overflow-hidden">
       <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Image upload */}
         <div className="flex items-center justify-center">
           <label
             className="hover:bg-gray-100 hover:border-gray-300 relative flex h-70 rounded-xl w-full cursor-pointer flex-col justify-center border-2 border-dashed"
@@ -150,6 +154,7 @@ const CreateBlog = ({ initialValues, onSubmit }: BlogProps) => {
             ) : previewUrl ? (
               <>
                 <Image src={previewUrl} alt="Preview" height={100} width={100} className="h-full w-full object-cover" />
+                <button onClick={clearImage} className="mt-2 text-red-500">Remove Image</button>
               </>
             ) : (
               <p className="text-center text-blue-600">Drag your photo here or click to select</p>
@@ -158,6 +163,7 @@ const CreateBlog = ({ initialValues, onSubmit }: BlogProps) => {
           </label>
         </div>
 
+        {/* Blog Title */}
         <TextField
           label="Blog Title"
           sx={{
@@ -170,6 +176,7 @@ const CreateBlog = ({ initialValues, onSubmit }: BlogProps) => {
           placeholder="Blog Title"
         />
 
+        {/* Doctor's Name */}
         <TextField
           label="Doctor's Name"
           sx={{
@@ -182,6 +189,7 @@ const CreateBlog = ({ initialValues, onSubmit }: BlogProps) => {
           placeholder="Doctor's Name"
         />
 
+        {/* Tags */}
         <TextField
           label="Add Tags"
           sx={{
@@ -201,9 +209,11 @@ const CreateBlog = ({ initialValues, onSubmit }: BlogProps) => {
           ))}
         </Box>
 
+        {/* Description */}
         <label className="text-black block text-sm font-medium">Description</label>
         <ReactQuill value={description} onChange={setDescription} className="mb-15 overflow-y-scroll mt-1 h-50" />
 
+        {/* Submit Button */}
         <button type="submit" className="w-full rounded-md mt-9 bg-[#547587] px-4 py-2 font-semibold text-white shadow">
           {initialValues ? "Update Blog" : "Create Blog"}
         </button>

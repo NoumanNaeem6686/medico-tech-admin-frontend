@@ -8,7 +8,9 @@ export const createBlog = createAsyncThunk(
   async (blog, thunkAPI) => {
     console.log(blog);
     try {
+      console.log("'blog", blog)
       const response = await axios.post(`${URL}/api/admin/create-blog`, blog);
+      console.log("'blog response", response)
       if (!response.data.success) {
         return thunkAPI.rejectWithValue(
           response.data.message || "Failed to create Blog",
@@ -28,7 +30,7 @@ export const getAllBlogs = createAsyncThunk(
   async (blog, thunkAPI) => {
     try {
       const response = await axios.get(`${URL}/api/admin/all-blogs`);
-      // console.log("🚀 ~ response:", response.data)
+      console.log("🚀 ~ response:", response.data)
       if (!response.data.success) {
         return thunkAPI.rejectWithValue(
           response.data.message || "Failed to getting all Blog",
@@ -61,22 +63,23 @@ export const updateBlog = createAsyncThunk(
   "blogs/updateBlog",
   async (blog: any, thunkAPI) => {
     try {
+      console.log("update blod Data", blog)
       const response = await axios.put(
         `${URL}/api/admin/update-blog/${blog.id}`,
-        blog,
+        blog
       );
       if (!response.data.success) {
         return thunkAPI.rejectWithValue(
-          response.data.message || "Failed to update Blog",
+          response.data.message || "Failed to update Blog"
         );
       }
-      return response.data;
+      return response.data; // Make sure this returns the updated blog
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Error during updating Blog",
+        error.response?.data?.message || "Error during updating Blog"
       );
     }
-  },
+  }
 );
 export const getAllPsychics = createAsyncThunk(
   "Blog/getAllPsychics",
@@ -98,7 +101,7 @@ export const getAllPsychics = createAsyncThunk(
 );
 
 const initialState = {
-  blogs: [], // Ensure initial state is an array
+  blogs: [], 
   psychics: null,
   error: null,
   loading: false,
@@ -171,11 +174,11 @@ const blogSlice = createSlice({
         state.loading = false;
         state.isSuccess = true;
         const updatedBlogIndex = state.blogs.findIndex(
-          (blog: any) => blog.id === action.payload.updatedBlog.id,
+          (blog: any) => blog.id === action.payload.updatedBlog.id
         );
         if (updatedBlogIndex !== -1) {
-          // @ts-ignore
-
+          // Update the blog at the found index
+          //@ts-ignore
           state.blogs[updatedBlogIndex] = action.payload.updatedBlog;
         }
       })
