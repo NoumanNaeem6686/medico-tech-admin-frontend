@@ -1,3 +1,4 @@
+'use client'
 import React, { useState, useEffect } from "react";
 import { TextField, Chip, Box } from "@mui/material";
 import dynamic from "next/dynamic";

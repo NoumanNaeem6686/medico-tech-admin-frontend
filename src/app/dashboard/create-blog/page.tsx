@@ -8,9 +8,9 @@ const page = () => {
     <DefaultLayout>
       <Breadcrumb pageName="Create Blog" />
 
-      <div className="flex flex-col gap-10">
+      {/* <div className="flex flex-col gap-10">
         <CreateBlog />
-      </div>
+      </div> */}
     </DefaultLayout>
   );
 };
