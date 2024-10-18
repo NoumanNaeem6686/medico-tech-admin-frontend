@@ -183,7 +183,7 @@ const SignInMain = () => {
     <div className="flex flex-wrap">
       <div className="flex w-full flex-col md:w-1/2">
         <div
-          className="my-auto flex flex-col justify-center bg-[#3caad8]  px-8 py-15 max-md:h-screen md:mx-auto md:justify-start md:rounded-3xl md:px-6 lg:w-[50rem]"
+          className="my-auto flex flex-col justify-center bg-[#3caad8]  px-8 py-15 max-md:h-screen md:mx-auto md:justify-start md:rounded-3xl md:px-6 lg:w-3/4"
           style={{
             boxShadow:
               "rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px",
@@ -205,23 +205,23 @@ const SignInMain = () => {
 
           <form className="flex flex-col pt-3 md:pt-8" onSubmit={handleLogin}>
             <div className="flex flex-col pt-4">
-              <div className="focus-within:border-b-gray-500 relative flex overflow-hidden border-b-2 transition">
+              <div className="focus-within:border-b-gray-500 relative flex overflow-hidden  transition">
                 <input
                   type="email"
                   id="login-email"
                   onChange={(e) => setEmail(e.target.value)}
-                  className="text-whiteplaceholder-gray-400 w-full flex-1 appearance-none rounded-xl border-white px-4 py-5 focus:outline-none  md:text-xl"
+                  className="text-whiteplaceholder-gray-400 w-full flex-1 appearance-none rounded-xl border-white px-4 py-4 focus:outline-none  md:text-xl"
                   placeholder="Email"
                 />
               </div>
             </div>
             <div className="mb-12 flex flex-col pt-4">
-              <div className="focus-within:border-b-gray-500 relative flex overflow-hidden border-b-2 transition">
+              <div className="focus-within:border-b-gray-500 relative flex overflow-hidden  transition">
                 <input
                   type="password"
                   onChange={(e) => setPassword(e.target.value)}
                   id="login-password"
-                  className="placeholder-gray-400 w-full flex-1 appearance-none rounded-xl border-white px-4 py-5 focus:outline-none  md:text-xl"
+                  className="placeholder-gray-400 w-full flex-1 appearance-none rounded-xl border-white px-4 py-4 focus:outline-none  md:text-xl"
                   placeholder="Password"
                 />
               </div>
