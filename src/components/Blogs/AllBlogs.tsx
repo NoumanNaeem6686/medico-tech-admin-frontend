@@ -73,8 +73,8 @@ const AllBlogs = () => {
           { id: blogImageId },
         );
       }
-
-      // Optimistically delete the blog from the Redux store
+  
+      
       //@ts-ignore
       const result = await dispatch(deleteBlog(id));
       console.log("🚀 ~delete blog result:", result);
