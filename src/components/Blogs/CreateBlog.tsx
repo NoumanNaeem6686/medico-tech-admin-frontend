@@ -175,7 +175,7 @@ const CreateBlog = ({ initialValues, onSubmit }: BlogProps) => {
               </>
             ) : (
               <p className="text-center text-blue-600">
-                Drag your photo here or click to select
+                click to select image
               </p>
             )}
             <input type="file" onChange={handleFileChange} className="hidden" />
