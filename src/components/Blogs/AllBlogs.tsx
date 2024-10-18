@@ -111,17 +111,16 @@ const AllBlogs = () => {
           <CircularProgress />
         </div>
       )}
-      <div className=" flex justify-end mb-5">
-
+      <div className=" mb-5 flex justify-end">
         <button
           onClick={() => openModal()}
-          className="my-4 rounded-md flex items-center bg-[#547587] p-3 text-white hover:opacity-75"
+          className="my-4 flex items-center rounded-md bg-[#3caad8] p-3 text-white hover:opacity-75"
         >
           <Plus />
           Add New Blog
         </button>
       </div>
-      <div className="grid grid-cols-1 mt-10 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {blogs?.map((blog: any) => (
           <MediaCard
             key={blog.id}
@@ -140,7 +139,7 @@ const AllBlogs = () => {
         aria-describedby="modal-modal-description"
         className="flex items-center justify-center"
       >
-        <Box className="max-h-[98vh] w-full max-w-3xl rounded-2xl overflow-y-auto bg-white p-4 shadow-lg">
+        <Box className="max-h-[98vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white p-4 shadow-lg">
           <CreateBlog
             initialValues={selectedBlog}
             onSubmit={isUpdating ? handleUpdate : handleCreate}

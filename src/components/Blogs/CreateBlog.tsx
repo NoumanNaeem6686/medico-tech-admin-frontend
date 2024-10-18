@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useState, useEffect } from "react";
 import { TextField, Chip, Box } from "@mui/material";
 import dynamic from "next/dynamic";
@@ -24,7 +24,9 @@ const CreateBlog = ({ initialValues, onSubmit }: BlogProps) => {
   const [imageId, setImageId] = useState(initialValues?.blogImageId || "");
   const [tags, setTags] = useState<string[]>(initialValues?.tags || []); // Initialize with initialValues.tags
   const [inputValue, setInputValue] = useState("");
-  const [description, setDescription] = useState(initialValues?.description || "");
+  const [description, setDescription] = useState(
+    initialValues?.description || "",
+  );
 
   useEffect(() => {
     if (initialValues?.blogImageUrl) {
@@ -66,7 +68,7 @@ const CreateBlog = ({ initialValues, onSubmit }: BlogProps) => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
       setImageUrl(response.data.data.secure_url);
       setImageId(response.data.data.public_id);
@@ -84,7 +86,10 @@ const CreateBlog = ({ initialValues, onSubmit }: BlogProps) => {
     if (imageId) {
       setIsLoading(true);
       try {
-        await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/image/deleteImage`, { id: imageId });
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/image/deleteImage`,
+          { id: imageId },
+        );
         setFile(null);
         setPreviewUrl(null);
       } catch (error) {
@@ -119,7 +124,7 @@ const CreateBlog = ({ initialValues, onSubmit }: BlogProps) => {
       blogImageUrl: imageUrl,
       blogImageId: imageId,
       description,
-      tags,  // Include the updated tags array
+      tags, // Include the updated tags array
     };
 
     try {
@@ -132,12 +137,12 @@ const CreateBlog = ({ initialValues, onSubmit }: BlogProps) => {
   };
 
   return (
-    <div className="container mx-auto p-4 rounded-xl overflow-hidden">
+    <div className="container mx-auto overflow-hidden rounded-xl p-4">
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Image upload */}
         <div className="flex items-center justify-center">
           <label
-            className="hover:bg-gray-100 hover:border-gray-300 relative flex h-70 rounded-xl w-full cursor-pointer flex-col justify-center border-2 border-dashed"
+            className="hover:bg-gray-100 hover:border-gray-300 relative flex h-70 w-full cursor-pointer flex-col justify-center rounded-xl border-2 border-dashed"
             onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => {
               e.preventDefault();
@@ -154,11 +159,24 @@ const CreateBlog = ({ initialValues, onSubmit }: BlogProps) => {
               </div>
             ) : previewUrl ? (
               <>
-                <Image src={previewUrl} alt="Preview" height={100} width={100} className="h-full w-full object-cover" />
-                <button onClick={clearImage} className="mt-2 text-red-500">Remove Image</button>
+                <Image
+                  src={previewUrl}
+                  alt="Preview"
+                  height={100}
+                  width={100}
+                  className="h-full w-full object-cover"
+                />
+                <button
+                  onClick={clearImage}
+                  className="text-red-500 absolute right-0 top-0 mt-2 rounded bg-red px-4 py-2 text-white"
+                >
+                  Remove
+                </button>
               </>
             ) : (
-              <p className="text-center text-blue-600">Drag your photo here or click to select</p>
+              <p className="text-center text-blue-600">
+                Drag your photo here or click to select
+              </p>
             )}
             <input type="file" onChange={handleFileChange} className="hidden" />
           </label>
@@ -206,16 +224,30 @@ const CreateBlog = ({ initialValues, onSubmit }: BlogProps) => {
         />
         <Box sx={{ mt: 2 }}>
           {tags.map((tag) => (
-            <Chip key={tag} label={tag} onDelete={() => handleDelete(tag)} sx={{ mr: 1, mb: 1 }} />
+            <Chip
+              key={tag}
+              label={tag}
+              onDelete={() => handleDelete(tag)}
+              sx={{ mr: 1, mb: 1 }}
+            />
           ))}
         </Box>
 
         {/* Description */}
-        <label className="text-black block text-sm font-medium">Description</label>
-        <ReactQuill value={description} onChange={setDescription} className="mb-15 overflow-y-scroll mt-1 h-50" />
+        <label className="block text-sm font-medium text-black">
+          Description
+        </label>
+        <ReactQuill
+          value={description}
+          onChange={setDescription}
+          className="mb-15 mt-1 h-50 overflow-y-scroll"
+        />
 
         {/* Submit Button */}
-        <button type="submit" className="w-full rounded-md mt-9 bg-[#547587] px-4 py-2 font-semibold text-white shadow">
+        <button
+          type="submit"
+          className="mt-9 w-full rounded-md bg-[#3caad8] px-4 py-2 font-semibold text-white shadow"
+        >
           {initialValues ? "Update Blog" : "Create Blog"}
         </button>
       </form>

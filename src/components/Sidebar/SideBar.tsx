@@ -6,7 +6,20 @@ import Link from "next/link";
 import Image from "next/image";
 import SidebarLinkGroup from "./SidebarLinkGroup";
 import { CiUser } from "react-icons/ci";
-import { DollarSign, Gem, HandCoins, LayoutDashboard, Newspaper, Phone, RepeatIcon, ShieldCheck, ShieldPlus, Store, UserRound } from 'lucide-react'
+import {
+  DollarSign,
+  Gem,
+  HandCoins,
+  LayoutDashboard,
+  Newspaper,
+  Phone,
+  RepeatIcon,
+  ShieldCheck,
+  ShieldPlus,
+  Store,
+  UserRound,
+} from "lucide-react";
+import { IMAGES } from "../../../public/images/Index";
 interface SidebarProps {
   sidebarOpen: boolean;
   setSidebarOpen: (arg: boolean) => void;
@@ -58,20 +71,25 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   return (
     <aside
       ref={sidebar}
-      className={`absolute left-0 top-0 z-50 flex h-screen w-72.5 flex-col overflow-y-hidden bg-white shadow-lg duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+      className={`absolute left-0 top-0 z-50 flex h-screen w-72.5 flex-col overflow-y-hidden bg-[#3caad8] shadow-lg duration-300 ease-linear dark:bg-[#1a1a1a] lg:static lg:translate-x-0 ${
+        sidebarOpen ? "translate-x-0" : "-translate-x-full"
+      }`}
+      style={{
+        boxShadow:
+          "rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px",
+      }}
     >
       {/* SIDEBAR HEADER */}
       <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
-        {/* <Link href="/">
+        <Link href="/">
           <Image
-            width={176}
-            height={32}
-            src={"/images/logo/logo.png"}
-            alt="Logo"
-            priority
+            src={IMAGES.LOGO_WHITE}
+            alt="logo"
+            width={250}
+            height={250}
+            className="mx-auto my-4"
           />
-        </Link> */}
+        </Link>
 
         <button
           ref={trigger}
@@ -103,134 +121,48 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           {/* Menu Group */}
           <div>
             <ul className="flex flex-col gap-1.5">
-
               <Link
                 href="/dashboard"
-                className={`group relative flex items-center rounded-lg gap-2.5 hover:text-white px-4 py-2 font-medium text-black duration-300 ease-in-out hover:bg-[#547587] dark:hover:bg-meta-4 ${pathname === "/dashboard"
-                  &&
-                  "bg-[#547587] text-white dark:bg-meta-4"
-                  }`}
-
+                className={`group relative flex items-center gap-2.5 rounded-lg px-4 py-2 font-medium text-white duration-300 ease-in-out hover:bg-white hover:text-[#1a1a1a] ${
+                  pathname === "/dashboard" && "bg-white text-[#1a1a1a]"
+                }`}
               >
                 <LayoutDashboard />
                 Dashboard
-
               </Link>
-
-
-
-
-
-
-
 
               <li>
                 <Link
                   href="/dashboard/all-blogs"
-                  className={`group relative flex items-center gap-2.5 hover:text-white rounded-lg px-4 py-2 font-medium text-black duration-300 ease-in-out hover:bg-[#547587]  dark:hover:bg-meta-4 ${pathname == "/dashboard/all-blogs" &&
-                    "bg-[#547587] text-white dark:bg-meta-4"
-                    }`}
+                  className={`group relative flex items-center gap-2.5 rounded-lg px-4 py-2 font-medium text-white duration-300 ease-in-out hover:bg-white hover:text-[#1a1a1a] ${
+                    pathname == "/dashboard/all-blogs" &&
+                    "bg-white text-[#1a1a1a]"
+                  }`}
                 >
-                  {/* <svg
-                    className="fill-current"
-                    width="18"
-                    height="19"
-                    viewBox="0 0 18 19"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g clipPath="url(#clip0_130_9756)">
-                      <path
-                        d="M15.7501 0.55835H2.2501C1.29385 0.55835 0.506348 1.34585 0.506348 2.3021V15.8021C0.506348 16.7584 1.29385 17.574 2.27822 17.574H15.7782C16.7345 17.574 17.5501 16.7865 17.5501 15.8021V2.3021C17.522 1.34585 16.7063 0.55835 15.7501 0.55835ZM6.69385 10.599V6.4646H11.3063V10.5709H6.69385V10.599ZM11.3063 11.8646V16.3083H6.69385V11.8646H11.3063ZM1.77197 6.4646H5.45635V10.5709H1.77197V6.4646ZM12.572 6.4646H16.2563V10.5709H12.572V6.4646ZM2.2501 1.82397H15.7501C16.0313 1.82397 16.2563 2.04897 16.2563 2.33022V5.2271H1.77197V2.3021C1.77197 2.02085 1.96885 1.82397 2.2501 1.82397ZM1.77197 15.8021V11.8646H5.45635V16.3083H2.2501C1.96885 16.3083 1.77197 16.0834 1.77197 15.8021ZM15.7501 16.3083H12.572V11.8646H16.2563V15.8021C16.2563 16.0834 16.0313 16.3083 15.7501 16.3083Z"
-                        fill=""
-                      />
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_130_9756">
-                        <rect
-                          width="18"
-                          height="18"
-                          fill="white"
-                          transform="translate(0 0.052124)"
-                        />
-                      </clipPath>
-                    </defs>
-                  </svg> */}
-                  <Newspaper />                 Blogs
+                  <Newspaper /> Blogs
                 </Link>
               </li>
               <li>
                 <Link
                   href="/dashboard/contact"
-                  className={`group relative flex items-center gap-2.5 hover:text-white rounded-lg px-4 py-2 font-medium text-black duration-300 ease-in-out hover:bg-[#547587]  dark:hover:bg-meta-4 ${pathname == "/dashboard/contact" &&
-                    "bg-[#547587] text-white dark:bg-meta-4"
-                    }`}
+                  className={`group relative flex items-center gap-2.5 rounded-lg px-4 py-2 font-medium text-white duration-300 ease-in-out hover:bg-white hover:text-[#1a1a1a] ${
+                    pathname == "/dashboard/contact" &&
+                    "bg-white text-[#1a1a1a]"
+                  }`}
                 >
-                  {/* <svg
-                    className="fill-current"
-                    width="18"
-                    height="19"
-                    viewBox="0 0 18 19"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g clipPath="url(#clip0_130_9756)">
-                      <path
-                        d="M15.7501 0.55835H2.2501C1.29385 0.55835 0.506348 1.34585 0.506348 2.3021V15.8021C0.506348 16.7584 1.29385 17.574 2.27822 17.574H15.7782C16.7345 17.574 17.5501 16.7865 17.5501 15.8021V2.3021C17.522 1.34585 16.7063 0.55835 15.7501 0.55835ZM6.69385 10.599V6.4646H11.3063V10.5709H6.69385V10.599ZM11.3063 11.8646V16.3083H6.69385V11.8646H11.3063ZM1.77197 6.4646H5.45635V10.5709H1.77197V6.4646ZM12.572 6.4646H16.2563V10.5709H12.572V6.4646ZM2.2501 1.82397H15.7501C16.0313 1.82397 16.2563 2.04897 16.2563 2.33022V5.2271H1.77197V2.3021C1.77197 2.02085 1.96885 1.82397 2.2501 1.82397ZM1.77197 15.8021V11.8646H5.45635V16.3083H2.2501C1.96885 16.3083 1.77197 16.0834 1.77197 15.8021ZM15.7501 16.3083H12.572V11.8646H16.2563V15.8021C16.2563 16.0834 16.0313 16.3083 15.7501 16.3083Z"
-                        fill=""
-                      />
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_130_9756">
-                        <rect
-                          width="18"
-                          height="18"
-                          fill="white"
-                          transform="translate(0 0.052124)"
-                        />
-                      </clipPath>
-                    </defs>
-                  </svg> */}
-                  <Phone />                 Contact Info
+                  <Phone /> Contact Info
                 </Link>
               </li>
               <li>
                 <Link
                   href="/dashboard/audit"
-                  className={`group relative flex items-center gap-2.5 hover:text-white rounded-lg px-4 py-2 font-medium text-black duration-300 ease-in-out hover:bg-[#547587]  dark:hover:bg-meta-4 ${pathname == "/dashboard/audit" &&
-                    "bg-[#547587] text-white dark:bg-meta-4"
-                    }`}
+                  className={`group relative flex items-center gap-2.5 rounded-lg px-4 py-2 font-medium text-white duration-300 ease-in-out hover:bg-white hover:text-[#1a1a1a] ${
+                    pathname == "/dashboard/audit" && "bg-white text-[#1a1a1a]"
+                  }`}
                 >
-                  {/* <svg
-                    className="fill-current"
-                    width="18"
-                    height="19"
-                    viewBox="0 0 18 19"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g clipPath="url(#clip0_130_9756)">
-                      <path
-                        d="M15.7501 0.55835H2.2501C1.29385 0.55835 0.506348 1.34585 0.506348 2.3021V15.8021C0.506348 16.7584 1.29385 17.574 2.27822 17.574H15.7782C16.7345 17.574 17.5501 16.7865 17.5501 15.8021V2.3021C17.522 1.34585 16.7063 0.55835 15.7501 0.55835ZM6.69385 10.599V6.4646H11.3063V10.5709H6.69385V10.599ZM11.3063 11.8646V16.3083H6.69385V11.8646H11.3063ZM1.77197 6.4646H5.45635V10.5709H1.77197V6.4646ZM12.572 6.4646H16.2563V10.5709H12.572V6.4646ZM2.2501 1.82397H15.7501C16.0313 1.82397 16.2563 2.04897 16.2563 2.33022V5.2271H1.77197V2.3021C1.77197 2.02085 1.96885 1.82397 2.2501 1.82397ZM1.77197 15.8021V11.8646H5.45635V16.3083H2.2501C1.96885 16.3083 1.77197 16.0834 1.77197 15.8021ZM15.7501 16.3083H12.572V11.8646H16.2563V15.8021C16.2563 16.0834 16.0313 16.3083 15.7501 16.3083Z"
-                        fill=""
-                      />
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_130_9756">
-                        <rect
-                          width="18"
-                          height="18"
-                          fill="white"
-                          transform="translate(0 0.052124)"
-                        />
-                      </clipPath>
-                    </defs>
-                  </svg> */}
-                  <RepeatIcon />                 Audit Info
+                  <RepeatIcon /> Audit Info
                 </Link>
               </li>
-
-
             </ul>
           </div>
         </nav>

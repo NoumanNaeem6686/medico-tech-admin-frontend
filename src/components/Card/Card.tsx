@@ -7,11 +7,16 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { CircularProgress } from "@mui/material";
 
-export default function MediaCard({ blog, handleDelete, handleUpdate, loading }: any) {
+export default function MediaCard({
+  blog,
+  handleDelete,
+  handleUpdate,
+  loading,
+}: any) {
   return (
-    <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:scale-[102%] transition-all duration-300 ease-in-out">
+    <div className="overflow-hidden rounded-2xl bg-white shadow-lg transition-all duration-300 ease-in-out hover:scale-[102%]">
       <CardMedia
-        sx={{ height: 140 }}
+        sx={{ height: 300 }}
         image={blog.blogImageUrl}
         title={blog.title}
       />
@@ -24,30 +29,22 @@ export default function MediaCard({ blog, handleDelete, handleUpdate, loading }:
         </Typography>
       </CardContent>
       <CardActions>
-        <div className="flex items-center gap-4 ml-5 pb-4">
-
+        <div className="ml-5 flex items-center gap-4 pb-4">
           <button
-            className="bg-transparent border-2 border-red p-2 rounded-lg text-red px-4 hover:bg-red hover:text-white"
+            className="rounded-lg border-2 border-red bg-transparent p-2 px-4 text-red hover:bg-red hover:text-white"
             onClick={() => handleDelete(blog)}
             disabled={loading}
           >
-            {
-              loading ? "Deleting.." : "Delete"
-            }
-
+            {loading ? "Deleting.." : "Delete"}
           </button>
           <button
-            className="bg-green-700 border-2 border-green-700 p-2 rounded-lg hover:bg-transparent hover:text-green-700 px-4 text-white"
+            className="rounded-lg border-2 border-[#3caad8] bg-[#3caad8] p-2 px-4 text-white hover:bg-transparent hover:text-[#3caad8]"
             onClick={handleUpdate}
             disabled={loading}
           >
-            {
-              loading ? "Editing.." : "Update"
-            }
-
+            {loading ? "Editing.." : "Update"}
           </button>
         </div>
-
       </CardActions>
     </div>
   );

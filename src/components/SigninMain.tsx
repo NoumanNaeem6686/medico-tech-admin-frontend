@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import logo from "../../public/images/logo/logo.png";
+import { IMAGES } from "../../public/images/Index";
 
 const SignInMain = () => {
   const router = useRouter();
@@ -181,47 +182,72 @@ const SignInMain = () => {
 
     <div className="flex flex-wrap">
       <div className="flex w-full flex-col md:w-1/2">
-
-        <div className="lg:w-[28rem] mx-auto my-auto flex flex-col justify-center pt-8 md:justify-start md:px-6 md:pt-0">
-          <p className="text-left text-3xl font-bold">Welcome back</p>
-          <p className="mt-2 text-left text-gray-500">Welcome back, please enter your details.</p>
+        <div
+          className="my-auto flex flex-col justify-center bg-[#3caad8]  px-8 py-15 max-md:h-screen md:mx-auto md:justify-start md:rounded-3xl md:px-6 lg:w-[50rem]"
+          style={{
+            boxShadow:
+              "rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px",
+          }}
+        >
+          <Image
+            src={IMAGES.LOGO_WHITE}
+            alt="logo"
+            width={250}
+            height={250}
+            className="mx-auto my-4"
+          />
+          <p className="text-left text-3xl font-bold text-white">
+            Welcome back
+          </p>
+          <p className="text-gray-500 mt-2 text-left text-white">
+            Welcome back, please enter your details.
+          </p>
 
           <form className="flex flex-col pt-3 md:pt-8" onSubmit={handleLogin}>
             <div className="flex flex-col pt-4">
               <div className="focus-within:border-b-gray-500 relative flex overflow-hidden border-b-2 transition">
-                <input type="email" id="login-email"
+                <input
+                  type="email"
+                  id="login-email"
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full flex-1 appearance-none border-gray-300 bg-transparent px-4 py-2 text-base text-gray-700 placeholder-gray-400 focus:outline-none" placeholder="Email" />
+                  className="text-whiteplaceholder-gray-400 w-full flex-1 appearance-none rounded-xl border-white px-4 py-5 focus:outline-none  md:text-xl"
+                  placeholder="Email"
+                />
               </div>
             </div>
             <div className="mb-12 flex flex-col pt-4">
               <div className="focus-within:border-b-gray-500 relative flex overflow-hidden border-b-2 transition">
-                <input type="password"
+                <input
+                  type="password"
                   onChange={(e) => setPassword(e.target.value)}
-                  id="login-password" className="w-full flex-1 appearance-none border-gray-300 bg-transparent px-4 py-2 text-base text-gray-700 placeholder-gray-400 focus:outline-none" placeholder="Password" />
+                  id="login-password"
+                  className="placeholder-gray-400 w-full flex-1 appearance-none rounded-xl border-white px-4 py-5 focus:outline-none  md:text-xl"
+                  placeholder="Password"
+                />
               </div>
             </div>
-            <button type="submit" className="w-full rounded-lg bg-black px-4 py-2 text-center text-base font-semibold text-white shadow-md ring-gray-500 ring-offset-2 transition focus:ring-2">
-
-
+            <button
+              type="submit"
+              className="ring-gray-500 flex w-full items-center justify-center gap-7 rounded-lg bg-[#000000] px-4 py-5 text-center font-semibold text-white shadow-md ring-offset-2 transition focus:ring-2 md:text-xl"
+            >
               {loading ? (
                 <AiOutlineLoading3Quarters className="mr-2 animate-spin" />
               ) : null}
               {loading ? "Signing In..." : "Sign In"}
             </button>
           </form>
-
         </div>
       </div>
       <div className="pointer-events-none relative hidden h-screen select-none bg-black md:block md:w-1/2">
-
-        <img className=" absolute top-0 h-full w-full object-cover opacity-90" src="/images/photo-1565301660306-29e08751cc53.avif" />
+        <Image
+          src={IMAGES.LOGIN}
+          width={2000}
+          height={2000}
+          alt="pic"
+          className=" absolute top-0 h-full w-full object-cover opacity-90"
+        />
       </div>
     </div>
-
-
-
-
   );
 };
 

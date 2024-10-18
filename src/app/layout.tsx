@@ -10,10 +10,10 @@ import { StoreProvider } from "@/store/storeProvider";
 import { Metadata } from "next";
 export const metadata: Metadata = {
   title: {
-    template: "%s | Eleven Psychics",
-    default: "Eleven Psychics", 
+    template: "%s | Medico Tech",
+    default: "Medico Tech", 
   },
-  description: "This is eleven psychic webiste",
+  description: "This is Medico Tech webiste",
 };
 export default function RootLayout({
   children,
