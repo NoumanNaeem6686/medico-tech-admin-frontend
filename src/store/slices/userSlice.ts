@@ -92,11 +92,11 @@ const userSlice = createSlice({
       state.isSuccess = false;
       state.isError = false;
       state.isUserLogined = false;
-
       state.loading = false;
-      document.cookie = "login=;expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+      document.cookie = "login=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;";
       localStorage.removeItem("login");
     },
+    
   },
   extraReducers: (builder) => {
     builder

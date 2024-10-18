@@ -43,6 +43,7 @@ const DropdownUser = () => {
     // localStorage.removeItem('token'); // If you use localStorage to store token
 
     await dispatch(logoutAdmin());
+    document.cookie = 'login=; expires=Thu, 01 Jan 1970 00:00:00 UTC';
     router.push("/auth/signin");
   };
 
