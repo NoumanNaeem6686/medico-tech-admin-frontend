@@ -82,27 +82,7 @@ const AllBlogs = () => {
     }
   };
 
-  // const gettingAllPsychics = async () => {
-  //   try {
-  //     //@ts-ignore
-  //     const res = await dispatch(getAllPsychics());
-  //     console.log("🚀 ~ gettingAllPsychics ~ res:", res);
-  //   } catch (error) {
-  //     console.log("Error in getting all psychics");
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   const gettingBlogs = async () => {
-  //     setLoading(true);
-  //     //@ts-ignore
-  //     const result = await dispatch(getAllBlogs());
-  //     console.log("🚀 ~ gettingBlogs ~ result:", result);
-  //     setLoading(false);
-  //   };
-  //   gettingBlogs();
-  //   // gettingAllPsychics();
-  // }, [dispatch]);
+  
 
   return (
     <div className="container mx-auto p-4">

@@ -162,8 +162,8 @@ const CreateBlog = ({ initialValues, onSubmit }: BlogProps) => {
                 <Image
                   src={previewUrl}
                   alt="Preview"
-                  height={100}
-                  width={100}
+                  height={2000}
+                  width={2000}
                   className="h-full w-full object-cover"
                 />
                 <button
