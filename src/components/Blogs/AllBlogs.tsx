@@ -63,24 +63,34 @@ const AllBlogs = () => {
 
   const handleDelete = async (blog: any) => {
     const { id, blogImageId } = blog;
-    if (blogImageId) {
-      setLoading(true);
-      try {
+    setLoading(true);
+    
+    try {
+      // Delete the image from the server if necessary
+      if (blogImageId) {
         await axios.post(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/image/deleteImage`,
-          {
-            id: blogImageId,
-          },
+          { id: blogImageId }
         );
-        //@ts-ignore
-        await dispatch(deleteBlog(id));
-      } catch (error) {
-        console.error("Error deleting blog or image:", error);
-      } finally {
-        setLoading(false);
       }
+  
+      // Optimistically delete the blog from the Redux store
+      //@ts-ignore
+      const result = await dispatch(deleteBlog(id));
+      console.log("🚀 ~delete blog result:", result)
+  
+      // Show a success message after deleting
+      if (result?.payload) {
+        toast.success("Blog deleted successfully");
+      }
+    } catch (error) {
+      console.error("Error deleting blog or image:", error);
+      toast.error("Failed to delete the blog.");
+    } finally {
+      setLoading(false);
     }
   };
+  
 
   
 

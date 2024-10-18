@@ -50,20 +50,30 @@ export const deleteBlog = createAsyncThunk(
   async (blogId, thunkAPI) => {
     try {
       const response = await axios.delete(
-        `${URL}/api/admin/delete-blog/${blogId}`,
+        `${URL}/api/admin/delete-blog/${blogId}`
       );
-      return blogId;
+
+      console.log('delete blog', response)
+
+      if (response.data.message ==='Blog deleted successfully') {
+        return blogId; 
+      }
+
+      return thunkAPI.rejectWithValue("Failed to delete the blog");
     } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Error during deleting Blog"
+      );
     }
-  },
+  }
 );
+
 
 export const updateBlog = createAsyncThunk(
   "blogs/updateBlog",
   async (blog: any, thunkAPI) => {
     try {
-      console.log("update blod Data", blog)
+      console.log("update blog Data", blog)
       const response = await axios.put(
         `${URL}/api/admin/update-blog/${blog.id}`,
         blog
@@ -73,7 +83,9 @@ export const updateBlog = createAsyncThunk(
           response.data.message || "Failed to update Blog"
         );
       }
-      return response.data; // Make sure this returns the updated blog
+
+      // Return the updated blog data immediately
+      return { updatedBlog: { ...blog, ...response.data.updatedBlog } }; 
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Error during updating Blog"
@@ -81,6 +93,7 @@ export const updateBlog = createAsyncThunk(
     }
   }
 );
+
 export const getAllPsychics = createAsyncThunk(
   "Blog/getAllPsychics",
   async (blog, thunkAPI) => {
@@ -158,10 +171,12 @@ const blogSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(deleteBlog.fulfilled, (state, action) => {
-        state.blogs = state.blogs.filter(
-          (blog: any) => blog.id !== action.payload,
-        );
+        console.log('Before deletion:', state.blogs); 
+        //@ts-ignore
+        state.blogs = state.blogs.filter((blog) => blog.id !== action.payload);
+        console.log('After deletion:', state.blogs); 
       })
+      
       .addCase(deleteBlog.rejected, (state, action: PayloadAction<any>) => {
         state.error = action.payload;
       })
@@ -173,15 +188,17 @@ const blogSlice = createSlice({
       .addCase(updateBlog.fulfilled, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.isSuccess = true;
+      
         const updatedBlogIndex = state.blogs.findIndex(
           (blog: any) => blog.id === action.payload.updatedBlog.id
         );
+      
         if (updatedBlogIndex !== -1) {
-          // Update the blog at the found index
-          //@ts-ignore
+         //@ts-ignore
           state.blogs[updatedBlogIndex] = action.payload.updatedBlog;
         }
       })
+      
       .addCase(updateBlog.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.isError = true;

@@ -23,7 +23,7 @@ interface UserContactInfo {
 }
 
 const staticUserData = [
-    { id: 1, name: "John Doe", phone: "123-456-7890", email: "john@example.com", contactType: "Personal", message: "Looking forward to our meeting." },
+    { id: 1, name: "John Doe", phone: "123-456-7890", email: "john@example.com", contactType: "Personal", time:"dd/mm/yy", message: "Looking forward to our meeting." },
    
 ];
 
@@ -51,6 +51,7 @@ export default function UserContactTable() {
                             <TableCell>Phone</TableCell>
                             <TableCell>Email</TableCell>
                             <TableCell>Contact Type</TableCell>
+                            <TableCell>Time</TableCell>
                             <TableCell>Message</TableCell>
                         </TableRow>
                     </TableHead>
@@ -63,6 +64,7 @@ export default function UserContactTable() {
                                     <TableCell>{user.phone}</TableCell>
                                     <TableCell>{user.email}</TableCell>
                                     <TableCell>{user.contactType}</TableCell>
+                                    <TableCell>{user.time}</TableCell>
                                     <TableCell>{user.message}</TableCell>
                                 </TableRow>
                             ))}
