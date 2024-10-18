@@ -124,7 +124,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               <Link
                 href="/dashboard"
                 className={`group relative flex items-center gap-2.5 rounded-lg px-4 py-2 font-medium text-white duration-300 ease-in-out hover:bg-white hover:text-[#1a1a1a] ${
-                  pathname === "/dashboard" && "bg-white text-[#1a1a1a]"
+                  pathname === "/dashboard" && "bg-white !text-[#1a1a1a]"
                 }`}
               >
                 <LayoutDashboard />
@@ -136,7 +136,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   href="/dashboard/all-blogs"
                   className={`group relative flex items-center gap-2.5 rounded-lg px-4 py-2 font-medium text-white duration-300 ease-in-out hover:bg-white hover:text-[#1a1a1a] ${
                     pathname == "/dashboard/all-blogs" &&
-                    "bg-white text-[#1a1a1a]"
+                    "bg-white !text-[#1a1a1a]"
                   }`}
                 >
                   <Newspaper /> Blogs
@@ -147,7 +147,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   href="/dashboard/contact"
                   className={`group relative flex items-center gap-2.5 rounded-lg px-4 py-2 font-medium text-white duration-300 ease-in-out hover:bg-white hover:text-[#1a1a1a] ${
                     pathname == "/dashboard/contact" &&
-                    "bg-white text-[#1a1a1a]"
+                    "bg-white !text-[#1a1a1a]"
                   }`}
                 >
                   <Phone /> Contact Info
@@ -157,7 +157,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 <Link
                   href="/dashboard/audit"
                   className={`group relative flex items-center gap-2.5 rounded-lg px-4 py-2 font-medium text-white duration-300 ease-in-out hover:bg-white hover:text-[#1a1a1a] ${
-                    pathname == "/dashboard/audit" && "bg-white text-[#1a1a1a]"
+                    pathname == "/dashboard/audit" && "bg-white !text-[#1a1a1a]"
                   }`}
                 >
                   <RepeatIcon /> Audit Info
