@@ -35,7 +35,7 @@ export default function UserContactTable() {
     const fetchContacts = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/api/user/get-all-contacts",
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/get-all-contacts`,
         ); // Adjust the URL to match your API endpoint
         setContacts(response.data.data);
         setLoading(false);
