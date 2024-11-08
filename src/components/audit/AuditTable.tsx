@@ -35,7 +35,7 @@ export default function AuditTable() {
     const fetchAudits = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/api/user/get-all-audits",
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/get-all-audits`,
         );
 
         console.log("Audit data:", response.data.data);
